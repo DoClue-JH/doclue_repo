@@ -10,7 +10,6 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         
         self.player_surface = pygame.Surface((self.WIDTH,self.HEIGHT))
-        self.player_surface.fill('bisque3')
         data_folder = Path("clueless/data/graphics/")
         
         self.player_name = name
@@ -26,9 +25,14 @@ class Player(pygame.sprite.Sprite):
                            'Colonel Mustard':'col_mustard'}
         self.player_image = pygame.image.load(f'{data_folder / name_image_dict[name]}.PNG')
         self.player_image = pygame.transform.scale(self.player_image, (80, 80))
+        pygame.draw.rect(self.player_image, 'BLACK', 
+                         pygame.Rect(0, 0, self.WIDTH, self.HEIGHT), 1)
+        self.rect = self.player_image.get_rect()
 
         # Use a dictionary to map name to location, how are we defining locations?
         # self.player_location = 
+       
+       
        
     # Return player status (0 = active, 1 = lost, and 2 = inactive)
     def get_status(self):
