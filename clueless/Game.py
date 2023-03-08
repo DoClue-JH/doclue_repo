@@ -1,8 +1,7 @@
 # Game Module
 from sys import exit
-from clueless import Board, Button, Network
-from clueless.Network import Network
-import pickle
+from clueless import Board
+from clueless import Player
 import pygame
 import random
 
@@ -77,6 +76,8 @@ class Game:
     def addView(self):
         # Add board
         board = Board.Board()
+        p = Player('Professor Plum')
+        
         board.loadTiles(self.screen, board)
 
         # Initialize Buttons
@@ -102,6 +103,7 @@ class Game:
             board.closeRoomOptions(self.screen, self.base_color)
             self.state = "START"
             isRoomSelectionActive = False
+        self.screen.blit(p.player_image,(75,75))
 
     def render(self):
         pygame.display.update()
