@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
     WIDTH = 100
     HEIGHT = 100
     
-    def __init__(self, name):
+    def __init__(self, name, pos_x, pos_y):
         super().__init__()
         
         self.player_surface = pygame.Surface((self.WIDTH,self.HEIGHT))
@@ -28,7 +28,8 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(self.player_image, 'BLACK', 
                          pygame.Rect(0, 0, self.WIDTH, self.HEIGHT), 1)
         self.rect = self.player_image.get_rect()
-
+        self.rect.center = [pos_x, pos_y]
+        
         # Use a dictionary to map name to location, how are we defining locations?
         # self.player_location = 
        
