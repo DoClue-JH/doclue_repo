@@ -76,7 +76,8 @@ class Game:
     def addView(self):
         # Add board
         board = Board.Board()
-        p = Player('Professor Plum')
+        # Add players
+        player_plum = Player.Player('Professor Plum')
         
         board.loadTiles(self.screen, board)
 

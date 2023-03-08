@@ -3,8 +3,8 @@ import pygame
 from pathlib import Path
 
 class Player:    
-    WIDTH = 200
-    HEIGHT = 200
+    WIDTH = 100
+    HEIGHT = 100
     
     def __init__(self, name):
         self.player_surface = pygame.Surface((self.WIDTH,self.HEIGHT))
@@ -23,7 +23,7 @@ class Player:
                            'Miss Scarlet':'miss_scarlet',
                            'Colonel Mustard':'col_mustard'}
         self.player_image = pygame.image.load(f'{data_folder / name_image_dict[name]}.PNG')
-        self.player_image = pygame.transform.scale(self.player_image, (100, 100))
+        self.player_image = pygame.transform.scale(self.player_image, (80, 80))
 
         # Use a dictionary to map name to location, how are we defining locations?
         # self.player_location = 
