@@ -2,11 +2,13 @@
 import pygame
 from pathlib import Path
 
-class Player:    
+class Player(pygame.sprite.Sprite):    
     WIDTH = 100
     HEIGHT = 100
     
     def __init__(self, name):
+        super().__init__()
+        
         self.player_surface = pygame.Surface((self.WIDTH,self.HEIGHT))
         self.player_surface.fill('bisque3')
         data_folder = Path("clueless/data/graphics/")
