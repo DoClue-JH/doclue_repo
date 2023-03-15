@@ -77,7 +77,7 @@ class Game:
         # Add board
         board = Board.Board()
         # Add players
-        player_plum = Player.Player('Professor Plum', pos_x=80, pos_y=245)
+        player_plum = Player.Player('Professor Plum', pos_x=60, pos_y=210)
         
         board.loadTiles(self.screen, board)
 
