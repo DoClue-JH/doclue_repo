@@ -78,6 +78,11 @@ class Game:
         board = Board.Board()
         # Add players
         player_plum = Player.Player('Professor Plum', pos_x=60, pos_y=210)
+        player_mustard = Player.Player('Colonel Mustard', pos_x=60, pos_y=210)
+        player_scarlet = Player.Player('Miss Scarlet', pos_x=60, pos_y=210)
+        player_green = Player.Player('Mr Green', pos_x=60, pos_y=210)
+        player_white = Player.Player('Mrs White', pos_x=60, pos_y=210)
+        player_peacock = Player.Player('Mrs Peacock', pos_x=60, pos_y=400)
         
         board.loadTiles(self.screen, board)
 

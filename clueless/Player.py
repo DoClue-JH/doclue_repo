@@ -19,9 +19,9 @@ class Player(pygame.sprite.Sprite):
         name_image_dict = {'Professor Plum':'prof_plum',
                            'Mrs Peacock':'mrs_peacock',
                            'Mr Green':'mr_green',
-                           'Mrs Wine':'mrs_wine',
+                           'Mrs White':'mrs_white',
                            'Miss Scarlet':'miss_scarlet',
-                           'Colonel Mustard':'col_mustard'}
+                           'Colonel Mustard':'colonel_mustard'}
         self.player_image = pygame.image.load(f'{data_folder / name_image_dict[name]}.PNG')
         self.player_image = pygame.transform.scale(self.player_image, (80, 80))
         
