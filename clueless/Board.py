@@ -1,6 +1,6 @@
 # Board Module
 import pygame
-from clueless import Button, OptionsBox
+from clueless import Button, OptionsBox, Player
 from pathlib import Path
 
 class Board:
@@ -32,9 +32,8 @@ class Board:
         self.hallwayVerticalRect = self.hallwayVertical.get_rect()
     
     def loadTiles(self, screen, board):
-
         screen.blit(board.boardSurface,(self.boardXPos,self.boardYPos))
-
+        # Initialize hallways
         screen.blit(board.hallwayVertical,(125,200))
         screen.blit(board.hallwayVertical,(325,200))
         screen.blit(board.hallwayVertical,(525,200))
@@ -48,18 +47,33 @@ class Board:
         screen.blit(board.hallway,(400,325))
         screen.blit(board.hallway,(200,525))
         screen.blit(board.hallway,(400,525))
-
+        # Initialize corner rooms
         screen.blit(board.cornerRoomSurface,(100,100))
         screen.blit(board.cornerRoomSurface,(500,100))
         screen.blit(board.cornerRoomSurface,(100,500))
         screen.blit(board.cornerRoomSurface,(500,500))
-
+        # Initialize normal rooms   
         screen.blit(board.normalRoomSurface,(300,100))
         screen.blit(board.normalRoomSurface,(100,300))
         screen.blit(board.normalRoomSurface,(500,300))
         screen.blit(board.normalRoomSurface,(300,500))
         screen.blit(board.normalRoomSurface,(300,300))
 
+        # Add players
+        player_plum = Player.Player('Professor Plum', pos_x=60, pos_y=210)
+        player_mustard = Player.Player('Colonel Mustard', pos_x=560, pos_y=210)
+        player_scarlet = Player.Player('Miss Scarlet', pos_x=410, pos_y=60)
+        player_green = Player.Player('Mr Green', pos_x=210, pos_y=550)
+        player_white = Player.Player('Mrs White', pos_x=410, pos_y=550)
+        player_peacock = Player.Player('Mrs Peacock', pos_x=60, pos_y=410)
+        # Initialize player positions
+        self.screen.blit(player_plum.player_image, player_plum.rect) 
+        self.screen.blit(player_mustard.player_image, player_mustard.rect) 
+        self.screen.blit(player_scarlet.player_image, player_scarlet.rect) 
+        self.screen.blit(player_green.player_image, player_green.rect) 
+        self.screen.blit(player_white.player_image, player_white.rect) 
+        self.screen.blit(player_peacock.player_image, player_peacock.rect) 
+    
     def loadButton(self, screen, text, buttonXPos, buttonYPos):
         buttonColor = (150, 150, 150)
         buttonWidth = 160
