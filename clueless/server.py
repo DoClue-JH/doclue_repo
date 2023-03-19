@@ -20,22 +20,23 @@ print("Waiting for a connection, server started")
 
 players = []
 player_count = 0
+idCount = 0
+connected = set()
 
-def threaded_client(conn, player):
-    global player_count
+def threaded_client(conn, player, game):
+    global idCount
     conn.send(str.encode(str(player)))
     reply = ""
     while True:
         try:
             player_data = conn.recv(4096).decode()
-            players[player] = player_data
 
             if not player_data:
                 print("Disconnected")
                 break
             else:
                 if player_data == "reset":
-                     game.reset_round()
+                    game.reset_round()
                 elif player_data != "get":
                     game.take_turn(player, player_data)
                     print("Player taking turn ")
@@ -45,7 +46,13 @@ def threaded_client(conn, player):
             break
 
     print("Lost connection")
+    try:
+        print("Closing Game")
+    except:
+        pass
+
     conn.close()
+    
     sys.exit()
 
 
@@ -54,7 +61,6 @@ while True:
     print("Connected to:", addr)
 
     player = 0
-    game = Game()
-    player = 1
+    game = 1
 
-    start_new_thread(threaded_client, (conn, player))
+    start_new_thread(threaded_client, (conn, player, game))

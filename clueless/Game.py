@@ -1,6 +1,6 @@
 # Game Module
 from sys import exit
-from clueless import Board
+from Board import Board
 import pygame
 
 
