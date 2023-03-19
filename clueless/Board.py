@@ -67,12 +67,12 @@ class Board:
         player_white = Player.Player('Mrs White', pos_x=410, pos_y=550)
         player_peacock = Player.Player('Mrs Peacock', pos_x=60, pos_y=410)
         # Initialize player positions
-        self.screen.blit(player_plum.player_image, player_plum.rect) 
-        self.screen.blit(player_mustard.player_image, player_mustard.rect) 
-        self.screen.blit(player_scarlet.player_image, player_scarlet.rect) 
-        self.screen.blit(player_green.player_image, player_green.rect) 
-        self.screen.blit(player_white.player_image, player_white.rect) 
-        self.screen.blit(player_peacock.player_image, player_peacock.rect) 
+        screen.blit(player_plum.player_image, player_plum.rect) 
+        screen.blit(player_mustard.player_image, player_mustard.rect) 
+        screen.blit(player_scarlet.player_image, player_scarlet.rect) 
+        screen.blit(player_green.player_image, player_green.rect) 
+        screen.blit(player_white.player_image, player_white.rect) 
+        screen.blit(player_peacock.player_image, player_peacock.rect) 
     
     def loadButton(self, screen, text, buttonXPos, buttonYPos):
         buttonColor = (150, 150, 150)
