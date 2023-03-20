@@ -6,6 +6,8 @@ import sys
 
 HOST_ADDR = "192.168.1.24"
 HOST_PORT = 8080
+PLAYER_MAX = 6
+PLAYER_MIN = 3
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -18,14 +20,15 @@ sock.listen(2)
 print("Waiting for a connection, server started")
 
 players = []
+id_count = 0
 connected = set()
 
 def threaded_client(conn, player, game):
-    conn.send(str.encode(str(player)))
+    conn.send(pickle.dumps(player))
     reply = ""
     while True:
         try:
-            player_data = conn.recv(4096).decode()
+            player_data = pickle.loads(conn.recv(4096))
 
             if not player_data:
                 print("Disconnected")
@@ -34,8 +37,7 @@ def threaded_client(conn, player, game):
                 if player_data == "reset":
                     game.reset_round()
                 elif player_data != "get":
-                    print("Player taking turn")
-                    print("Player mouse position: ", player_data)
+                    print("Player status: ", player_data)
 
                 conn.sendall(pickle.dumps(game))
         except:
@@ -53,10 +55,14 @@ def threaded_client(conn, player, game):
 
 
 while True:
-    conn, addr = sock.accept()
-    print("Connected to:", addr)
+    #this loops runs forever, so any print statements outside of 
+    # the if statemennt will print forever
 
-    player = 0
-    game = 1
+    if (id_count < PLAYER_MAX):
+        id_count += 1
+        conn, addr = sock.accept()
+        print("Connected to:", addr)
+        player = id_count
+        game = 1
 
-    start_new_thread(threaded_client, (conn, player, game))
+        start_new_thread(threaded_client, (conn, player, game))

@@ -13,16 +13,18 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Clue-Less")
-        self.playing = True
+        
         self.network = Network()
+        self.id = int(self.network.get_player())
+        self.playing = True
+        player_caption = "Clue-Less Player " + str(self.id)
+        pygame.display.set_caption(player_caption)
         self.state = "START"
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.clock = pygame.time.Clock()
         self.gameLoop()
 
     def gameLoop(self):
-        #network = Network()
 
         while self.playing:
             self.tick()
@@ -67,7 +69,7 @@ class Game:
         if isRoomSelectionActive:
             self.state = "CHOOSING"
             board.loadRoomOptions(self.screen)
-            self.network.send(str(mousePos))
+            self.network.send((self.id, self.state, mousePos))
 
         #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
         closeRect = pygame.Rect(820, 570, 55, 30)
