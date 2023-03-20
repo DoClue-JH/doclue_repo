@@ -18,8 +18,8 @@ On your main directory, run `start.py` or `python3 start.py`
 
 open multiple terminals
 1 terminal for the server/splash screen
-    run `clueless\server.py`
+    run `clueless\Server.py`
     to exit, must kill the terminal (TODO: exit by keyboard shortcut)
 3-6 terminals for players
-    run `clueless\client.py` in each
+    run `start.py` in each
     to exit, close out the client window
