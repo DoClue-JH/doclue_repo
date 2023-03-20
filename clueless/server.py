@@ -3,7 +3,6 @@ import socket
 from _thread import *
 import pickle
 import sys
-from Game import Game
 
 HOST_ADDR = "192.168.1.24"
 HOST_PORT = 8080
@@ -19,12 +18,9 @@ sock.listen(2)
 print("Waiting for a connection, server started")
 
 players = []
-player_count = 0
-idCount = 0
 connected = set()
 
 def threaded_client(conn, player, game):
-    global idCount
     conn.send(str.encode(str(player)))
     reply = ""
     while True:
@@ -38,8 +34,8 @@ def threaded_client(conn, player, game):
                 if player_data == "reset":
                     game.reset_round()
                 elif player_data != "get":
-                    game.take_turn(player, player_data)
-                    print("Player taking turn ")
+                    print("Player taking turn")
+                    print("Player mouse position: ", player_data)
 
                 conn.sendall(pickle.dumps(game))
         except:
@@ -52,8 +48,8 @@ def threaded_client(conn, player, game):
         pass
 
     conn.close()
-    
-    sys.exit()
+
+    sys.exit("Server Closed")
 
 
 while True:

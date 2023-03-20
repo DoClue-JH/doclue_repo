@@ -1,6 +1,8 @@
 # Game Module
 from sys import exit
-from clueless import Board, Button
+from clueless import Board, Button, Network
+from clueless.Network import Network
+import pickle
 import pygame
 
 
@@ -13,15 +15,27 @@ class Game:
         pygame.init()
         pygame.display.set_caption("Clue-Less")
         self.playing = True
+        self.network = Network()
         self.state = "START"
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.clock = pygame.time.Clock()
         self.gameLoop()
 
     def gameLoop(self):
+        #network = Network()
+
         while self.playing:
             self.tick()
             self.render()
+
+            try:
+                game = self.network.send("get")
+                #print("Connected to Server")
+            except:
+                run = False
+                print("Couldn't get game")
+                break
+
             events = pygame.event.get()
             self.checkEvents(events)
             self.addView()
@@ -53,6 +67,7 @@ class Game:
         if isRoomSelectionActive:
             self.state = "CHOOSING"
             board.loadRoomOptions(self.screen)
+            self.network.send(str(mousePos))
 
         #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
         closeRect = pygame.Rect(820, 570, 55, 30)
