@@ -1,7 +1,6 @@
 # Game Module
 from sys import exit
 from Board import Board
-from weapon import Weapon
 from Deck import ClueDeck
 import pygame
 
@@ -65,9 +64,18 @@ class Game:
     def tick(self):
         self.clock.tick(self.FPS)
 
-# Instantiating Deck class
+# Instantiate Deck class
+# players = ["Katie", "Khue", "Kweku", "Megan", "Sely"]
 
-players = ["Katie", "Khue", "Kweku", "Megan", "Sely"]
+num_players= int(input("Enter the number of players: "))
+players= []
+
+for i in range(num_players):
+    player_name= input(f"Enter the name of player {i+1}: ")
+    players.append(player_name)
+print("List of players=", players)   
+print()
+
 deck = ClueDeck(players)
 dealt_cards = deck.deal()
 
