@@ -1,6 +1,8 @@
 # Game Module
 from sys import exit
-from clueless import Board
+from Board import Board
+from weapon import Weapon
+from Deck import ClueDeck
 import pygame
 
 
@@ -62,3 +64,14 @@ class Game:
 
     def tick(self):
         self.clock.tick(self.FPS)
+
+# Instantiating Deck class
+
+players = ["Katie", "Khue", "Kweku", "Megan", "Sely"]
+deck = ClueDeck(players)
+dealt_cards = deck.deal()
+
+for key, value in dealt_cards.items():
+    print(f"{key}: {value}")
+print()
+print("Secret deck:", deck.secret_deck)

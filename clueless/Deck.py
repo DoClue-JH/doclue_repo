@@ -55,12 +55,4 @@ weapon4 = Weapon("Wrench")
 weapon5 = Weapon("Candlestick")
 weapon6 = Weapon("Revolver")
 
-players = ["Katie", "Khue", "Kweku", "Megan", "Sely"]
-deck = ClueDeck(players)
-dealt_cards = deck.deal()
-
-for key, value in dealt_cards.items():
-    print(f"{key}: {value}")
-print()
-print("Secret deck:", deck.secret_deck)
 
