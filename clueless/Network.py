@@ -3,7 +3,6 @@ import socket
 import pickle
 import threading
 
-#HOST_ADDR = "192.168.1.24"
 HOST_ADDR = socket.gethostbyname(socket.gethostname())
 HOST_PORT = 8080
 

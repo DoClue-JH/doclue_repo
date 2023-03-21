@@ -5,6 +5,7 @@ from clueless.Network import Network
 import pickle
 import pygame
 
+DEFAULT_GAME = dict({'player_count': 0, 'player_turn_id': '0', 'player_turn_type': '', 'player_turn_details': ''})
 
 class Game:
     WIDTH = 875
@@ -26,16 +27,32 @@ class Game:
 
     def gameLoop(self):
 
+        prev_game_state = DEFAULT_GAME
+        print("You are Player ", self.id)
+
         while self.playing:
             self.tick()
             self.render()
 
             try:
-                #game = self.network.send_receive("get")
                 game_data = self.network.build_package("get", "")
                 #print(game_data)
                 game = self.network.send_receive(game_data)
-                #game = self.network.send_receive("get")
+
+                #receive updates
+                if game != prev_game_state:
+                    #print(game)
+                    game_player_id = game['player_turn_id']
+                    game_player_status = game['player_turn_type']
+                    game_player_turn = game['player_turn_details']
+
+                    if game_player_status == 'CHOOSING':
+                        print("Player taking turn: Player ", game_player_id)
+                        print("Player chooses to move to location ", game_player_turn)
+                        print()
+
+                    prev_game_state = game
+
             except:
                 run = False
                 print("Couldn't get game")
@@ -44,14 +61,6 @@ class Game:
             events = pygame.event.get()
             self.checkEvents(events)
             self.addView()
-
-            #receive updates
-            #update = self.network.receive()
-            
-            #if (update != self.id):
-            #    if(update[0] != self.id and update != prev_turn):
-            #        print("update: ", update)
-            #    prev_turn = update
             
         # when pygame.QUIT event happens, change self.playing to False 
         # the while loop will end and quit the game
