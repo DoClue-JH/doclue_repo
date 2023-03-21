@@ -15,7 +15,7 @@ class Game:
         pygame.init()
         
         self.network = Network()
-        self.id = int(self.network.get_player())
+        self.id = int(self.network.get_id())
         self.playing = True
         player_caption = "Clue-Less Player " + str(self.id)
         pygame.display.set_caption(player_caption)
@@ -31,8 +31,11 @@ class Game:
             self.render()
 
             try:
-                game = self.network.send("get")
-                #print("Connected to Server")
+                #game = self.network.send_receive("get")
+                game_data = self.network.build_package("get", "")
+                #print(game_data)
+                game = self.network.send_receive(game_data)
+                #game = self.network.send_receive("get")
             except:
                 run = False
                 print("Couldn't get game")
@@ -42,6 +45,14 @@ class Game:
             self.checkEvents(events)
             self.addView()
 
+            #receive updates
+            #update = self.network.receive()
+            
+            #if (update != self.id):
+            #    if(update[0] != self.id and update != prev_turn):
+            #        print("update: ", update)
+            #    prev_turn = update
+            
         # when pygame.QUIT event happens, change self.playing to False 
         # the while loop will end and quit the game
         pygame.quit()
@@ -69,7 +80,9 @@ class Game:
         if isRoomSelectionActive:
             self.state = "CHOOSING"
             board.loadRoomOptions(self.screen)
-            self.network.send((self.id, self.state, mousePos))
+            turn_data = self.network.build_package(self.state, str(mousePos))
+            #print(turn_data)
+            self.network.send(turn_data)
 
         #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
         closeRect = pygame.Rect(820, 570, 55, 30)
