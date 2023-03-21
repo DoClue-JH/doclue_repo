@@ -67,6 +67,10 @@ class Game:
 # Instantiate Deck class
 # Enter the number of players and their names
 num_players= int(input("Enter the number of players: "))
+
+assert num_players >= 3, f"At least 3 players can participate in this game."
+assert num_players < 6, f"The maximum number of players allowed is 6."
+
 players= []
 
 for i in range(num_players):
