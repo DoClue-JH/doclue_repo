@@ -65,8 +65,7 @@ class Game:
         self.clock.tick(self.FPS)
 
 # Instantiate Deck class
-# players = ["Katie", "Khue", "Kweku", "Megan", "Sely"]
-
+# Enter the number of players and their names
 num_players= int(input("Enter the number of players: "))
 players= []
 
