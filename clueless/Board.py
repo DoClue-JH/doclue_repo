@@ -76,8 +76,7 @@ class Board:
         roomOptions = OptionsBox.OptionsBox()
         return roomOptions.draw(screen)
     
-    def closeRoomOptions(self, screen):
+    def closeRoomOptions(self, screen, color):
 
         roomOptions = OptionsBox.OptionsBox()
-        roomOptions.closeOption(screen)
-
+        roomOptions.closeOption(screen, color)
