@@ -8,6 +8,7 @@ HOST_ADDR = socket.gethostbyname(socket.gethostname())
 HOST_PORT = 8080
 DEFAULT_TURN = dict({'header': 'none', 'player_id': '0', 'data': ''})
 DEFAULT_GAME = dict({'player_count': 0, 'player_turn_id': '0', 'player_turn_type': '', 'player_turn_details': ''})
+
 PLAYER_MAX = 6
 PLAYER_MIN = 3
 
