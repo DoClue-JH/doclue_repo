@@ -2,8 +2,6 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):    
-    WIDTH = 100
-    HEIGHT = 100
     
     def __init__(self, name, pos_x, pos_y, width, height, color):
         super().__init__()
