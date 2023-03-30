@@ -1,7 +1,8 @@
 # Game Module
 from sys import exit
-from clueless import Board
-from clueless import Player
+from clueless import Board, Button, Network
+from clueless.Network import Network
+import pickle
 import pygame
 import random
 
@@ -76,14 +77,6 @@ class Game:
     def addView(self):
         # Add board
         board = Board.Board()
-        # Add players
-        player_plum = Player.Player('Professor Plum', pos_x=60, pos_y=210)
-        player_mustard = Player.Player('Colonel Mustard', pos_x=560, pos_y=210)
-        player_scarlet = Player.Player('Miss Scarlet', pos_x=410, pos_y=60)
-        player_green = Player.Player('Mr Green', pos_x=210, pos_y=550)
-        player_white = Player.Player('Mrs White', pos_x=410, pos_y=550)
-        player_peacock = Player.Player('Mrs Peacock', pos_x=60, pos_y=410)
-        
         board.loadTiles(self.screen, board)
 
         # Initialize Buttons
@@ -94,6 +87,10 @@ class Game:
         isAccuseSelectionActive = board.loadButton(self.screen, "Accuse", buttonXPos, buttonYPos + buttonDistance)
         isSuggestSelectionActive = board.loadButton(self.screen, "Suggest", buttonXPos, buttonYPos + buttonDistance*2)
         isEndTurnSelectionActive = board.loadButton(self.screen, "End Turn", buttonXPos, buttonYPos + buttonDistance*3)
+        
+        # Initialize valid players 
+        # TO DO: players should be added to screen later depending on which tokens are chosen (here for now to test)
+        board.load_player_tokens(self.screen, board)
 
         mousePos = pygame.mouse.get_pos()
         if isRoomSelectionActive:
@@ -109,7 +106,6 @@ class Game:
             board.closeRoomOptions(self.screen, self.base_color)
             self.state = "START"
             isRoomSelectionActive = False
-        self.screen.blit(p.player_image,(75,75))
 
     def render(self):
         pygame.display.update()
