@@ -3,6 +3,7 @@ from sys import exit
 import Board, Button, Network
 from Network import Network
 from Deck import ClueDeck
+from Weapon_image import Weapon_Image
 import pickle
 import pygame
 import random
@@ -114,31 +115,51 @@ class Game:
         list_of_color = [(224,238,255), (203,204,255), (255,216,171), (255,234,253), (162,131,91), (110,137,215), (183,142,55), (234,231,240), (204,153,255), (126,135,145), (86,180,233), (0,0,0),(213,94,0), (255,255,255), (75,0,146), (64,176,166)]
         return list_of_color[random.randint(0,len(list_of_color)-1)]
 
-
+################################################################################
 # Instantiate Deck class
+# Remove Docstring to execute 
+''' 
 # Enter the number of players and their names
-num_players= int(input("Enter the number of players: "))
+# num_players= int(input("Enter the number of players: "))
 
-assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
- participate in this game."
+# assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
+#  participate in this game."
 
-players= []
+# players= []
 
-for i in range(num_players):
-    player_name= input(f"Enter the name of player {i+1}: ")
-    players.append(player_name)
-print("List of players=", players)   
-print()
+# for i in range(num_players):
+#     player_name= input(f"Enter the name of player {i+1}: ")
+#     players.append(player_name)
+# print("List of players=", players)   
+# print()
 
-deck = ClueDeck(players)
-dealt_cards = deck.deal()
+# deck = ClueDeck(players)
+# dealt_cards = deck.deal()
 
-for key, value in dealt_cards.items():
-    print(f"{key}: {value}")
-print()
-print("Secret deck:", deck.secret_deck)
+# for key, value in dealt_cards.items():
+#     print(f"{key}: {value}")
+# print()
+# print("Secret deck:", deck.secret_deck)
 
-for key, value in dealt_cards.items():
-    print(f"{key}: {value}")
-print()
-print("Secret deck:", deck.secret_deck)
+# for key, value in dealt_cards.items():
+#     print(f"{key}: {value}")
+# print()
+# print("Secret deck:", deck.secret_deck)
+'''
+################################################################################
+
+#Instatiate Weapon_Image Class 
+# Remove Docstring to execute 
+'''
+weapon_dict= {
+    'Dagger':'dagger.png', 'Candlestick':'candlestick.png', 'Wrench': 'wrench.png',
+    'Leadpipe':'leadpipe.png', 'Revolver': 'revolver.png', 'Rope': 'rope.png'
+}
+
+wep_img= Weapon_Image()
+
+# Enter the number of players and their names
+weapon_name= input("State the name of your 'Weapon' to display image: ")
+wep_img.display_weapon_image(weapon_dict[weapon_name])
+'''
+################################################################################

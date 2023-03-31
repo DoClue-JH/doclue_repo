@@ -1,5 +1,5 @@
 import random
-from weapon import Weapon
+from Weapon import Weapon
 
 class ClueDeck:
     def __init__(self, players):
@@ -50,7 +50,7 @@ class ClueDeck:
 # Instantiate    
 weapon1 = Weapon("Rope")
 weapon2 = Weapon("Lead Pipe")
-weapon3 = Weapon("Knife")
+weapon3 = Weapon("Dagger")
 weapon4 = Weapon("Wrench")
 weapon5 = Weapon("Candlestick")
 weapon6 = Weapon("Revolver")
