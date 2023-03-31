@@ -1,13 +1,9 @@
 # Game Module
 from sys import exit
-<<<<<<< HEAD
-from Board import Board
+import Board, Button, Network
+from Network import Network
 from Deck import ClueDeck
-=======
-from clueless import Board, Button, Network
-from clueless.Network import Network
 import pickle
->>>>>>> main
 import pygame
 import random
 
@@ -114,7 +110,11 @@ class Game:
     def tick(self):
         self.clock.tick(self.FPS)
 
-<<<<<<< HEAD
+    def randomise_color(self):
+        list_of_color = [(224,238,255), (203,204,255), (255,216,171), (255,234,253), (162,131,91), (110,137,215), (183,142,55), (234,231,240), (204,153,255), (126,135,145), (86,180,233), (0,0,0),(213,94,0), (255,255,255), (75,0,146), (64,176,166)]
+        return list_of_color[random.randint(0,len(list_of_color)-1)]
+
+
 # Instantiate Deck class
 # Enter the number of players and their names
 num_players= int(input("Enter the number of players: "))
@@ -137,8 +137,8 @@ for key, value in dealt_cards.items():
     print(f"{key}: {value}")
 print()
 print("Secret deck:", deck.secret_deck)
-=======
-    def randomise_color(self):
-        list_of_color = [(224,238,255), (203,204,255), (255,216,171), (255,234,253), (162,131,91), (110,137,215), (183,142,55), (234,231,240), (204,153,255), (126,135,145), (86,180,233), (0,0,0),(213,94,0), (255,255,255), (75,0,146), (64,176,166)]
-        return list_of_color[random.randint(0,len(list_of_color)-1)]
->>>>>>> main
+
+for key, value in dealt_cards.items():
+    print(f"{key}: {value}")
+print()
+print("Secret deck:", deck.secret_deck)

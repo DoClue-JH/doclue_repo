@@ -1,6 +1,6 @@
 # Board Module
 import pygame
-from clueless import Button, OptionsBox
+import Button, OptionsBox
 from pathlib import Path
 
 class Board:
