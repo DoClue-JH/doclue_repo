@@ -118,7 +118,7 @@ class Game:
 ################################################################################
 # Instantiate Deck class
 # Remove docstring to execute 
-''' 
+
 #Enter the number of players and their names
 num_players= int(input("Enter the number of players: "))
 
@@ -140,7 +140,7 @@ for key, value in dealt_cards.items():
     print(f"{key}: {value}")
 print()
 print("Secret deck:", deck.secret_deck)
-'''
+
 ################################################################################
 
 #Instatiate Weapon_Image Class 
