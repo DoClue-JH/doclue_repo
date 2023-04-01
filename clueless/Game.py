@@ -117,39 +117,34 @@ class Game:
 
 ################################################################################
 # Instantiate Deck class
-# Remove Docstring to execute 
+# Remove docstring to execute 
 ''' 
-# Enter the number of players and their names
-# num_players= int(input("Enter the number of players: "))
+#Enter the number of players and their names
+num_players= int(input("Enter the number of players: "))
 
-# assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
-#  participate in this game."
+assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
+ participate in this game."
 
-# players= []
+players= []
 
-# for i in range(num_players):
-#     player_name= input(f"Enter the name of player {i+1}: ")
-#     players.append(player_name)
-# print("List of players=", players)   
-# print()
+for i in range(num_players):
+    player_name= input(f"Enter the name of player {i+1}: ")
+    players.append(player_name)
+print("List of players=", players)   
+print()
 
-# deck = ClueDeck(players)
-# dealt_cards = deck.deal()
+deck = ClueDeck(players)
+dealt_cards = deck.deal()
 
-# for key, value in dealt_cards.items():
-#     print(f"{key}: {value}")
-# print()
-# print("Secret deck:", deck.secret_deck)
-
-# for key, value in dealt_cards.items():
-#     print(f"{key}: {value}")
-# print()
-# print("Secret deck:", deck.secret_deck)
+for key, value in dealt_cards.items():
+    print(f"{key}: {value}")
+print()
+print("Secret deck:", deck.secret_deck)
 '''
 ################################################################################
 
 #Instatiate Weapon_Image Class 
-# Remove Docstring to execute 
+# Remove docstring to execute 
 '''
 weapon_dict= {
     'Dagger':'dagger.png', 'Candlestick':'candlestick.png', 'Wrench': 'wrench.png',

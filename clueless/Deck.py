@@ -55,4 +55,4 @@ weapon4 = Weapon("Wrench")
 weapon5 = Weapon("Candlestick")
 weapon6 = Weapon("Revolver")
 
-
+#Note that this class is called in Game.py
