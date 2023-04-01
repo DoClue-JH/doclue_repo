@@ -153,8 +153,8 @@ weapon_dict= {
 
 wep_img= Weapon_Image()
 
-# Enter the number of players and their names
-weapon_name= input("State the name of your 'Weapon' to display image: ")
+# Enter the name of your Weapon
+weapon_name= input("State the name of your Weapon (first letter capitalized) to display image: ")
 wep_img.display_weapon_image(weapon_dict[weapon_name])
 '''
 ################################################################################
