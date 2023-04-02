@@ -1,12 +1,11 @@
 import random
-from Weapon import Weapon
 
 class ClueDeck:
     def __init__(self, players):
         self.players = players
         self.characters = ["Miss Scarlett", "Colonel Mustard", "Mrs. White", "Mr. Green", "Mrs. Peacock", "Professor Plum"]
         self.rooms = ["Kitchen", "Ballroom", "Conservatory", "Dining Room", "Billiard Room", "Library", "Lounge", "Hall", "Study"]
-        self.weapons = [weapon1, weapon2, weapon3, weapon4, weapon5, weapon6]
+        self.weapons = ["Rope", "Lead Pipe", "Dagger", "Wrench", "Candlestick", "Revolver"]
 
         # Choose one random character, room, and weapon for the secret deck
         self.secret_deck = [
@@ -46,13 +45,5 @@ class ClueDeck:
         
         # Return a dictionary in the format of player: [dealt cards]
         return dealt_cards
-    
-# Instantiate    
-weapon1 = Weapon("Rope")
-weapon2 = Weapon("Lead Pipe")
-weapon3 = Weapon("Dagger")
-weapon4 = Weapon("Wrench")
-weapon5 = Weapon("Candlestick")
-weapon6 = Weapon("Revolver")
 
 #Note that this class is called in Game.py
