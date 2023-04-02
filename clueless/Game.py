@@ -120,6 +120,7 @@ class Game:
 # Remove docstring to execute 
 
 #Enter the number of players and their names
+'''
 num_players= int(input("Enter the number of players: "))
 
 assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
@@ -140,12 +141,12 @@ for key, value in dealt_cards.items():
     print(f"{key}: {value}")
 print()
 print("Secret deck:", deck.secret_deck)
-
+'''
 ################################################################################
 
 #Instatiate Weapon_Image Class 
 # Remove docstring to execute 
-'''
+
 weapon_dict= {
     'Dagger':'dagger.png', 'Candlestick':'candlestick.png', 'Wrench': 'wrench.png',
     'Leadpipe':'leadpipe.png', 'Revolver': 'revolver.png', 'Rope': 'rope.png'
@@ -156,5 +157,5 @@ wep_img= Weapon_Image()
 # Enter the name of your Weapon
 weapon_name= input("State the name of your Weapon (first letter capitalized) to display image: ")
 wep_img.display_weapon_image(weapon_dict[weapon_name])
-'''
+
 ################################################################################
