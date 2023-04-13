@@ -22,14 +22,18 @@ class Player:
     def update():
         pass
 
-    def get_player_status():
-        pass
+    # Returns the player's status corresponding to actively playing, passively playing (lost), or unchosen
+    def get_player_status(self):
+        return self.player_status
 
-    def set_player_status():
-        pass
+    # Update the player's status
+    def set_player_status(self, PLAYER_STATUS):
+        self.player_status = PLAYER_STATUS
     
-    def get_notebook():
-        pass
+    # Returns the player's notebook
+    def get_notebook(self):
+        return self.player_notebook
 
-    def get_hand():
-        pass
+    # Returns the player's hand, Deck of Cards
+    def get_hand(self):
+        return self.player_hand
