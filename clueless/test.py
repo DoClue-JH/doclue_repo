@@ -16,6 +16,14 @@ class ClueDeck:
         self.deck = [card for card in (self.card.CARD_TYPES['character'] + self.card.CARD_TYPES['room'] + self.card.CARD_TYPES['weapon']) if card not in self.secret_deck]
         random.shuffle(self.deck)
 
+        # self.deck=[]
+        # for card in (self.card.CARD_TYPES['character'] + self.card.CARD_TYPES['room']\
+        #               + self.card.CARD_TYPES['weapon']):
+        #     if card not in self.secret_deck:
+        #         self.deck.append(card)
+        # random.shuffle(self.deck)
+
+    
     # Deal out cards to players 
     def deal(self):
         num_players = len(self.players)
@@ -45,7 +53,7 @@ class ClueDeck:
         return dealt_cards
 
     def compare_deck(self, deck1, deck2):
-        
+
         # Convert the decks to sets for faster comparison
         set_deck1 = set(deck1)
         set_deck2 = set(deck2)
@@ -55,8 +63,33 @@ class ClueDeck:
 
         return f"There are {len(matching_cards)} matching cards: {matching_cards}"
         
-    # A method to output the functions in a deck
+
     def get_deck(self, deck):
             return deck.copy()
 
-#Note that this class is called in Game.py
+
+# Instantiate Deck class
+# Remove docstring to execute 
+
+#Enter the number of players and their names
+
+num_players= int(input("Enter the number of players: "))
+print()
+assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
+ participate in this game."
+
+players= []
+
+for i in range(num_players):
+    player_name= input(f"Enter the name of player {i+1}: ")
+    players.append(player_name)
+print("List of players=", players)   
+print()
+
+deck = ClueDeck(players)
+dealt_cards = deck.deal()
+
+for key, value in dealt_cards.items():
+    print(f"{key}: {value}")
+print()
+print("Secret deck:", deck.secret_deck)
