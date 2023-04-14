@@ -11,9 +11,21 @@ class Player:
         self.player_notebook = player_notebook                  # Dict
 
     ''' GETTER FUNCTIONS '''
+    # Returns the player's name
+    def get_player_name(self):
+        return self.player_name
+
+    # Returns the player's iD
+    def get_player_id(self):
+        return self.player_id
+        
     # Returns the player's status corresponding to actively playing, passively playing (lost), or unchosen
     def get_player_status(self):
         return self.player_status
+    
+    # Returns the player's turn status
+    def get_turn_status(self):
+        return self.turn_status
     
     # Returns the player's notebook
     def get_notebook(self):
@@ -22,8 +34,17 @@ class Player:
     # Returns the player's hand, Deck of Cards
     def get_hand(self):
         return self.player_hand
-    
-    
+ 
+    # Returns the player's old location
+    def get_player_old_location(self):
+        return self.player_old_location   
+ 
+    # Returns the player's old location
+    def get_player_current_location(self):
+        return self.player_current_location    
+      
+      
+      
     ''' SETTER FUNCTIONS '''
     # Update the player's old location and current location
     def update(self, new_location):
