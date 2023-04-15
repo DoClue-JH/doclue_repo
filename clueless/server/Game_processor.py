@@ -236,25 +236,6 @@ def validate_move(board_dict, player, destination):
     def accuse(self, player, weapon, room):
         accusation = {'player': player, 'weapon': weapon, 'room': room}
         self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
-        
-        '''
-        player_tokens : list
-        player_status :  (player who just finished a turn?)
-        turn_status : TURN_STATUS
-            Movement
-            Accusation  
-            Suggestion
-        suggest_result : string
-            Non-empty, card value of match if match
-        accuse_result : string
-            Non-empty, “correct” if match
-        accuse_info : dict 
-            Non-empty, {‘player_name’: accused_deck}
-        If_placed: bool
-            If player token was moved on a previous turn
-        Player_location: string
-            Name of tile where the player is located
-        '''
         # If accusation is correct
         if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
             self.game_over = True
