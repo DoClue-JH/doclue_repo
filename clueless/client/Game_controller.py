@@ -140,17 +140,17 @@ class Game_controller:
         list_of_color = [(224,238,255), (203,204,255), (255,216,171), (255,234,253), (162,131,91), (110,137,215), (183,142,55), (234,231,240), (204,153,255), (126,135,145), (86,180,233), (0,0,0),(213,94,0), (255,255,255), (75,0,146), (64,176,166)]
         return list_of_color[random.randint(0,len(list_of_color)-1)]
 
-    def display_update(self, message_dict): # dictionary
+    def display_update(self, message_dict): 
         '''
-        INPUT: message_dict dictionary containing the following key-value pairs
+        INPUT: message_dict : dictionary containing the following key-value pairs
                 'message_type' : 'type of message determines where and who sees message'
                 'message_to' : 'player names to display message to'
                 'message' : 'some text message to display on screen'
-        OUTPUT:
+        OUTPUT: N/A
         '''
         board = Client_game_board.Client_game_board()
         update_text = message_dict['message']
-        # Read dictionary message type to decide which screens get this message
+        # Read dictionary message type to know which screens get this message
         #   Map client network ID to players
         
         # Map message type to text message

@@ -1,5 +1,7 @@
 class Player:
     
+    # Reduce initialization!! 
+    
     def __init__(self, player_name, player_id, player_current_location, player_old_location, player_hand, turn_status, player_status, player_notebook):
         self.player_name = player_name                          # string
         self.player_id = player_id                              # int
