@@ -1,3 +1,7 @@
+import socket
+import pickle
+import threading
+
 class Game_message_handler:
 
     def __init__(self):
@@ -14,3 +18,12 @@ class Game_message_handler:
 
     def build_return_package():
         pass
+    
+    
+## MEGAN TESTING GROUNDS
+    def test_process_sent_package(self):
+        try:
+            return pickle.loads(self.client.recv(4096))
+        except socket.error as err:
+            print(err)
+

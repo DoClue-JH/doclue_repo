@@ -30,8 +30,8 @@ def threaded_client(conn, player_id, game):
         try:
             #print("Server receiving player data")
             player_data = pickle.loads(conn.recv(4096))
-            #print(player_data)
-            #print("Server received player data")
+            print(player_data)
+            print("Server received player data")
 
             if not player_data:
                 print("Disconnected")

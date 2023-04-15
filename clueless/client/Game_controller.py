@@ -110,12 +110,12 @@ class Game_controller:
             self.state = "ACCUSING"
             board.load_options(self.screen, self.state, events)
             # Prepare accuse data to be packaged by Client_msg_handler
-            package_data = {'current_player':'',
-                            'character':'',
+            package_data = {'current_player':'megan', 
+                            'character':'mrs white',
                             'weapon':'rope',
                             'room':'study'}
-            # turn_data = self.network.build_package(self.state, package_data)
-            turn_data = self.network.build_package(self.state, str(mousePos))
+            turn_data = self.network.build_package(self.state, package_data)
+            # turn_data = self.network.build_package(self.state, str(mousePos))
             #print(turn_data)
             self.network.send(turn_data)
 

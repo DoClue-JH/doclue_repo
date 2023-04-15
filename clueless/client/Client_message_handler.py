@@ -33,14 +33,14 @@ class Client_message_handler:
             print(err)
 
     def send(self, data):
-        #print("Player sending information to the Server")
+        print("Player sending information to the Server")
         try:
             self.client.send(pickle.dumps(data))
         except socket.error as err:
             print(err)
 
     def receive(self):
-        #print("Player receiving information from the Server")
+        print("Player receiving information from the Server")
         try:
             return pickle.loads(self.client.recv(4096))
         except socket.error as err:

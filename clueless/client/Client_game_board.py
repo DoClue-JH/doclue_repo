@@ -126,7 +126,7 @@ class Client_game_board:
 
     def load_options(self, screen, state, events):
 
-        room_options = Options_Box.OptionsBox()
+        room_options = Options_Box.Options_Box()
         if (state == "CHOOSING_ROOM"):
             return room_options.draw_room_options(screen)
         elif (state == "ACCUSING"):
