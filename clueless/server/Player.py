@@ -1,16 +1,15 @@
 class Player:
-    
-    # Reduce initialization!! 
-    
-    def __init__(self, player_name, player_id, player_current_location, player_old_location, player_hand, turn_status, player_status, player_notebook):
+        
+    def __init__(self, player_name, player_id, player_current_location):
         self.player_name = player_name                          # string
         self.player_id = player_id                              # int
         self.player_current_location = player_current_location  # Tile
-        self.player_old_location = player_old_location          # Tile
-        self.player_hand = player_hand                          # Deck
-        self.turn_status = turn_status                          # Enum (int)
-        self.player_status = player_status                      # Enum (int)
-        self.player_notebook = player_notebook                  # Dict
+        self.player_old_location = None         
+        self.player_hand = None                                 # Deck
+        self.turn_status = 'FIRST'                              # Enum (int)
+        self.player_status = 'ACTIVE'                           # Enum (int)
+        # TO DO initialize dict from all tokens, weapons, room : 'unknown'
+        self.player_notebook = dict                             # Dict
 
     ''' GETTER FUNCTIONS '''
     # Returns the player's name
