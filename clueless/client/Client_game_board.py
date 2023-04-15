@@ -1,9 +1,9 @@
 # Board Module
 import pygame
-from clueless.frontend import Token
+from clueless.client import Options_Box, Token
 from pathlib import Path
 
-from clueless.frontend import Button, OptionsBox
+from clueless.client import Button
 
 data_folder = Path("clueless/data/graphics/")
 
@@ -126,7 +126,7 @@ class Client_game_board:
 
     def load_options(self, screen, state, events):
 
-        room_options = OptionsBox.OptionsBox()
+        room_options = Options_Box.OptionsBox()
         if (state == "CHOOSING_ROOM"):
             return room_options.draw_room_options(screen)
         elif (state == "ACCUSING"):
@@ -138,6 +138,11 @@ class Client_game_board:
     
     def close_room_options(self, screen, color):
 
-        room_options = OptionsBox.OptionsBox()
+        room_options = Options_Box.OptionsBox()
         room_options.close_option(screen, color)
 
+    def display_update(self, screen, board, update_text):        
+        pygame.font.init() 
+        my_font = pygame.font.SysFont(None, 30)
+        text_surface = my_font.render(update_text, False, (0, 0, 0))
+        screen.blit(text_surface, (650, 300))
