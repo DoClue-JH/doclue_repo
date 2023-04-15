@@ -157,7 +157,7 @@ class Game:
     
     
 # ---------- MEGAN TESTING GROUNDS ----------
-
+# ---------- within Game class ----------
 # (1) assume this is done
 #   Game_message_handler.test_process_sent_package() --> 
 package_data = {'current_player':'megan', 
@@ -170,24 +170,24 @@ accuse_result = Game_processor.accuse(package_data['player'], package_data['weap
 #   returns True or False
 # (3) build server_status by Game_message_handler.build_return_package()
 '''
-player_tokens : list
-player_status :  (player who just finished a turn?)
-turn_status : TURN_STATUS
-    Movement
-    Accusation  
-    Suggestion
-suggest_result : string
-    Non-empty, card value of match if match
-accuse_result : string
-    Non-empty, “correct” if match
-accuse_info : dict 
-    Non-empty, [‘player_name’+accused_deck]
-if_placed: bool
-    If player token was moved on a previous turn
-player_location: string
-    Name of tile where the player is located
+    player_tokens : list
+    player_status :  (player who just finished a turn?)
+    turn_status : TURN_STATUS
+        Movement
+        Accusation  
+        Suggestion
+    suggest_result : string
+        Non-empty, card value of match if match
+    accuse_result : string
+        Non-empty, “correct” if match
+    accuse_info : dict 
+        Non-empty, [‘player_name’+accused_deck]
+    if_placed: bool
+        If player token was moved on a previous turn
+    player_location: string
+        Name of tile where the player is located
 '''
-server_status = {'player_tokens':[], # all player tokens?
+server_status = {'player_tokens':[], # all player tokens, self.players from Game
                  'player_status':'',
                  'turn_status':'Accusation',
                  'suggest_result':'',
@@ -199,7 +199,12 @@ if accuse_result:
     server_status['accuse_result'] = 'CORRECT' 
 else:
     server_status['accuse_result'] = 'INCORRECT' 
+    server_status['player_status'] = 'LOST' 
     
 # (4) send server_status by Game_message_handler.send_game_update()
+Game_message_handler.test_send_game_update(server_status)
 
-# (4) Client_message_handler.receive()
+
+
+# ---------- outside Game class ----------
+# (5) Client_message_handler.receive()
