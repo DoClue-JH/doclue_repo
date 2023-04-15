@@ -85,6 +85,25 @@ class Game_processor:
     def accuse(self, player, weapon, room):
         accusation = {'player': player, 'weapon': weapon, 'room': room}
         self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
+        
+        '''
+        player_tokens : list
+        player_status :  (player who just finished a turn?)
+        turn_status : TURN_STATUS
+            Movement
+            Accusation  
+            Suggestion
+        suggest_result : string
+            Non-empty, card value of match if match
+        accuse_result : string
+            Non-empty, “correct” if match
+        accuse_info : dict 
+            Non-empty, {‘player_name’: accused_deck}
+        If_placed: bool
+            If player token was moved on a previous turn
+        Player_location: string
+            Name of tile where the player is located
+        '''
         # If accusation is correct
         if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
             self.game_over = True
@@ -93,7 +112,7 @@ class Game_processor:
         # If accusation is incorrect
         else: 
             # TO DO 
-            # set player to lost/inactive
+            # set player_status = LOST/INACTIVE
             # only display lost and case file to losing player
             # continue to next turn
             return False
@@ -104,22 +123,23 @@ class Game_processor:
         #   Game_message_handler build_return_package()
         #   someone send package to Client_message_handler
 
+    # 4/15/23: validate_accusation moved to front-end
     # This method checks if an accusation is valid. It returns a Boolean value 
     # indicating whether or not the accusation is valid.   
-    def validate_accusation(self, accusation):
-        '''
-        INPUT: accusation : list of three user inputs
-        OUTPUT: True if accusation is valid, False otherwise
-        '''
-        # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
-        has_weapon = False
-        has_token = False
-        has_room = False
-        for guess in accusation:
-            if guess in self.WEAPONS: has_weapon = True
-            elif guess in self.TOKENS: has_token = True
-            elif guess in self.ROOMS: has_room = True
-        return has_weapon and has_token and has_room
+    # def validate_accusation(self, accusation):
+    #     '''
+    #     INPUT: accusation : list of three user inputs
+    #     OUTPUT: True if accusation is valid, False otherwise
+    #     '''
+    #     # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
+    #     has_weapon = False
+    #     has_token = False
+    #     has_room = False
+    #     for guess in accusation:
+    #         if guess in self.WEAPONS: has_weapon = True
+    #         elif guess in self.TOKENS: has_token = True
+    #         elif guess in self.ROOMS: has_room = True
+    #     return has_weapon and has_token and has_room
     
     # This method returns the list of accusations made by a specific player.
     def get_accusations_for_player(self, player):

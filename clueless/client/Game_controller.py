@@ -96,7 +96,6 @@ class Game_controller:
         isEndTurnSelectionActive = board.load_button(self.screen, "End Turn", button_X_Pos, button_Y_Pos + button_distance*3)
         
         # Initialize valid players 
-        # TO DO: players should be added to screen later depending on which tokens are chosen (here for now to test)
         board.load_player_tokens(self.screen, board)
 
         mousePos = pygame.mouse.get_pos()
@@ -110,6 +109,12 @@ class Game_controller:
         if is_Accuse_Selection_Active:
             self.state = "ACCUSING"
             board.load_options(self.screen, self.state, events)
+            # Prepare accuse data to be packaged by Client_msg_handler
+            package_data = {'current_player':'',
+                            'character':'',
+                            'weapon':'rope',
+                            'room':'study'}
+            # turn_data = self.network.build_package(self.state, package_data)
             turn_data = self.network.build_package(self.state, str(mousePos))
             #print(turn_data)
             self.network.send(turn_data)
