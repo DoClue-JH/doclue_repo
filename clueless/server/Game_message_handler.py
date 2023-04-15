@@ -27,3 +27,9 @@ class Game_message_handler:
         except socket.error as err:
             print(err)
 
+    def test_send_game_update(self, data):
+        print("Server sending information to clients")
+        try:
+            self.client.send(pickle.dumps(data)) # client to be changed to server
+        except socket.error as err:
+            print(err)
