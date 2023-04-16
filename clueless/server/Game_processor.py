@@ -137,15 +137,15 @@ class Game_processor:
 
 
 
-# create a new game
-game = GameLogic()
+# # create a new game
+# game = GameLogic()
 
-# make a suggestion by player 1
-game.suggestions("player1", "wrench", "study", "player2")
+# # make a suggestion by player 1
+# game.suggestions("player1", "wrench", "study", "player2")
 
-# validate the suggestion
-is_valid = game.validate_suggestion(("player1", "wrench", "study", "player2"))
-if is_valid:
-    print("Valid suggestion!")
-else:
-    print("Invalid suggestion.")
+# # validate the suggestion
+# is_valid = game.validate_suggestion(("player1", "wrench", "study", "player2"))
+# if is_valid:
+#     print("Valid suggestion!")
+# else:
+#     print("Invalid suggestion.")

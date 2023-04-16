@@ -33,3 +33,25 @@ class Game_message_handler:
             self.client.send(pickle.dumps(data)) # client to be changed to server
         except socket.error as err:
             print(err)
+    
+    # what would state be? do we need it?
+    def test_build_return_package(self, state, contents):         
+        # status = state
+        # package = dict({'header': status, 'player_id': self.id, 'data': contents})
+        server_status = {'player_tokens':[], # all player tokens, self.players from Game
+                 'player_status':'',
+                 'turn_status':'Accusation',
+                 'suggest_result':'',
+                 'accuse_result':'',
+                 'accuse_info':[contents['current_player'], contents['player'], contents['weapon'], contents['room']],
+                 'if_placed':'',
+                 'player_location':''}
+        # Build package for accusation result if state is accusation
+        if state == 'ACCUSATION':
+            accuse_result = contents['accuse_result']
+            if accuse_result:
+                server_status['accuse_result'] = 'CORRECT' 
+            else:
+                server_status['accuse_result'] = 'INCORRECT' 
+                server_status['player_status'] = 'LOST' 
+        return server_status
