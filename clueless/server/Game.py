@@ -166,9 +166,12 @@ package_data = {'current_player':'megan',
                 'room':'study'}
 
 # (2) call accuse in game_processor feeding in package info
-accuse_result = Game_processor.accuse(package_data['player'], package_data['weapon'], package_data['room'])
 #   returns True or False
-# (3) build server_status by Game_message_handler.build_return_package()
+accuse_result = Game_processor.accuse(package_data['player'], package_data['weapon'], package_data['room'])
+# Build contents by adding accuse_result
+contents = package_data.copy()
+contents['accuse_result'] = accuse_result
+# (3) TO IMPLEMENT build server_status by Game_message_handler.test_build_return_package(state, contents): 
 '''
     player_tokens : list
     player_status :  (player who just finished a turn?)
@@ -187,6 +190,7 @@ accuse_result = Game_processor.accuse(package_data['player'], package_data['weap
     player_location: string
         Name of tile where the player is located
 '''
+# ---------- inside Game class or inside Game_message_handler? ----------
 server_status = {'player_tokens':[], # all player tokens, self.players from Game
                  'player_status':'',
                  'turn_status':'Accusation',
@@ -201,10 +205,10 @@ else:
     server_status['accuse_result'] = 'INCORRECT' 
     server_status['player_status'] = 'LOST' 
     
-# (4) send server_status by Game_message_handler.send_game_update()
-Game_message_handler.test_send_game_update(server_status)
+# (4) TO IMPLEMENT send server_status by Game_message_handler.send_game_update()
+# Game_message_handler.test_send_game_update(server_status)
 
 
 
 # ---------- outside Game class ----------
-# (5) Client_message_handler.receive()
+# (5) TO TEST Client_message_handler.receive()
