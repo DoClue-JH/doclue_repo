@@ -28,7 +28,10 @@ class Tile:
         return self.adjacent_tiles
     
     def get_is_occupied(self):
-        return self.is_occupied
+        if (self.get_tile_num_players() == 0) or (self.get_tile_type() == "room" and self.get_tile_num_players() >= 1):
+            return False
+        elif self.tile_type == "hallway" and self.get_tile_num_players() == 1:
+            return True
 
 ### SETTERS ###
     def set_occupied(self):
