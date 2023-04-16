@@ -1,7 +1,7 @@
 # Game Module
 from sys import exit
 from clueless.client.Client_message_handler import Client_message_handler
-from clueless.server.Deck import ClueDeck
+from clueless.server.Deck import Deck
 from clueless.client.Weapon_image import Weapon_Image
 from clueless.client import Button, Client_game_board
 import pickle
@@ -147,7 +147,7 @@ assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
  participate in this game."
 
 players= []
-deck= ClueDeck()
+deck= Deck()
 print(deck.get_secret_deck())
 print()
 print(deck.get_deck())

@@ -1,6 +1,6 @@
 import random
 
-class ClueDeck:
+class Deck:
     def __init__(self):
         # self.num_players = num_players
         self.characters = {"Miss Scarlet": "character", "Colonel Mustard": "character", "Mrs. White": "character", "Mr. Green": "character", "Mrs. Peacock": "character", "Professor Plum": "character"}
@@ -61,7 +61,7 @@ class ClueDeck:
 
 # Driver code
 # This should can be called in the game class
-deck= ClueDeck()
+deck= Deck()
 players= ["katie","megan", "kweku", "sely", "khue"]
 print(deck.get_secret_deck())
 print()
