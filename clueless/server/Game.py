@@ -97,30 +97,3 @@ board_tiles = {
     'hw_11' : tile_hw_11,
     'hw_12' : tile_hw_12
     }
-
-def prompt_move(player):
-    print()
-    print("===============================")
-    print("       **Movement Phase**      ")
-    print("      **", player.player_name, "**")
-    print("===============================")
-    print()
-    print("Instructions:")
-    print("If this is your first turn, go ahead and enter whatever you want;")
-    print("your character has a predetermined first move. Otherwise, please")
-    print("type in a room from the list of rooms given to you without the ")
-    print("apostrophes. Please note that the names are case-sensitive!")
-    print()
-
-    player_input_tile = input("Where do you want to go? \n")
-    return player_input_tile
-
-# ms_scarlet = Player("Ms. Scarlet", 1, None)
-# input_string = prompt_move(ms_scarlet)
-# move(board_tiles, ms_scarlet, input_string)
-
-# input_string = prompt_move(ms_scarlet)
-# move(board_tiles, ms_scarlet, input_string)
-
-#move(board_tiles, ms_scarlet, "Hall")
-#move(board_tiles, ms_scarlet, "Study")
