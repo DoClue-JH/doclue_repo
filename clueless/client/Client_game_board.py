@@ -26,81 +26,81 @@ class Client_game_board:
         self.study_room_rect = self.study_room_surface.get_rect(topleft=(100,85))
         self.tile_rect_dict["study_room"] = [self.study_room_rect, (100,85)]
 
-        self.study_room_surface_suggest = pygame.transform.scale(self.study_room_surface, (110, 90))
-        self.study_room_rect_suggest = self.study_room_surface_suggest.get_rect(topleft=(35,440))
-        self.room_dict["study_room"] = [self.study_room_rect_suggest, (35,440),"room",False]
+        self.study_room_surface_accuse = pygame.transform.scale(self.study_room_surface, (110, 90))
+        self.study_room_rect_accuse = self.study_room_surface_accuse.get_rect(topleft=(35,440))
+        self.room_dict["study_room"] = [self.study_room_rect_accuse, (35,440),"room",False]
 
         self.hall_surface = pygame.image.load(data_folder / 'hall.png').convert_alpha()
         self.hall_surface = pygame.transform.scale(self.hall_surface, (130, 135))
         self.hall_rect = self.hall_surface.get_rect(topleft=(290,90))
         self.tile_rect_dict["hall"] = [self.hall_rect, (290,90)]
 
-        self.hall_surface_suggest = pygame.transform.scale(self.hall_surface, (100, 105))
-        self.hall_rect_suggest = self.hall_surface_suggest.get_rect(topleft=(160,440))
-        self.room_dict["hall"] = [self.hall_rect_suggest, (155,440),"room",False]
+        self.hall_surface_accuse = pygame.transform.scale(self.hall_surface, (100, 105))
+        self.hall_rect_accuse = self.hall_surface_accuse.get_rect(topleft=(160,440))
+        self.room_dict["hall"] = [self.hall_rect_accuse, (155,440),"room",False]
 
         self.lounge_surface = pygame.image.load(data_folder / 'lounge.png').convert_alpha()
         self.lounge_surface = pygame.transform.scale(self.lounge_surface, (120, 140))
         self.lounge_rect = self.lounge_surface.get_rect(topleft=(480,100))
         self.tile_rect_dict["lounge"] = [self.lounge_rect, (480,100)]
 
-        self.lounge_surface_suggest = pygame.transform.scale(self.lounge_surface, (90, 110))
-        self.lounge_rect_suggest = self.lounge_surface_suggest.get_rect(topleft=(260,440))
-        self.room_dict["lounge"] = [self.lounge_rect_suggest, (260,440),"room",False]
+        self.lounge_surface_accuse = pygame.transform.scale(self.lounge_surface, (90, 110))
+        self.lounge_rect_accuse = self.lounge_surface_accuse.get_rect(topleft=(260,440))
+        self.room_dict["lounge"] = [self.lounge_rect_accuse, (260,440),"room",False]
 
         self.library_surface = pygame.image.load(data_folder / 'library.png').convert_alpha()
         self.library_surface = pygame.transform.scale(self.library_surface, (135, 125))
         self.library_rect = self.library_surface.get_rect(topleft=(90,300))
         self.tile_rect_dict["library"] = [self.library_rect, (90,300)]
 
-        self.library_surface_suggest = pygame.transform.scale(self.library_surface, (95, 85))
-        self.library_rect_suggest = self.library_surface_suggest.get_rect(topleft=(365,440))
-        self.room_dict["library"] = [self.library_rect_suggest, (365,440),"room",False]
+        self.library_surface_accuse = pygame.transform.scale(self.library_surface, (95, 85))
+        self.library_rect_accuse = self.library_surface_accuse.get_rect(topleft=(365,440))
+        self.room_dict["library"] = [self.library_rect_accuse, (365,440),"room",False]
 
         self.billiard_room_surface = pygame.image.load(data_folder / 'billiard.png').convert_alpha()
         self.billiard_room_surface = pygame.transform.scale(self.billiard_room_surface, (140, 120))
         self.billiard_room_rect = self.billiard_room_surface.get_rect(topleft=(280,290))
         self.tile_rect_dict["billiard_room"] = [self.billiard_room_rect, (280,290)]
 
-        self.billiard_room_surface_suggest = pygame.transform.scale(self.billiard_room_surface, (95, 95))
-        self.billiard_room_rect_suggest = self.billiard_room_surface_suggest.get_rect(topleft=(470,440))
-        self.room_dict["billiard_room"] = [self.billiard_room_rect_suggest, (470,440),"room",False]
+        self.billiard_room_surface_accuse = pygame.transform.scale(self.billiard_room_surface, (95, 95))
+        self.billiard_room_rect_accuse = self.billiard_room_surface_accuse.get_rect(topleft=(470,440))
+        self.room_dict["billiard_room"] = [self.billiard_room_rect_accuse, (470,440),"room",False]
 
         self.dining_room_surface = pygame.image.load(data_folder / 'dining.png').convert_alpha()
         self.dining_room_surface = pygame.transform.scale(self.dining_room_surface, (145, 140))
         self.dining_room_rect = self.dining_room_surface.get_rect(topleft=(480,300))
         self.tile_rect_dict["dining_room"] = [self.dining_room_rect,(480,300)]
 
-        self.dining_room_surface_suggest = pygame.transform.scale(self.dining_room_surface, (105, 95))
-        self.dining_room_rect_suggest = self.dining_room_surface_suggest.get_rect(topleft=(575,440))
-        self.room_dict["dining_room"] = [self.dining_room_rect_suggest,(575,440),"room",False]
+        self.dining_room_surface_accuse = pygame.transform.scale(self.dining_room_surface, (105, 95))
+        self.dining_room_rect_accuse = self.dining_room_surface_accuse.get_rect(topleft=(575,440))
+        self.room_dict["dining_room"] = [self.dining_room_rect_accuse,(575,440),"room",False]
 
         self.conservatory_surface = pygame.image.load(data_folder / 'conservatory.png').convert_alpha()
         self.conservatory_surface = pygame.transform.scale(self.conservatory_surface, (125, 140))
         self.conservatory_rect = self.conservatory_surface.get_rect(topleft=(100,480))
         self.tile_rect_dict["conservatory"] = [self.conservatory_rect,(100,480)]
 
-        self.conservatory_surface_suggest = pygame.transform.scale(self.conservatory_surface, (100, 115))
-        self.conservatory_rect_suggest = self.conservatory_surface_suggest.get_rect(topleft=(690,440))
-        self.room_dict["conservatory"] = [self.conservatory_rect_suggest,(690,440),"room",False]
+        self.conservatory_surface_accuse = pygame.transform.scale(self.conservatory_surface, (100, 115))
+        self.conservatory_rect_accuse = self.conservatory_surface_accuse.get_rect(topleft=(690,440))
+        self.room_dict["conservatory"] = [self.conservatory_rect_accuse,(690,440),"room",False]
 
         self.ballroom_surface = pygame.image.load(data_folder / 'ballroom.png').convert_alpha()
         self.ballroom_surface = pygame.transform.scale(self.ballroom_surface, (140, 135))
         self.ballroom_rect = self.ballroom_surface.get_rect(topleft=(285,480))
         self.tile_rect_dict["ballroom"] = [self.ballroom_rect,(285,480)]
 
-        self.ballroom_surface_suggest = pygame.transform.scale(self.ballroom_surface ,(120, 115))
-        self.ballroom_rect_suggest = self.ballroom_surface_suggest.get_rect(topleft=(800,440))
-        self.room_dict["ballroom"] = [self.ballroom_rect_suggest,(800,440),"room",False]
+        self.ballroom_surface_accuse = pygame.transform.scale(self.ballroom_surface ,(120, 115))
+        self.ballroom_rect_accuse = self.ballroom_surface_accuse.get_rect(topleft=(800,440))
+        self.room_dict["ballroom"] = [self.ballroom_rect_accuse,(800,440),"room",False]
 
         self.kitchen_surface = pygame.image.load(data_folder / 'kitchen.png').convert_alpha()
         self.kitchen_surface = pygame.transform.scale(self.kitchen_surface, (130, 130))
         self.kitchen_rect = self.kitchen_surface.get_rect(topleft=(480,480))
         self.tile_rect_dict["kitchen"] = [self.kitchen_rect,(480,480)]
 
-        self.kitchen_surface_suggest = pygame.transform.scale(self.kitchen_surface ,(100, 95))
-        self.kitchen_rect_suggest = self.kitchen_surface_suggest.get_rect(topleft=(925,440))
-        self.room_dict["kitchen"] = [self.kitchen_rect_suggest,(925,440),"room",False]
+        self.kitchen_surface_accuse = pygame.transform.scale(self.kitchen_surface ,(100, 95))
+        self.kitchen_rect_accuse = self.kitchen_surface_accuse.get_rect(topleft=(925,440))
+        self.room_dict["kitchen"] = [self.kitchen_rect_accuse,(925,440),"room",False]
 
         self.hallway_image = pygame.image.load(data_folder / 'hallway.PNG').convert_alpha()
 
@@ -258,6 +258,18 @@ class Client_game_board:
         screen.blit(board.rope,self.weapon_dict["rope"][1])
         screen.blit(board.wrench,self.weapon_dict["wrench"][1])
 
+        # Initialize Rooms choices
+        screen.blit(board.study_room_surface_accuse,self.room_dict["study_room"][1])
+        screen.blit(board.lounge_surface_accuse,self.room_dict["lounge"][1])
+        screen.blit(board.conservatory_surface_accuse,self.room_dict["conservatory"][1])
+        screen.blit(board.kitchen_surface_accuse,self.room_dict["kitchen"][1])
+
+        screen.blit(board.hall_surface_accuse,self.room_dict["hall"][1])
+        screen.blit(board.library_surface_accuse,self.room_dict["library"][1])
+        screen.blit(board.dining_room_surface_accuse,self.room_dict["dining_room"][1])
+        screen.blit(board.ballroom_surface_accuse,self.room_dict["ballroom"][1])
+        screen.blit(board.billiard_room_surface_accuse,self.room_dict["billiard_room"][1])
+
     def load_suggest_board(self, screen, board):
 
         # Initialize weapon and suspect choices
@@ -274,18 +286,6 @@ class Client_game_board:
         screen.blit(board.revolver,self.weapon_dict["revolver"][1])
         screen.blit(board.rope,self.weapon_dict["rope"][1])
         screen.blit(board.wrench,self.weapon_dict["wrench"][1])
-
-        # Initialize Rooms choices
-        screen.blit(board.study_room_surface_suggest,self.room_dict["study_room"][1])
-        screen.blit(board.lounge_surface_suggest,self.room_dict["lounge"][1])
-        screen.blit(board.conservatory_surface_suggest,self.room_dict["conservatory"][1])
-        screen.blit(board.kitchen_surface_suggest,self.room_dict["kitchen"][1])
-
-        screen.blit(board.hall_surface_suggest,self.room_dict["hall"][1])
-        screen.blit(board.library_surface_suggest,self.room_dict["library"][1])
-        screen.blit(board.dining_room_surface_suggest,self.room_dict["dining_room"][1])
-        screen.blit(board.ballroom_surface_suggest,self.room_dict["ballroom"][1])
-        screen.blit(board.billiard_room_surface_suggest,self.room_dict["billiard_room"][1])
 
     def load_player_tokens(self, screen, board):
         chosen_tokens = ['Professor Plum', 'Colonel Mustard','Miss Scarlet', 'Mr Green', 'Mrs White', 'Mrs Peacock'] # input param
@@ -323,10 +323,10 @@ class Client_game_board:
     def load_options(self, screen, state, events):
 
         room_options = Options_Box.Options_Box()
-        if (state == "CHOOSING_ROOM"):
+        if (state == "MOVE"):
             return room_options.draw_room_options(screen)
-        if (state == "ACCUSING" or state == "SUGGESTING"):
-            return room_options.draw_accuse_options(screen)
+        if (state == "SUGGESTING"):
+            return room_options.draw_suggest_options(screen)
         else :
             print("No options box drawed")
     

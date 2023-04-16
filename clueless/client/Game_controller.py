@@ -15,6 +15,8 @@ class Game_controller:
     HEIGHT = 700
     FPS = 60
 
+    # There are FOUR Game State : "START", "MOVE", "ACCUSING", "SUGGESTING"
+
     def __init__(self):
         pygame.init()
         
@@ -29,9 +31,9 @@ class Game_controller:
         self.board = Client_game_board.Client_game_board()
         self.message_for_server = {}
         self.room_choice = None
-        self.gameLoop()
+        self.game_loop()
 
-    def gameLoop(self):
+    def game_loop(self):
 
         prev_game_state = DEFAULT_GAME
         print("You are Player ", self.id)
@@ -52,7 +54,7 @@ class Game_controller:
                     game_player_status = game['player_turn_type']
                     game_player_turn = game['player_turn_details']
 
-                    if game_player_status == 'CHOOSING_ROOM':
+                    if game_player_status == 'MOVE':
                         print("Player taking turn: Player ", game_player_id)
                         print("Player chooses to move to location ", game_player_turn)
                         print()
@@ -88,7 +90,7 @@ class Game_controller:
                 self.screen.fill(self.base_color)
                 self.add_main_view(events)
 
-            if (self.state == 'CHOOSING_ROOM'):
+            if (self.state == 'MOVE'):
                 self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
                 enterRect = pygame.Rect(810, 560, 60, 35)
@@ -144,17 +146,6 @@ class Game_controller:
                             self.suggest_suspect_dict[key][3] = True
                             self.message_for_server['suspect'] = key
 
-                for key in self.suggest_room_dict:
-                    if self.suggest_room_dict[key][3] == True:
-                        self.board.highlight_rect(self.screen,(0,200,0),self.suggest_room_dict[key][2],key)
-                    if (self.suggest_room_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
-                        for i in self.suggest_room_dict:
-                            self.suggest_room_dict[i][3] = False
-                        if (self.suggest_room_dict[key][2] == 'room') :
-                            print('Player choose room: ' + key)
-                            self.suggest_room_dict[key][3] = True
-                            self.message_for_server['room'] = key
-
             if (self.state == 'ACCUSING'):
                 self.add_accuse_view(events)
                 for key in self.accuse_weapon_dict:
@@ -179,6 +170,17 @@ class Game_controller:
                             self.accuse_suspect_dict[key][3] = True
                             self.message_for_server['suspect'] = key
 
+                for key in self.accuse_room_dict:
+                    if self.accuse_room_dict[key][3] == True:
+                        self.board.highlight_rect(self.screen,(0,200,0),self.accuse_room_dict[key][2],key)
+                    if (self.accuse_room_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                        for i in self.accuse_room_dict:
+                            self.accuse_room_dict[i][3] = False
+                        if (self.accuse_room_dict[key][2] == 'room') :
+                            print('Player choose room: ' + key)
+                            self.accuse_room_dict[key][3] = True
+                            self.message_for_server['room'] = key
+
     def add_main_view(self, events):
 
         player_caption = "Clue-Less Player " + str(self.id)
@@ -192,8 +194,8 @@ class Game_controller:
         button_X_Pos = 800
         button_distance = 60
         is_Room_Selection_Active = self.board.load_button(self.screen, "Go To Room", button_X_Pos, button_Y_Pos)
-        is_Accuse_Selection_Active = self.board.load_button(self.screen, "Accuse", button_X_Pos, button_Y_Pos + button_distance)
-        is_Suggest_Selection_Active = self.board.load_button(self.screen, "Suggest", button_X_Pos, button_Y_Pos + button_distance*2)
+        is_Suggest_Selection_Active = self.board.load_button(self.screen, "Suggest", button_X_Pos, button_Y_Pos + button_distance)
+        is_Accuse_Selection_Active = self.board.load_button(self.screen, "Accuse", button_X_Pos, button_Y_Pos + button_distance*2)
         isEndTurnSelectionActive = self.board.load_button(self.screen, "End Turn", button_X_Pos, button_Y_Pos + button_distance*3)
         
         # Initialize valid players 
@@ -202,7 +204,7 @@ class Game_controller:
 
         mousePos = pygame.mouse.get_pos()
         if is_Room_Selection_Active:
-            self.state = "CHOOSING_ROOM"
+            self.state = "MOVE"
             self.board.load_options(self.screen, self.state, events)
             turn_data = self.network.build_package(self.state, str(mousePos))
             #print(turn_data)
@@ -222,7 +224,6 @@ class Game_controller:
         self.screen.fill(self.base_color)
         self.suggest_weapon_dict = self.board.get_weapon_directory()
         self.suggest_suspect_dict = self.board.get_suspect_directory()
-        self.suggest_room_dict = self.board.get_room_directory()
 
         # Initialize Back Button
         button_X_Pos = 250
@@ -231,6 +232,7 @@ class Game_controller:
         is_submit_button_active = self.board.load_button(self.screen, "Submit", button_X_Pos+350, button_Y_Pos)
 
         self.board.load_suggest_board(self.screen, self.board)
+        self.board.load_options(self.screen, self.state, events)
         if is_back_button_active:
             self.reset_weapon_and_suspect_dict(self.state)
             self.state = "START"
@@ -254,6 +256,8 @@ class Game_controller:
         self.screen.fill(self.base_color)
         self.accuse_weapon_dict = self.board.get_weapon_directory()
         self.accuse_suspect_dict = self.board.get_suspect_directory()
+        self.accuse_room_dict = self.board.get_room_directory()
+        
         # Initialize Back Button
         button_X_Pos = 250
         button_Y_Pos = 620
@@ -274,7 +278,6 @@ class Game_controller:
             print('Sending message to server for accusation: ')
             print(self.message_for_server)
         
-        self.board.load_options(self.screen, self.state, events)
         turn_data = self.network.build_package(self.state, str(mousePos))
         #print(turn_data)
         self.network.send(turn_data)
@@ -294,14 +297,14 @@ class Game_controller:
                     self.accuse_weapon_dict[i][3] = False
             for i in self.accuse_suspect_dict:
                     self.accuse_suspect_dict[i][3] = False
+            for i in self.accuse_room_dict:
+                    self.accuse_room_dict[i][3] = False
 
         if (state == 'SUGGESTING'):
             for i in self.suggest_weapon_dict:
                     self.suggest_weapon_dict[i][3] = False
             for i in self.suggest_suspect_dict:
                     self.suggest_suspect_dict[i][3] = False
-            for i in self.suggest_room_dict:
-                    self.suggest_room_dict[i][3] = False
 ################################################################################
 # Instantiate Deck class
 # Remove docstring to execute 

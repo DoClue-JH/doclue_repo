@@ -44,7 +44,7 @@ class Options_Box:
         screen.blit(message_surface, message_surface_rect)
         screen.blit(message_surface2, message_surface_rect2)
 
-    def draw_accuse_options(self, screen):
+    def draw_suggest_options(self, screen):
 
         X_Pos = 780
         Y_Pos = 450
