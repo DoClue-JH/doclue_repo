@@ -26,33 +26,6 @@ class Tile:
     
     def get_adjacent_tiles(self):
         return self.adjacent_tiles
-    
-    def get_is_occupied(self):
-        if (self.get_tile_num_players() == 0) or (self.get_tile_type() == "room" and self.get_tile_num_players() >= 1):
-            return False
-        elif self.tile_type == "hallway" and self.get_tile_num_players() == 1:
-            return True
-
-### SETTERS ###
-    def set_occupied(self):
-        # set the Tile's is_occupied to TRUE *if it is not already occupied*
-        #
-        # KT note, might need to change to accommodate changing an old location?
-        # or a more robust check of whether or not there is at least one character
-        if self.is_occupied == True:
-            return  # is this pass or return?
-        else:
-            self.is_occupied = True
-    
-    def set_unoccupied(self):
-        # set the Tile's is_occupied to FALSE *if it is not already unoccupied*
-        #
-        # KT note, might need to change to accommodate changing an old location?
-        # or a more robust check of whether or not there is at least one character
-        if self.is_occupied == False:
-            return  # is this pass or return?
-        else:
-            self.is_occupied = False
 
 # "main"
-# instantiate tiles in Board class, import into Board
+# instantiate tiles in Board class as attribute
