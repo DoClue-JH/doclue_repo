@@ -11,11 +11,22 @@ import random
 DEFAULT_GAME = dict({'player_count': 0, 'player_turn_id': '0', 'player_turn_type': '', 'player_turn_details': ''})
 
 class Game_controller:
+
+    # WIDTH AND HEIGHT OF THE WINDOW
     WIDTH = 1050
     HEIGHT = 700
     FPS = 60
 
     # There are FOUR Game State : "START", "MOVE", "ACCUSING", "SUGGESTING"
+    # Each State will have different views
+    # SEND MESSAGE TO SERVER comments are placeholder where the code sends message to server
+    ############################################################################################
+    # game_loop is the function to keep looping check_events as long as playing=True
+    # check_events is the function to check user's mouse movement
+    # add_main_view is the function to show main view
+    # add_suggest_view is the function to show suggest view
+    # add_accuse_view is the function to show accuse view
+
 
     def __init__(self):
         pygame.init()
@@ -33,6 +44,9 @@ class Game_controller:
         self.room_choice = None
         self.game_loop()
 
+    ################################################################################
+    # game_loop is the function to keep looping check_events as long as playing=True
+    ################################################################################
     def game_loop(self):
 
         prev_game_state = DEFAULT_GAME
@@ -77,6 +91,10 @@ class Game_controller:
         # the while loop will end and quit the game
         pygame.quit()
 
+    ################################################################################
+    # check_events is the function to check user's mouse movement
+    # Input : events [type: Pygame Event]
+    ################################################################################
     def check_events(self, events) :
         mousePos = pygame.mouse.get_pos()
         for event in events:
@@ -93,7 +111,6 @@ class Game_controller:
             if (self.state == 'MOVE'):
                 self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
-                enterRect = pygame.Rect(810, 560, 60, 35)
                 for key in self.tiles_directory:
                     if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                         pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
@@ -110,7 +127,7 @@ class Game_controller:
                         print('Player choose to go to tile : ' + self.room_choice)
                         self.message_for_server["room"] = self.room_choice
                         self.state = "START"
-                        # send message to server
+                        # SEND MESSAGE TO SERVER
                         print("Sending message to server for movement:")
                         print(self.message_for_server)
 
@@ -181,6 +198,10 @@ class Game_controller:
                             self.accuse_room_dict[key][3] = True
                             self.message_for_server['room'] = key
 
+    ################################################################################
+    # add_main_view is the function to show main view
+    # Input : events [type: Pygame Event]
+    ################################################################################
     def add_main_view(self, events):
 
         player_caption = "Clue-Less Player " + str(self.id)
@@ -217,7 +238,10 @@ class Game_controller:
 
         # if player chooose end turn, then it passes the turn to others.
 
-
+    ################################################################################
+    # add_suggest_view is the function to show suggest view
+    # Input : events [type: Pygame Event]
+    ################################################################################
     def add_suggest_view(self, events):
         mousePos = pygame.mouse.get_pos()
         pygame.display.set_caption("Suggest Player : ")
@@ -242,7 +266,7 @@ class Game_controller:
             self.reset_weapon_and_suspect_dict(self.state)
             self.state = "START"
             self.screen.fill(self.base_color)
-            # send message to server
+            # SEND MESSAGE TO SERVER
             print('Sending message to server for suggestion: ')
             print(self.message_for_server)
 
@@ -250,6 +274,10 @@ class Game_controller:
         #print(turn_data)
         self.network.send(turn_data)
 
+    ################################################################################
+    # add_accuse_view is the function to show accuse view
+    # Input : events [type: Pygame Event]
+    ################################################################################
     def add_accuse_view(self, events):
         mousePos = pygame.mouse.get_pos()
         pygame.display.set_caption("Accuse Player : ")
@@ -274,7 +302,7 @@ class Game_controller:
             self.reset_weapon_and_suspect_dict(self.state)
             self.state = "START"
             self.screen.fill(self.base_color)
-            # send message to server for suggest
+            # SEND MESSAGE TO SERVER
             print('Sending message to server for accusation: ')
             print(self.message_for_server)
         
