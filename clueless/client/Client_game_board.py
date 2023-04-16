@@ -323,9 +323,9 @@ class Client_game_board:
     def load_options(self, screen, state, events):
 
         room_options = Options_Box.Options_Box()
-        if (state == "MOVE"):
+        if (state == "MOVEMENT"):
             return room_options.draw_room_options(screen)
-        if (state == "SUGGESTING"):
+        if (state == "SUGGESTION"):
             return room_options.draw_suggest_options(screen)
         else :
             print("No options box drawed")

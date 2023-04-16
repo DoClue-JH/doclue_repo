@@ -17,7 +17,7 @@ class Game_controller:
     HEIGHT = 700
     FPS = 60
 
-    # There are FOUR Game State : "START", "MOVE", "ACCUSING", "SUGGESTING"
+    # There are FOUR Game State : "START", "MOVEMENT", "ACCUSATION", "SUGGESTION"
     # Each State will have different views
     # SEND MESSAGE TO SERVER comments are placeholder where the code sends message to server
     ############################################################################################
@@ -68,13 +68,13 @@ class Game_controller:
                     game_player_status = game['player_turn_type']
                     game_player_turn = game['player_turn_details']
 
-                    if game_player_status == 'MOVE':
+                    if game_player_status == 'MOVEMENT':
                         print("Player taking turn: Player ", game_player_id)
                         print("Player chooses to move to location ", game_player_turn)
                         print()
-                    # if game_player_status == 'SUGGESTING':
+                    # if game_player_status == 'SUGGESTION':
                     #     print()
-                    # if game_player_status == 'ACCUSING':
+                    # if game_player_status == 'ACCUSATION':
                     #     print()
 
                     prev_game_state = game
@@ -106,9 +106,9 @@ class Game_controller:
                 self.room_choice = None
                 self.screen.fill(self.base_color)
                 self.add_main_view(events)
-                
+
             # This is to highlight rectangle when choosing the room and print the choosen one on the options box
-            if (self.state == 'MOVE'):
+            if (self.state == 'MOVEMENT'):
                 self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
                 for key in self.tiles_directory:
@@ -138,7 +138,7 @@ class Game_controller:
                     self.state = "START"
                     #is_Room_Selection_Active = False
 
-            if (self.state == 'SUGGESTING'):
+            if (self.state == 'SUGGESTION'):
                 self.add_suggest_view(events)
 
                 for key in self.suggest_weapon_dict:
@@ -163,7 +163,7 @@ class Game_controller:
                             self.suggest_suspect_dict[key][3] = True
                             self.message_for_server['suspect'] = key
 
-            if (self.state == 'ACCUSING'):
+            if (self.state == 'ACCUSATION'):
                 self.add_accuse_view(events)
                 for key in self.accuse_weapon_dict:
                     if self.accuse_weapon_dict[key][3] == True:
@@ -225,16 +225,16 @@ class Game_controller:
 
         mousePos = pygame.mouse.get_pos()
         if is_Room_Selection_Active:
-            self.state = "MOVE"
+            self.state = "MOVEMENT"
             self.board.load_options(self.screen, self.state, events)
             turn_data = self.network.build_package(self.state, str(mousePos))
             #print(turn_data)
             self.network.send(turn_data)
 
         if is_Accuse_Selection_Active:
-            self.state = "ACCUSING"
+            self.state = "ACCUSATION"
         if is_Suggest_Selection_Active:
-            self.state = "SUGGESTING"
+            self.state = "SUGGESTION"
 
         # if player chooose end turn, then it passes the turn to others.
 
@@ -320,7 +320,7 @@ class Game_controller:
         return list_of_color[random.randint(0,len(list_of_color)-1)]
     
     def reset_weapon_and_suspect_dict(self, state):
-        if (state == 'ACCUSING'):
+        if (state == 'ACCUSATION'):
             for i in self.accuse_weapon_dict:
                     self.accuse_weapon_dict[i][3] = False
             for i in self.accuse_suspect_dict:
@@ -328,7 +328,7 @@ class Game_controller:
             for i in self.accuse_room_dict:
                     self.accuse_room_dict[i][3] = False
 
-        if (state == 'SUGGESTING'):
+        if (state == 'SUGGESTION'):
             for i in self.suggest_weapon_dict:
                     self.suggest_weapon_dict[i][3] = False
             for i in self.suggest_suspect_dict:
