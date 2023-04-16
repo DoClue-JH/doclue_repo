@@ -1,62 +1,70 @@
 import random
-from Card import Card
 
 class ClueDeck:
-    def __init__(self, players):
-        self.players = players
-        self.card = Card() # Create an instance of the Card class
+    def __init__(self):
+        # self.num_players = num_players
+        self.characters = {"Miss Scarlet": "character", "Colonel Mustard": "character", "Mrs. White": "character", "Mr. Green": "character", "Mrs. Peacock": "character", "Professor Plum": "character"}
+        self.rooms = {"Kitchen": "room", "Ballroom": "room", "Conservatory": "room", "Dining Room": "room", "Billiard Room": "room", "Library": "room", "Lounge": "room", "Hall": "room", "Study": "room"}
+        self.weapons = {"Rope": "weapon", "Lead Pipe": "weapon", "Dagger": "weapon", "Wrench": "weapon", "Candlestick": "weapon", "Revolver": "weapon"}
 
         # Choose one random character, room, and weapon for the secret deck
-        self.secret_deck = [
-            self.card.get_card_value(self.card.CARD_TYPES['character'][random.randint(0, len(self.card.CARD_TYPES['character'])-1)]),
-            self.card.get_card_value(self.card.CARD_TYPES['room'][random.randint(0, len(self.card.CARD_TYPES['room'])-1)]),
-            self.card.get_card_value(self.card.CARD_TYPES['weapon'][random.randint(0, len(self.card.CARD_TYPES['weapon'])-1)])
-        ]
-        # Remove secret deck cards from the remaining deck (self.deck)
-        self.deck = [card for card in (self.card.CARD_TYPES['character'] + self.card.CARD_TYPES['room'] + self.card.CARD_TYPES['weapon']) if card not in self.secret_deck]
-        random.shuffle(self.deck)
+        self.secret_deck = {
+            random.choice(list(self.characters.keys())): "character",
+            random.choice(list(self.rooms.keys())): "room",
+            random.choice(list(self.weapons.keys())): "weapon"
+        }
 
-    # Deal out cards to players 
-    def deal(self):
-        num_players = len(self.players)
+        # Create the deck as a dictionary with key-value pairs {card value: card type}
+        self.deck = {}
+        for card_type in [self.characters, self.rooms, self.weapons]:
+            for card_name in card_type.keys():
+                if card_name not in self.secret_deck.keys():
+                    self.deck[card_name] = card_type[card_name]
         
-        # Create dictionary to hold dealt cards for each player
-        dealt_cards = {}
-        for i in range(num_players):
-            dealt_cards[self.players[i]] = []
+        # Shuffle the deck of cards
+        shuffled_keys = list(self.deck.keys())
+        random.shuffle(shuffled_keys)
+        self.deck = {key: self.deck[key] for key in shuffled_keys}
 
-        # Deal cards to players
-        for i in range(num_players):
-            for player in dealt_cards:
-                if len(self.deck) == 0:
-                    break
-                card = self.deck.pop(0)
-                dealt_cards[player].append(card)
+    def __repr__(self):
+        # Return a string representation of the dictionaries
+        return f"Game_deck: {self.deck}"
+    
+    def get_deck(self):
+        return self.deck
+    
+    def get_secret_deck(self):
+        return self.secret_deck
+    
+    # A method that creates player decks based on the number of players
+    def deck_distribution(self, num_players)->list:
+        game_deck= self.get_deck()
 
-        # Deal remaining cards in round-robin fashion
-        i = 0
-        while len(self.deck) > 0:
-            player = list(dealt_cards.keys())[i]
-            card = self.deck.pop(0)
-            dealt_cards[player].append(card)
-            i = (i+1) % num_players
-        
-        # Return a dictionary in the format of player: [dealt cards]
-        return dealt_cards
+        dealt_decks = [{} for i in range(num_players)]
 
-    def compare_deck(self, deck1, deck2):
-        
-        # Convert the decks to sets for faster comparison
-        set_deck1 = set(deck1)
-        set_deck2 = set(deck2)
-        
-        # Find matching cards
-        matching_cards = [card for card in set_deck1.intersection(set_deck2)]
+        num_dicts= len(dealt_decks)
+        game_deck_keys= list(game_deck.keys())
+        for i, key in enumerate(game_deck_keys):
+            dealt_deck= dealt_decks[i % num_dicts]
+            dealt_deck[key]= game_deck[key]
+        return dealt_decks # returns a list of decks in the form of dictionaries
 
-        return f"There are {len(matching_cards)} matching cards: {matching_cards}"
-        
-    # A method to output the functions in a deck
-    def get_deck(self, deck):
-            return deck.copy()
+    # A method that deals a deck of cards to players 
+    # players passed into deck should be a list
+    # This function can be placed in the game class
+    def deal(self,players)->dict:
+        num_players= len(players)
+        dealt_decks= self.deck_distribution(num_players)
+        player_w_cards = {key: value for key, value in zip(players, dealt_decks)}
+        return player_w_cards
+    
 
-#Note that this class is called in Game.py
+# Driver code
+deck= ClueDeck()
+players= ["katie","megan", "kweku", "sely", "khue"]
+print(deck.get_secret_deck())
+print()
+print(deck.get_deck())
+print()
+print(deck.deal(players))
+print()

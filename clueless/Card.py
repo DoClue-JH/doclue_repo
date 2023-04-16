@@ -17,16 +17,16 @@ class Card:
 
 
 # Driver code
-# card = Card()
-# card_name = "Ballroom"
-# card_value = card.get_card_value(card_name)
-# if card_value:
-#     print(card_value)
-# else:
-#     print("This card does not exist")
+card = Card()
+card_name = "Wrench"
+card_value = card.get_card_value(card_name)
+if card_value:
+    print(card_value)
+else:
+    print("This card does not exist")
 
-# card_type = card.get_card_type(card_name)
-# if card_type:
-#     print(card_type)
-# else:
-#     print("Card type unknown")
+card_type = card.get_card_type(card_name)
+if card_type:
+    print(card_type)
+else:
+    print("Card type unknown")
