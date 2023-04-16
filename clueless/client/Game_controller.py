@@ -101,13 +101,13 @@ class Game_controller:
             if event.type == pygame.QUIT:
                 self.playing = False
 
-            # This is to highlight rectangle when choosing the room and print the choosen one on the options box
             if (self.state == 'START'):
                 self.message_for_server = {}
                 self.room_choice = None
                 self.screen.fill(self.base_color)
                 self.add_main_view(events)
-
+                
+            # This is to highlight rectangle when choosing the room and print the choosen one on the options box
             if (self.state == 'MOVE'):
                 self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
