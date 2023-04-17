@@ -3,12 +3,16 @@ from Player import Player
 
 class Game:
 
-    def __init__(self, num_players, players, game_board, game_deck, case_file, turn_state, game_status):
+    def __init__(self, num_players, players, game_board, player_id, turn_state, game_status): # I took these attributes (game_deck, case_file) out
         self.num_players = num_players
-        self.players = players
+        self.players = []
+        for player_name in players:
+            this_player = Player(player_name,player_id)   
+            self.players.append(this_player) 
         self.game_board = game_board
-        self.game_deck = Deck.get_deck()
-        self.case_file = Deck.get_secret_deck()
+        deck= Deck()
+        self.game_deck = deck.get_deck()
+        self.case_file = deck.get_secret_deck()
         self.turn_state = turn_state
         self.game_status = game_status
         
@@ -35,4 +39,4 @@ class Game:
         num_players= len(self.players)
         dealt_decks = Deck.deal(num_players)
         for i, player in enumerate(self.players):
-            Player.set_player_hand(dealt_decks[i])
+            player.set_player_hand(dealt_decks[i])
