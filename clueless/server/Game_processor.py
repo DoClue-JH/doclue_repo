@@ -26,99 +26,15 @@ def prompt_move(player):
     print("Instructions:")
     print("Please enter a valid tile name from above, without apostrophes.")
 
-    player_input_tile = input("Where do you want to go? \n")
-    return player_input_tile
+        player_input_tile = input("Where do you want to go? \n")
+        return player_input_tile
 
-# split into server-side retrieve and client-display valid moves
-def show_valid_moves(player, board_dict):
+    # split into server-side retrieve and client-display valid moves
+    def show_valid_moves(player, board_dict):
 
-    if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
+        if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
 
-        player_first_move = {
-        'Miss Scarlet' : 'Hallway 02',
-        'Professor Plum' : 'Hallway 03',
-        'Colonal Mustard' : 'Hallway 05',
-        'Mrs. Peacock' : 'Hallway 08',
-        'Mr. Green' : 'Hallway 11',
-        'Mrs. White' : 'Hallway 12'
-        }
-
-        
-        print()
-        print("####################################################################")
-        print("Looks like this is your first move! You have to move to your starting")
-        print("tile, but don't worry, you'll get to pick where you go next time.")
-        print()
-        print("**********************************")
-        print("Your starting tile is:", player_first_move.get(player.get_player_name()))
-        print("**********************************")
-        return
-
-    print(player.get_player_name(), "is in", player.get_player_current_location())
-
-    # create list of ALL adjacent tiles
-    # create empty list for valid tiles player can move to after they've been checked for validity
-    print(player.get_player_current_location())
-    temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
-    temp_valid_tiles = []
-
-    print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
-
-    # iterate over all tiles in the adjacent list
-    for tile in temp_adjacent_tiles:
-        # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
-        #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
-        # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
-        if board_dict.get(tile).get_tile_num_players() == 0:
-            temp_valid_tiles.append(tile)
-        elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
-            temp_valid_tiles.append(tile)
-    print()
-    print("####################################################################")
-    print("Tiles that are valid moves are:", temp_valid_tiles)
-    print("####################################################################")
-    return 
-
-def move(board_dict, player, destination):
-    # validate gets called first
-    if validate_move(board_dict, player, destination) == True:
-        # update player old and new location
-        player.update(destination)
-        print("old is", player.get_player_old_location())
-        print("new is", player.get_player_current_location())
-
-        # update tile_num_players
-        if player.get_player_old_location() is not None:
-            board_dict.get(player.get_player_old_location()).tile_num_players -= 1
-
-        board_dict.get(player.get_player_current_location()).tile_num_players += 1
-
-        # print statements
-        print()
-        print("Success!")
-        print("Previous tile:", player.get_player_old_location())
-        if player.get_player_old_location() is not None:
-            print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
-        print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
-        print()
-        print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
-        print()
-        print("===============================")
-        return True
-    
-    elif validate_move(board_dict, player, destination) == False:
-        return False
-
-
-# check if move is in dict; if in dict, is it in the adj tiles?
-def validate_move(board_dict, player, destination):
-
-    # check if this is the player's first move, the only time where
-    # both old and new location are None
-    if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
-
-        # dict of player_name : starting tile_name
-        player_first_move = {
+            player_first_move = {
             'Miss Scarlet' : 'Hallway 02',
             'Professor Plum' : 'Hallway 03',
             'Colonal Mustard' : 'Hallway 05',
@@ -126,37 +42,121 @@ def validate_move(board_dict, player, destination):
             'Mr. Green' : 'Hallway 11',
             'Mrs. White' : 'Hallway 12'
             }
-        
-        if player_first_move.get(player.player_name) == destination:
+
+            
+            print()
+            print("####################################################################")
+            print("Looks like this is your first move! You have to move to your starting")
+            print("tile, but don't worry, you'll get to pick where you go next time.")
+            print()
+            print("**********************************")
+            print("Your starting tile is:", player_first_move.get(player.get_player_name()))
+            print("**********************************")
+            return
+
+        print(player.get_player_name(), "is in", player.get_player_current_location())
+
+        # create list of ALL adjacent tiles
+        # create empty list for valid tiles player can move to after they've been checked for validity
+        print(player.get_player_current_location())
+        temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
+        temp_valid_tiles = []
+
+        print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
+
+        # iterate over all tiles in the adjacent list
+        for tile in temp_adjacent_tiles:
+            # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
+            #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
+            # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
+            if board_dict.get(tile).get_tile_num_players() == 0:
+                temp_valid_tiles.append(tile)
+            elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
+                temp_valid_tiles.append(tile)
+        print()
+        print("####################################################################")
+        print("Tiles that are valid moves are:", temp_valid_tiles)
+        print("####################################################################")
+        return 
+
+    def move(board_dict, player, destination):
+        # validate gets called first
+        if validate_move(board_dict, player, destination) == True:
+            # update player old and new location
+            player.update(destination)
+            print("old is", player.get_player_old_location())
+            print("new is", player.get_player_current_location())
+
+            # update tile_num_players
+            if player.get_player_old_location() is not None:
+                board_dict.get(player.get_player_old_location()).tile_num_players -= 1
+
+            board_dict.get(player.get_player_current_location()).tile_num_players += 1
+
+            # print statements
+            print()
+            print("Success!")
+            print("Previous tile:", player.get_player_old_location())
+            if player.get_player_old_location() is not None:
+                print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
+            print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
+            print()
+            print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
+            print()
+            print("===============================")
             return True
-        else:
+        
+        elif validate_move(board_dict, player, destination) == False:
             return False
-    
-
-    # create list of ALL adjacent tiles
-    # create empty list for valid tiles player can move to after they've been checked for validity
-    # print(player.get_player_current_location())
-    temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
-    temp_valid_tiles = []
-
-    # print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
-
-    # iterate over all tiles in the adjacent list
-    for tile in temp_adjacent_tiles:
-        # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
-        #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
-        # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
-        if board_dict.get(tile).get_tile_num_players() == 0:
-            temp_valid_tiles.append(tile)
-        elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
-            temp_valid_tiles.append(tile)
 
 
-    # check if the tile player wants to move to is in the list of remaining valid move options
-    if destination in temp_valid_tiles:
-        return True
-    else: 
-        return False
+    # check if move is in dict; if in dict, is it in the adj tiles?
+    def validate_move(board_dict, player, destination):
+
+        # check if this is the player's first move, the only time where
+        # both old and new location are None
+        if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
+
+            # dict of player_name : starting tile_name
+            player_first_move = {
+                'Miss Scarlet' : 'Hallway 02',
+                'Professor Plum' : 'Hallway 03',
+                'Colonal Mustard' : 'Hallway 05',
+                'Mrs. Peacock' : 'Hallway 08',
+                'Mr. Green' : 'Hallway 11',
+                'Mrs. White' : 'Hallway 12'
+                }
+            
+            if player_first_move.get(player.player_name) == destination:
+                return True
+            else:
+                return False
+        
+
+        # create list of ALL adjacent tiles
+        # create empty list for valid tiles player can move to after they've been checked for validity
+        # print(player.get_player_current_location())
+        temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
+        temp_valid_tiles = []
+
+        # print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
+
+        # iterate over all tiles in the adjacent list
+        for tile in temp_adjacent_tiles:
+            # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
+            #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
+            # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
+            if board_dict.get(tile).get_tile_num_players() == 0:
+                temp_valid_tiles.append(tile)
+            elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
+                temp_valid_tiles.append(tile)
+
+
+        # check if the tile player wants to move to is in the list of remaining valid move options
+        if destination in temp_valid_tiles:
+            return True
+        else: 
+            return False
 
 
 
@@ -247,7 +247,7 @@ def validate_move(board_dict, player, destination):
 
 # # validate the suggestion
 # is_valid = game.validate_suggestion(("player1", "wrench", "study", "player2"))
-# if is_valid:
+# if is_valid:n
 #     print("Valid suggestion!")
 # else:
 #     print("Invalid suggestion.")

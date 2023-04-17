@@ -117,10 +117,10 @@ class Game:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
 
-    def get_player(self, player_id):
-        for i, player in enumerate(self.players):
-            if player.get_player_id() == player_id:
-                return player
+    # def get_player(self, player_id):
+    #     for i, player in enumerate(self.players):
+    #         if player.get_player_id() == player_id:
+    #             return player
     
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:
