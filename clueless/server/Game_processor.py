@@ -79,9 +79,9 @@ def prompt_move(player):
         print("####################################################################")
         return 
 
-    def move(board_dict, player, destination):
+    def move(self, board_dict, player, destination):
         # validate gets called first
-        if validate_move(board_dict, player, destination) == True:
+        if self.validate_move(board_dict, player, destination) == True:
             # update player old and new location
             player.update(destination)
             print("old is", player.get_player_old_location())
@@ -106,7 +106,7 @@ def prompt_move(player):
             print("===============================")
             return True
         
-        elif validate_move(board_dict, player, destination) == False:
+        elif self.validate_move(board_dict, player, destination) == False:
             return False
 
 
@@ -214,18 +214,12 @@ def prompt_move(player):
     
     # This method records an accusation made by a player. It does not return
     # anything, but it modifies the accusations attribute of the ClueGame object. 
-    # If the accusation is correct, it also sets the game_over attribute to True.  
+    # If the accusation is correct
     def accuse(self, player, weapon, room, case_file):
         case_file_reversed = {card_type: card_val for card_val, card_type in case_file.items()}
 
         # If accusation is correct, return True
         return player == case_file_reversed['character'] and weapon == case_file_reversed['weapon'] and room == case_file_reversed['room']
-        # TO DO 
-        #   update game_status
-        #   send game_status to Game_message_handler
-        #   Game_message_handler receive_game_status()
-        #   Game_message_handler build_return_package()
-        #   someone send package to Client_message_handler
     
 #     # This method returns the list of accusations made by a specific player.
 #     def get_accusations_for_player(self, player):
