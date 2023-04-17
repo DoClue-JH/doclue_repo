@@ -1,16 +1,18 @@
 from Tile import * 
 from Player import *
 from Game_processor import *
+from Deck import Deck
+from Player import Player
 
 class Game:
 
     def __init__(self, players, num_players):
         self.num_players = num_players
-        self.players = players            # list of all players
-        self.game_deck = None             # dict for initial overall game deck
-        self.case_file = None             # dict of three secret cards
-        self.turn_state = None            # turn state for current player
-        self.game_status = None           # game state of entire game
+        self.players = players                              # list of all players
+        self.game_deck = Deck.get_deck()                    # dict for initial overall game deck
+        self.case_file = Deck.get_secret_deck()             # dict of three secret cards
+        # self.turn_state = None                              # turn state for current player
+        self.game_status = None                             # game state of entire game
 
         ############################
         ##### INITIALIZE TILES #####
@@ -78,7 +80,6 @@ class Game:
             'Hallway 11' : tile_hallway_11,
             'Hallway 12' : tile_hallway_12
             }
-
         
         # Find out where Game is initialized, loop through players and map their name to id
         # self.player_name_to_connectionid_dict = 
@@ -98,6 +99,7 @@ class Game:
     def get_game_board(self):
         return self.game_board
 
+
     # return a player whose turn it is not currently
     def get_player(self, player):
         if player in self.players:
@@ -106,38 +108,45 @@ class Game:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
 
-
+    # A method that deals a deck of cards to players 
+    def deal_to_players(self)->dict:
+        num_players= len(self.players)
+        dealt_decks = Deck.deal(num_players)
+        for i, player in enumerate(self.players):
+            Player.set_player_hand(dealt_decks[i])
 
 
 # Khue Test Statements for Move
 # show valid moves, prompt, take input is the loop
 # test statement
 
-miss_scarlet = Player("Miss Scarlet", 1, None)
-players = []
-players.append(miss_scarlet)
+# miss_scarlet = Player("Miss Scarlet", 1)
+# players = []
+# players.append(miss_scarlet)
 
-game = Game(players, len(players))
+# game = Game(players, len(players))
 
-# movement phase for one player
-while True:
-    show_valid_moves(miss_scarlet, game.get_game_board())
-    move_input = prompt_move(miss_scarlet)
-    move_output = move(game.game_board, miss_scarlet, move_input)
+# # movement phase for one player
+# while True:
+#     show_valid_moves(miss_scarlet, game.get_game_board())
+#     move_input = prompt_move(miss_scarlet)
+#     move_output = move(game.game_board, miss_scarlet, move_input)
 
-    if move_output == True:
-        break       # continue to next phase
+#     if move_output == True:
+#         break       # continue to next phase
 
-    else:
-        print("Invalid move, try again!")
+#     else:
+#         print("Invalid move, try again!")
 
-while True:
-    show_valid_moves(miss_scarlet, game.get_game_board())
-    move_input = prompt_move(miss_scarlet)
-    move_output = move(game.game_board, miss_scarlet, move_input)
+# while True:
+#     show_valid_moves(miss_scarlet, game.get_game_board())
+#     move_input = prompt_move(miss_scarlet)
+#     move_output = move(game.game_board, miss_scarlet, move_input)
 
-    if move_output == True:
-        break       # continue to next phase
+#     if move_output == True:
+#         break       # continue to next phase
 
-    else:
-        print("Invalid move, try again!")
+#     else:
+#         print("Invalid move, try again!")
+
+
