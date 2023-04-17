@@ -215,14 +215,13 @@ def validate_move(board_dict, player, destination):
     # This method records an accusation made by a player. It does not return
     # anything, but it modifies the accusations attribute of the ClueGame object. 
     # If the accusation is correct, it also sets the game_over attribute to True.  
-    def accuse(self, player, weapon, room):
-        accusation = {'player': player, 'weapon': weapon, 'room': room}
-        self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
-        
+    def accuse(self, player, weapon, room, case_file):
+        case_file_reversed = {card_type: card_val for card_val, card_type in case_file.items()}
+
         # If accusation is correct, return True
-        return player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
+        return player == case_file_reversed['character'] and weapon == case_file_reversed['weapon'] and room == case_file_reversed['room']
         # TO DO 
-        #   update game_status?
+        #   update game_status
         #   send game_status to Game_message_handler
         #   Game_message_handler receive_game_status()
         #   Game_message_handler build_return_package()

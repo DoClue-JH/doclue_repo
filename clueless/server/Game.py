@@ -239,7 +239,11 @@ class Game:
             
         elif player_turn['player_status'] == "ACCUSING":
             print('Player chooses to accuse')
-            accuse_result = Game_processor.accuse(player, weapon, room)
+            # TO EXTRACT
+            player = ''
+            weapon = ''
+            room = ''
+            accuse_result = Game_processor.accuse(player, weapon, room, self.case_file)
             if accuse_result: 
                 curr_player.set_player_status('LOST')
             
