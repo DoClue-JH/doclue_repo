@@ -154,7 +154,40 @@ class Game:
 
 
 
-    
+    # This method determines what turn the player is taking and then routes to 
+    # appropriate game logic functions to carry out turn accordingly
+    def player_take_turn(player_turn):
+        '''
+        INPUT: player_turn : dictionary from Game_message_handler.process_client_update(client_message)
+            {'turn_status': player_status or'skip', 
+            'player_token' : player_id, 
+            'player_details' : desired location?
+            }
+        OUTPUT:
+        '''
+        # Build game status from the result of player taking a turn
+        game_status = {'player_token':'',
+                       'turn_status':'', # Movement, Accusation, or Suggestion
+                       'suggested_cards':'',  # dict
+                       'suggest_result_player':'', # Name of player who provided suggested cards, None if no matching cards were found
+                       'accused_cards':'', # dict
+                       'target_tile':'' # string
+                       } 
+        if player_turn['player_status'] == "MOVING": #"CHOOSING":
+            destination = player_turn['player_details']
+            print("Player taking turn: Player ", player_turn['player_id'])
+            print("Player chooses to move to location ", player_turn['player_details'], end='\n')
+            # move(player, destination)
+            
+        elif player_turn['player_status'] == "ACCUSING":
+            print('Player chooses to accuse')
+            # accuse(player, weapon, room)
+            
+        elif player_turn['player_status'] == "SUGGESTING":
+            print('Player chooses to suggest')
+            # suggest(player, weapon, room, accused_player)
+            
+        return game_status # --> server_update = Game_message_handler.build_game_package(game_status)
     
 # ---------- MEGAN TESTING GROUNDS ----------
 # ---------- within Game class ----------
