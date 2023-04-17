@@ -233,8 +233,7 @@ class Game:
         
         if player_turn['player_status'] == "MOVING": #"CHOOSING":
             destination = player_turn['player_details']
-            print("Player taking turn: Player ", player_turn['player_id'])
-            print("Player chooses to move to location ", player_turn['player_details'], end='\n')
+            print(f"Player {player_turn['player_id']} chooses to move to location {player_turn['player_details']}", end='\n')
             # move_result = Game_processor.move(player, destination)
             
         elif player_turn['player_status'] == "ACCUSING":
@@ -244,8 +243,10 @@ class Game:
             weapon = ''
             room = ''
             accuse_result = Game_processor.accuse(player, weapon, room, self.case_file)
-            if accuse_result: 
-                curr_player.set_player_status('LOST')
+            if accuse_result:
+                # TO DO
+                print('Player accused correctly')
+            else: curr_player.set_player_status('LOST')
             
         elif player_turn['player_status'] == "SUGGESTING":
             print('Player chooses to suggest')
