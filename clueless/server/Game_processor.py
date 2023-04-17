@@ -237,24 +237,6 @@ def validate_move(board_dict, player, destination):
         #   Game_message_handler receive_game_status()
         #   Game_message_handler build_return_package()
         #   someone send package to Client_message_handler
-
-    # 4/15/23: validate_accusation moved to front-end
-    # This method checks if an accusation is valid. It returns a Boolean value 
-    # indicating whether or not the accusation is valid.   
-    # def validate_accusation(self, accusation):
-    #     '''
-    #     INPUT: accusation : list of three user inputs
-    #     OUTPUT: True if accusation is valid, False otherwise
-    #     '''
-    #     # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
-    #     has_weapon = False
-    #     has_token = False
-    #     has_room = False
-    #     for guess in accusation:
-    #         if guess in self.WEAPONS: has_weapon = True
-    #         elif guess in self.TOKENS: has_token = True
-    #         elif guess in self.ROOMS: has_room = True
-    #     return has_weapon and has_token and has_room
     
 #     # This method returns the list of accusations made by a specific player.
 #     def get_accusations_for_player(self, player):
