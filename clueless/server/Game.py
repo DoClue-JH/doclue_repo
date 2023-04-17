@@ -212,13 +212,14 @@ class Game:
             }
             
         OUTPUT: game_status : dictionary to be sent back to the Server containing information about the turn result
-            {'player_token':'',
-            'turn_status':'',                   # Movement, Accusation, or Suggestion
-            'suggested_cards':'',  # dict
-            'suggest_result_player':'',         # Name of player who provided suggested cards, None if no matching cards were found
-            'accused_cards':'', # dict
-            'accused_result_player' : '',        # Name of player who accused correctly, None accused incorrectly
-            'target_tile':'' # string
+            {'player_token': str,
+            'turn_status': str,                   # MOVING, ACCUSING, or SUGGESTING
+            'suggested_cards': dict,
+            'suggested_match_card' : str,
+            'suggest_result_player': str,         # Name of player who provided suggested cards, None if no matching cards were found
+            'accused_cards': dict,
+            'accused_result_player' : str,        # Name of player who accused correctly, None accused incorrectly
+            'target_tile': str
             } 
         '''
         # Get player object
@@ -228,13 +229,14 @@ class Game:
         game_status = {'player_token': curr_player.get_player_name(),
                        'turn_status': player_turn['player_status'], # MOVING, ACCUSING, or SUGGESTING
                         # SUGGESTING results 
-                       'suggested_cards':'',  # dict
-                       'suggest_result_player':'', # Name of player who provided suggested cards, None if no matching cards were found
+                       'suggested_cards':'',   
+                       'suggest_result_player':'',
+                       'suggested_match_card':'', 
                         # ACCUSING results 
-                       'accused_cards':'', # dict
+                       'accused_cards':'', 
                        'accused_result_player' : '',
                        # MOVING results 
-                       'target_tile':'' # string
+                       'target_tile':''  
                        } 
         
         # Execute specific turn and update corresponding game_status with result
@@ -265,12 +267,13 @@ class Game:
             suggested_player = ''
             weapon = ''
             room = ''
-            suggest_result = Game_processor.suggest(curr_player, weapon, room, suggested_player)
+            player_w_match, matched_card = Game_processor.suggest(curr_player, weapon, room, suggested_player)
             # TO DO: inputs and outputs for suggest?
             game_status['suggested_cards'] = {suggested_player:'player', weapon:'weapon', room:'room'}
-            # TO DO: assumes output of suggest_result is name of player who suggested cards
-            game_status['suggest_result_player'] = suggest_result
+            # TO DO: assumes output of suggest has name of player who suggested cards
+            game_status['suggest_result_player'] = player_w_match
             # TO DO: need card chosen to show
+            game_status['suggested_match_card'] = matched_card
             
         return game_status # --> server_update = Game_message_handler.build_game_package(game_status)
     
