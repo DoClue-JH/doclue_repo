@@ -117,12 +117,53 @@ class Game:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
 
+    def get_player(self, player_id):
+        for i, player in enumerate(self.players):
+            if player.get_player_id() == player_id:
+                return player
+    
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:
         num_players= len(self.players)
         dealt_decks = Deck.deal(num_players)
         for i, player in enumerate(self.players):
-            Player.set_player_hand(dealt_decks[i])
+            player.set_player_hand(dealt_decks[i])
+
+
+# Khue Test Statements for Move
+# show valid moves, prompt, take input is the loop
+# test statement
+
+# miss_scarlet = Player("Miss Scarlet", 1)
+# players = []
+# players.append(miss_scarlet)
+
+# game = Game(players, len(players))
+
+# # movement phase for one player
+# while True:
+#     show_valid_moves(miss_scarlet, game.get_game_board())
+#     move_input = prompt_move(miss_scarlet)
+#     move_output = move(game.game_board, miss_scarlet, move_input)
+
+#     if move_output == True:
+#         break       # continue to next phase
+
+#     else:
+#         print("Invalid move, try again!")
+
+# while True:
+#     show_valid_moves(miss_scarlet, game.get_game_board())
+#     move_input = prompt_move(miss_scarlet)
+#     move_output = move(game.game_board, miss_scarlet, move_input)
+
+#     if move_output == True:
+#         break       # continue to next phase
+
+#     else:
+#         print("Invalid move, try again!")
+
+
 
 
 # Khue Test Statements for Move
