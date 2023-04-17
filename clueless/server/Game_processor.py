@@ -1,35 +1,17 @@
 import random
 
 class Game_processor:
-    WEAPONS = ['candlestick','dagger','leadpipe','revolver','rope','wrench']
-    TOKENS = ['Professor Plum','Mrs Peacock','Mr Green','Mrs White','Miss Scarlet','Colonel Mustard']
-    ROOMS = ['Study','Library','Lounge', 'Billiard Room', 'Dining Room', 'Conservatory', 'Ballroom', 'Kitchen']
-
-    def __init__(self, players, weapons, rooms, solution):
-        self.players = players
-        self.weapons = weapons
-        self.rooms = rooms
-        self.solution = solution
-        self.cards = players + weapons + rooms
-        self.deck = self.cards.copy()
-        random.shuffle(self.deck)
-        self.player_positions = {player: None for player in players}
-        self.suggestions = []
-        self.accusations = []
-        self.player_cards = {player: [] for player in players}
-        self.game_over = False
 
     def __init__(self) -> None:
         pass
 
-
 #      # This method deals out the cards in the deck to each player. It does not
 #      # return anything, but it modifies the player_cards and deck attributes 
 #      # of the ClueGame object.   
-#     def deal_cards(self):
-#         for i, card in enumerate(self.deck):
-#             self.player_cards[self.players[i % len(self.players)]].append(card)
-#         self.deck = []
+    def deal_cards(self):
+        for i, card in enumerate(self.deck):
+            self.player_cards[self.players[i % len(self.players)]].append(card)
+        self.deck = []
 
     
 
@@ -233,9 +215,10 @@ def validate_move(board_dict, player, destination):
     # This method records an accusation made by a player. It does not return
     # anything, but it modifies the accusations attribute of the ClueGame object. 
     # If the accusation is correct, it also sets the game_over attribute to True.  
-    def accuse(self, player, weapon, room):
+    def accuse(self, curr_player, player, weapon, room):
         accusation = {'player': player, 'weapon': weapon, 'room': room}
         self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
+        
         # If accusation is correct
         if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
             self.game_over = True
