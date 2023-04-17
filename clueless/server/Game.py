@@ -88,7 +88,13 @@ class Game:
         # self.player_name_to_connectionid_dict = 
 
     def get_turn_status(self):
-        return self.get_turn_status
+        return self.turn_state
+
+    def get_game_status(self):
+        return self.game_status
+
+    def get_case_file(self):
+        return self.case_file
 
     def get_current_player(self):
         return self.get_turn_status
@@ -156,7 +162,7 @@ class Game:
 
     # This method determines what turn the player is taking and then routes to 
     # appropriate game logic functions to carry out turn accordingly
-    def player_take_turn(player_turn):
+    def player_take_turn(self, player_turn):
         '''
         INPUT: player_turn : dictionary from Game_message_handler.process_client_update(client_message)
             {'turn_status': player_status or'skip', 
@@ -165,6 +171,10 @@ class Game:
             }
         OUTPUT:
         '''
+        
+        # Get player object
+        player_token = self.get_player(player_turn['player_token'])
+        
         # Build game status from the result of player taking a turn
         game_status = {'player_token':'',
                        'turn_status':'', # Movement, Accusation, or Suggestion
@@ -173,21 +183,25 @@ class Game:
                        'accused_cards':'', # dict
                        'target_tile':'' # string
                        } 
+        
         if player_turn['player_status'] == "MOVING": #"CHOOSING":
             destination = player_turn['player_details']
             print("Player taking turn: Player ", player_turn['player_id'])
             print("Player chooses to move to location ", player_turn['player_details'], end='\n')
-            # move(player, destination)
+            # move_result = Game_processor.move(player, destination)
             
         elif player_turn['player_status'] == "ACCUSING":
             print('Player chooses to accuse')
-            # accuse(player, weapon, room)
+            # accuse_result = Game_processor.accuse(player, weapon, room)
             
         elif player_turn['player_status'] == "SUGGESTING":
             print('Player chooses to suggest')
-            # suggest(player, weapon, room, accused_player)
+            # suggest_result = Game_processor.suggest(player, weapon, room, accused_player)
             
         return game_status # --> server_update = Game_message_handler.build_game_package(game_status)
+    
+    
+    
     
 # ---------- MEGAN TESTING GROUNDS ----------
 # ---------- within Game class ----------
