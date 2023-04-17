@@ -37,7 +37,7 @@ class Deck:
         return self.secret_deck
     
     # A method that creates player decks based on the number of players
-    def deck_distribution(self, num_players)->list:
+    def deal(self, num_players)->list:
         game_deck= self.get_deck()
 
         dealt_decks = [{} for i in range(num_players)]
@@ -48,24 +48,27 @@ class Deck:
             dealt_deck= dealt_decks[i % num_dicts]
             dealt_deck[key]= game_deck[key]
         return dealt_decks # returns a list of decks in the form of dictionaries
+     
+
 
     # A method that deals a deck of cards to players 
     # players passed into deck should be a list
-    # This function can be placed in the game class
-    def deal(self,players)->dict:
-        num_players= len(players)
-        dealt_decks= self.deck_distribution(num_players)
-        player_w_cards = {key: value for key, value in zip(players, dealt_decks)}
-        return player_w_cards
-    
+    # Assigned the method to game as deal_to_players()
+
+    # def deal_to_players(self,players)->dict:
+    #     num_players= len(players)
+    #     dealt_decks= self.deal(num_players)
+    #     player_w_cards = {key: value for key, value in zip(players, dealt_decks)}
+    #     return player_w_cards
+   
 
 # Driver code
 # This should can be called in the game class
-deck= Deck()
-players= ["katie","megan", "kweku", "sely", "khue"]
-print(deck.get_secret_deck())
-print()
-print(deck.get_deck())
-print()
-print(deck.deal(players))
-print()
+# deck= Deck()
+# players= ["katie","megan", "kweku", "sely", "khue"]
+# print(deck.get_secret_deck())
+# print()
+# print(deck.get_deck())
+# print()
+# print(deck.deal(players))
+# print()

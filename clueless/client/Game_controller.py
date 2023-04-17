@@ -170,18 +170,6 @@ class Game_controller:
 
 # assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
 #  participate in this game."
-
-
-players= []
-
-deck= Deck()
-print(deck.get_secret_deck())
-print()
-print(deck.get_deck())
-print()
-print(deck.deal(players))
-print()
-
 ################################################################################
 
 #Instatiate Weapon_Image Class 
