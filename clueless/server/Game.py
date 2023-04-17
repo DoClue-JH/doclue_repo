@@ -210,11 +210,17 @@ class Game:
             'player_token' : player_id, 
             'player_details' : desired location?
             }
-        OUTPUT:
+        OUTPUT: game_status : dictionary to be sent back to the Server containing information about the turn result
+            {'player_token':'',
+            'turn_status':'', # Movement, Accusation, or Suggestion
+            'suggested_cards':'',  # dict
+            'suggest_result_player':'', # Name of player who provided suggested cards, None if no matching cards were found
+            'accused_cards':'', # dict
+            'target_tile':'' # string
+            } 
         '''
-        
         # Get player object
-        player_token = self.get_player(player_turn['player_token'])
+        curr_player = self.get_player(player_turn['player_token'])
         
         # Build game status from the result of player taking a turn
         game_status = {'player_token':'',
@@ -233,7 +239,9 @@ class Game:
             
         elif player_turn['player_status'] == "ACCUSING":
             print('Player chooses to accuse')
-            # accuse_result = Game_processor.accuse(player, weapon, room)
+            accuse_result = Game_processor.accuse(player, weapon, room)
+            if accuse_result: 
+                curr_player.set_player_status('LOST')
             
         elif player_turn['player_status'] == "SUGGESTING":
             print('Player chooses to suggest')

@@ -58,5 +58,5 @@ class Player:
         self.player_status = PLAYER_STATUS
     
     # Update the player's turn status
-    def set_player_status(self, TURN_STATUS):
+    def set_player_turn_status(self, TURN_STATUS):
         self.turn_status = TURN_STATUS
