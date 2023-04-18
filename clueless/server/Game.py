@@ -11,11 +11,11 @@ class Game:
 
     def __init__(self, players, num_players):
         self.num_players = num_players
-        self.players = players                              # list of all players
+        self.players = players                              # list of all player objects
         deck = Deck()
         self.game_deck = deck.get_deck()                    # dict for initial overall game deck
         self.case_file = deck.get_secret_deck()             # dict of three secret cards
-        # self.turn_state = None                              # turn state for current player
+        # self.turn_state = None                             # turn state for current player
         self.game_status = None                             # game state of entire game
 
         ############################
@@ -109,7 +109,6 @@ class Game:
     def get_game_board(self):
         return self.game_board
 
-
     # return a player whose turn it is not currently
     def get_player(self, player):
         if player in self.players:
@@ -118,10 +117,10 @@ class Game:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
 
-    # def get_player(self, player_id):
-    #     for i, player in enumerate(self.players):
-    #         if player.get_player_id() == player_id:
-    #             return player
+    def get_player_object(self, player_id):
+        for i, player in enumerate(self.players):
+            if player.get_player_id() == player_id:
+                return player
     
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:
@@ -224,7 +223,7 @@ class Game:
             } 
         '''
         # Get player object
-        curr_player = self.get_player(player_turn['player_token'])
+        curr_player = self.get_player_object(player_turn['player_token'])
         
         #  Game status stores the result of player taking a turn
         game_status = {'player_token': curr_player.get_player_name(),
@@ -276,64 +275,4 @@ class Game:
             # TO DO: need card chosen to show
             game_status['suggested_match_card'] = matched_card
             
-        return game_status # --> server_update = Game_message_handler.build_game_package(game_status)
-    
-    
-    
-    
-# ---------- MEGAN TESTING GROUNDS ----------
-# ---------- within Game class ----------
-# (1) assume this is done
-#   Game_message_handler.test_process_sent_package() --> 
-package_data = {'current_player':'megan', 
-                'character':'mrs white',
-                'weapon':'rope',
-                'room':'study'}
-
-# (2) call accuse in game_processor feeding in package info
-#   returns True or False
-accuse_result = Game_processor.accuse(package_data['player'], package_data['weapon'], package_data['room'])
-# Build contents by adding accuse_result
-contents = package_data.copy()
-contents['accuse_result'] = accuse_result
-# (3) TO IMPLEMENT build server_status by Game_message_handler.test_build_return_package(state, contents): 
-'''
-    player_tokens : list
-    player_status :  (player who just finished a turn?)
-    turn_status : TURN_STATUS
-        Movement
-        Accusation  
-        Suggestion
-    suggest_result : string
-        Non-empty, card value of match if match
-    accuse_result : string
-        Non-empty, “correct” if match
-    accuse_info : dict 
-        Non-empty, [‘player_name’+accused_deck]
-    if_placed: bool
-        If player token was moved on a previous turn
-    player_location: string
-        Name of tile where the player is located
-'''
-# ---------- inside Game class or inside Game_message_handler? ----------
-server_status = {'player_tokens':[], # all player tokens, self.players from Game
-                 'player_status':'',
-                 'turn_status':'Accusation',
-                 'suggest_result':'',
-                 'accuse_result':'',
-                 'accuse_info':[package_data['current_player'], package_data['player'], package_data['weapon'], package_data['room']],
-                 'if_placed':'',
-                 'player_location':''}
-if accuse_result:
-    server_status['accuse_result'] = 'CORRECT' 
-else:
-    server_status['accuse_result'] = 'INCORRECT' 
-    server_status['player_status'] = 'LOST' 
-    
-# (4) TO IMPLEMENT send server_status by Game_message_handler.send_game_update()
-# Game_message_handler.test_send_game_update(server_status)
-
-
-
-# ---------- outside Game class ----------
-# (5) TO TEST Client_message_handler.receive()
+        return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
