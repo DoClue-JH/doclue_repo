@@ -92,17 +92,14 @@ class Game:
         # Find out where Game is initialized, loop through players and map their name to id
         # self.player_name_to_connectionid_dict = 
 
-    def get_turn_status(self):
-        return self.turn_state
+    # def get_turn_status(self):
+    #     return self.turn_state
 
     def get_game_status(self):
         return self.game_status
 
     def get_case_file(self):
         return self.case_file
-
-    def get_current_player(self):
-        return self.turn_status
 
     def get_game_status(self):
         return self.game_status
@@ -234,13 +231,12 @@ class Game:
         curr_player = self.get_player_object(player_turn['player_id'])
         
         #  Game status stores the result of player taking a turn
-        game_status = dict(player_turn.copy())
+        game_status = player_turn.copy()
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":  
-            destination = player_turn['player_details']
-            print(f"  Player {player_turn['player_id']} chooses to move to location {player_turn['player_details']}", end='\n')
-            move_result_boolean = Game_processor.move(self.game_board, curr_player, destination)
+            print(f"  Player {player_turn['player_id']} chooses to move to location {player_turn['target_tile']}")
+            move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = player_turn['target_tile'])
             
         elif player_turn['turn_status'] == "accusation":
             print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
@@ -256,7 +252,6 @@ class Game:
         elif player_turn['turn_status'] == "suggestion":
             print('  Player chooses to suggest')
             # TO DO: extract from player_turn
-            print(self.case_file)
             player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
             # TO DO: assumes output of suggest has name of player who suggested cards
             game_status['suggest_result_player'] = player_w_match
@@ -266,7 +261,10 @@ class Game:
     
     
 ## ---------- MEGAN TESTING GROUNDS ----------
-
+def pretty_print_dict(this_dict):
+    for key in this_dict:
+        print(f"  {key} : {this_dict[key]}")
+        
 # in Server.py
 #   player_turn = Game_message_handler.process_client_update(client_message)
 player_turn = {'player_id': '1',
@@ -283,12 +281,12 @@ player_info_dict = {'1':'Colonel Mustard',
 game = Game(player_info_dict)
 game.set_case_file(character='Mrs. White', weapon='Rope', room='Library')
 case = game.get_case_file()
-for key in case:
-    print(key, case[key])
+print('secret case file is ')
+pretty_print_dict(case)
     
 # --> in Game.py
 print('Player taking a turn...')
 game_status = game.player_take_turn(player_turn)
+print()
 print('Player finished turn... and resulting game_status is')
-for key in game_status:
-    print(f'  {key} : {game_status[key]}')
+pretty_print_dict(game_status)
