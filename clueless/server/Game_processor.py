@@ -215,9 +215,9 @@ def prompt_move(player):
     # This method records an accusation made by a player. It does not return
     # anything, but it modifies the accusations attribute of the ClueGame object. 
     # If the accusation is correct
-    def accuse(self, player, weapon, room, case_file):
+    def accuse(player, weapon, room, case_file):
         case_file_reversed = {card_type: card_val for card_val, card_type in case_file.items()}
-
+        
         # If accusation is correct, return True
         return player == case_file_reversed['character'] and weapon == case_file_reversed['weapon'] and room == case_file_reversed['room']
     

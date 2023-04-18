@@ -9,9 +9,13 @@ from clueless.server.Game_processor import Game_processor
 
 class Game:
 
-    def __init__(self, players, num_players):
-        self.num_players = num_players
-        self.players = players                              # list of all player objects
+    def __init__(self, player_info_dict): # players, num_players):
+        self.num_players = len(player_info_dict)
+        self.players = []
+        for player_id, player_name in player_info_dict.items():
+            this_player = Player(player_name, player_id)
+            self.players.append(this_player)
+        
         deck = Deck()
         self.game_deck = deck.get_deck()                    # dict for initial overall game deck
         self.case_file = deck.get_secret_deck()             # dict of three secret cards
@@ -98,13 +102,10 @@ class Game:
         return self.case_file
 
     def get_current_player(self):
-        return self.get_turn_status
+        return self.turn_status
 
     def get_game_status(self):
-        return self.get_turn_status
-
-    def get_case_file(self):
-        return self.get_case_file
+        return self.game_status
     
     def get_game_board(self):
         return self.game_board
@@ -225,7 +226,7 @@ class Game:
             } 
         '''
         # Get player object
-        curr_player = self.get_player_object(player_turn['player_token'])
+        curr_player = self.get_player_object(player_turn['player_id'])
         
         #  Game status stores the result of player taking a turn
         game_status =  player_turn.copy()
@@ -239,10 +240,8 @@ class Game:
         elif player_turn['turn_status'] == "accusation":
             print('Player chooses to accuse')
             # TO DO: extract from player_turn
-            accused_player = ''
-            weapon = ''
-            room = ''
-            accuse_result = Game_processor.accuse(accused_player, weapon, room, self.case_file)
+            print(self.case_file)
+            accuse_result = Game_processor.accuse(player_turn['accused_cards']['character'], player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], self.case_file)
             if accuse_result:
                 print('Player accused correctly')
                 # Include name of current player if they accused correctly
@@ -253,13 +252,44 @@ class Game:
         elif player_turn['turn_status'] == "suggestion":
             print('Player chooses to suggest')
             # TO DO: extract from player_turn
-            suggested_player = ''
-            weapon = ''
-            room = ''
-            player_w_match, matched_card = Game_processor.suggest(curr_player, weapon, room, suggested_player)
+            print(self.case_file)
+            player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
             # TO DO: assumes output of suggest has name of player who suggested cards
             game_status.update('suggest_result_player', player_w_match)
             # TO DO: need card chosen to show
             game_status.update('suggested_match_card', matched_card)
             
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
+    
+    
+## ---------- MEGAN TESTING GROUNDS ----------
+
+def dictstr(dict):
+    """
+    Pretty-prints a dictionary into a string and returns it.  
+    An extraordinary hack from https://stackoverflow.com/a/36021359
+    """
+    import json
+    dict_as_string={str(key):dict[key] for key in dict}
+    return json.dumps(dict_as_string, indent=2)
+
+# in Server.py
+#   player_turn = Game_message_handler.process_client_update(client_message)
+player_turn = {'player_id': '1',
+            'turn_status': 'accusation',        # movement, accusation, or suggestion
+            'suggested_cards': dict,            # client_message['suggested_cards']
+            'accused_cards': {'character':'Mrs. White',
+                              'weapon':'Library',
+                              'room':'Rope'},
+            'target_tile': ''
+            } 
+player_info_dict = {'1':'Colonel Mustard', 
+                    '2':'Miss Scarlet'}
+# Server initializes Game
+game = Game(player_info_dict)
+print(dictstr(game.get_case_file()))
+
+# --> in Game.py
+game_status = game.player_take_turn(player_turn)
+for key in game_status:
+    print(key, game_status[key] )
