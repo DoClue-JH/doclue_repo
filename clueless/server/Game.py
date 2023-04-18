@@ -130,7 +130,12 @@ class Game:
         for i, player in enumerate(self.players):
             player.set_player_hand(dealt_decks[i])
 
-
+    # Set case file for testing purposes
+    def set_case_file(self, character, weapon, room):
+        self.case_file = {character:'character',
+                     weapon: 'weapon',
+                     room:'room'}
+    
 # Khue Test Statements for Move
 # show valid moves, prompt, take input is the loop
 # test statement
@@ -229,49 +234,38 @@ class Game:
         curr_player = self.get_player_object(player_turn['player_id'])
         
         #  Game status stores the result of player taking a turn
-        game_status =  player_turn.copy()
+        game_status = dict(player_turn.copy())
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":  
             destination = player_turn['player_details']
-            print(f"Player {player_turn['player_id']} chooses to move to location {player_turn['player_details']}", end='\n')
+            print(f"  Player {player_turn['player_id']} chooses to move to location {player_turn['player_details']}", end='\n')
             move_result_boolean = Game_processor.move(self.game_board, curr_player, destination)
             
         elif player_turn['turn_status'] == "accusation":
-            print('Player chooses to accuse')
+            print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
             # TO DO: extract from player_turn
-            print(self.case_file)
             accuse_result = Game_processor.accuse(player_turn['accused_cards']['character'], player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], self.case_file)
             if accuse_result:
-                print('Player accused correctly')
+                print('    Player accused correctly')
                 # Include name of current player if they accused correctly
-                game_status.update('accused_result_player', curr_player.get_player_name())  
+                game_status['accused_result_player'] = curr_player.get_player_name()
             else: 
                 curr_player.set_player_status('LOST')
             
         elif player_turn['turn_status'] == "suggestion":
-            print('Player chooses to suggest')
+            print('  Player chooses to suggest')
             # TO DO: extract from player_turn
             print(self.case_file)
             player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
             # TO DO: assumes output of suggest has name of player who suggested cards
-            game_status.update('suggest_result_player', player_w_match)
-            # TO DO: need card chosen to show
-            game_status.update('suggested_match_card', matched_card)
+            game_status['suggest_result_player'] = player_w_match
+            game_status['suggested_match_card']= matched_card
             
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
     
     
 ## ---------- MEGAN TESTING GROUNDS ----------
-
-def dictstr(dict):
-    """
-    Pretty-prints a dictionary into a string and returns it.  
-    An extraordinary hack from https://stackoverflow.com/a/36021359
-    """
-    import json
-    dict_as_string={str(key):dict[key] for key in dict}
-    return json.dumps(dict_as_string, indent=2)
 
 # in Server.py
 #   player_turn = Game_message_handler.process_client_update(client_message)
@@ -279,17 +273,22 @@ player_turn = {'player_id': '1',
             'turn_status': 'accusation',        # movement, accusation, or suggestion
             'suggested_cards': dict,            # client_message['suggested_cards']
             'accused_cards': {'character':'Mrs. White',
-                              'weapon':'Library',
-                              'room':'Rope'},
+                              'weapon':'Rope',
+                              'room':'Library'},
             'target_tile': ''
             } 
 player_info_dict = {'1':'Colonel Mustard', 
                     '2':'Miss Scarlet'}
 # Server initializes Game
 game = Game(player_info_dict)
-print(dictstr(game.get_case_file()))
-
+game.set_case_file(character='Mrs. White', weapon='Rope', room='Library')
+case = game.get_case_file()
+for key in case:
+    print(key, case[key])
+    
 # --> in Game.py
+print('Player taking a turn...')
 game_status = game.player_take_turn(player_turn)
+print('Player finished turn... and resulting game_status is')
 for key in game_status:
-    print(key, game_status[key] )
+    print(f'  {key} : {game_status[key]}')
