@@ -12,8 +12,9 @@ class Game:
     def __init__(self, players, num_players):
         self.num_players = num_players
         self.players = players                              # list of all players
-        self.game_deck = Deck.get_deck()                    # dict for initial overall game deck
-        self.case_file = Deck.get_secret_deck()             # dict of three secret cards
+        deck = Deck()
+        self.game_deck = deck.get_deck()                    # dict for initial overall game deck
+        self.case_file = deck.get_secret_deck()             # dict of three secret cards
         # self.turn_state = None                              # turn state for current player
         self.game_status = None                             # game state of entire game
 
