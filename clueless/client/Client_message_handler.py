@@ -26,6 +26,7 @@ class Client_message_handler:
 
     def send_receive(self, data):
         #print("Player sending information to the Server")
+        #print(data)
         try:
             self.client.send(pickle.dumps(data))
             return pickle.loads(self.client.recv(4096))
@@ -94,5 +95,5 @@ class Client_message_handler:
                         print("Accusation was inccorect. Player " + player_id + " loses.")
                         print()
 
-        print("processed server message")
+        #print("processed server message")
         return server_message
