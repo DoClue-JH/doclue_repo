@@ -176,15 +176,15 @@ class Game_processor:
         else: 
             return False
 
-    # This method determines what turn the player is taking and then routes to 
-    # appropriate game logic functions to carry out turn accordingly
-    def player_take_turn(player_turn):
-        print("Player taking turn: Player ", player_turn['player_id'])
+    # # This method determines what turn the player is taking and then routes to 
+    # # appropriate game logic functions to carry out turn accordingly
+    # def player_take_turn(player_turn):
+    #     print("Player taking turn: Player ", player_turn['player_id'])
 
-        if player_turn['turn_status'] == "movement":
-            print("Player chooses to move to location ", player_turn['target_tile'])
-            print()
-            
+    #     if player_turn['turn_status'] == "movement":
+    #         print("Player chooses to move to location ", player_turn['target_tile'])
+    #         print()
+
     #     return player_turn
 
     # This method records an accusation made by a player. It does not return

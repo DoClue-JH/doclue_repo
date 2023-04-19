@@ -88,6 +88,7 @@ class Game_controller:
 
             events = pygame.event.get()
             game_data = self.check_events(events)
+            print(f'game_data is now {game_data}')
             
         # when pygame.QUIT event happens, change self.playing to False 
         # the while loop will end and quit the game
@@ -111,7 +112,7 @@ class Game_controller:
                 turn_data = self.add_main_view(events)
 
             # This is to highlight rectangle when choosing the room and print the choosen one on the options box
-            if (self.state == 'MOVEMENT'):
+            if (self.state == 'MOVING'): #'MOVEMENT'):
                 turn_data = self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
                 for key in self.tiles_directory:
@@ -129,10 +130,14 @@ class Game_controller:
                     if self.room_choice is not None:
                         print('Player choose to go to tile : ' + self.room_choice)
                         self.message_for_server["room"] = self.room_choice
-                        self.state = "START"
+                        print('Updated self.message_for_server with room choice')
+                        # self.state = "START"
+                        self.state = "MOVEMENT"
                         # SEND MESSAGE TO SERVER
+                        turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice)
+                        self.network.send(turn_data)
                         print("Sending message to server for movement:")
-                        print(self.message_for_server)
+                        print(f'     {self.player_id}, {self.state},{self.room_choice}')
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
                 closeRect = pygame.Rect(970, 570, 25, 25)
@@ -233,8 +238,11 @@ class Game_controller:
         if is_Room_Selection_Active:
             self.state = "MOVEMENT"
             self.board.load_options(self.screen, self.state, events)
+            self.state = "MOVING"
+            print('Player chose to move')
+            # This data stores the mouse position of the button
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
-            print(turn_data)
+            # turn_data = self.network.build_client_package(self.player_id, self.state, self.message_for_server['room'])
             self.network.send(turn_data)
 
         if is_Accuse_Selection_Active:

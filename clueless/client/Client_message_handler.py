@@ -49,7 +49,8 @@ class Client_message_handler:
 
     def build_client_package(self, player_id, state, contents):
         #start builing message package to send to server
-        #print("building client package")
+        print("...building client package")
+        print(f'   for player {player_id}, {state}, {contents}')
         client_package = dict({'player_id': player_id, 'turn_status': state})
 
         if (state == 'MOVEMENT'):
@@ -67,7 +68,7 @@ class Client_message_handler:
         return game
 
     def process_server_update(self, server_message, prev_server_message):
-        #print("processing server message")
+        print("...processing server message")
         if server_message != prev_server_message:
             player_id = server_message['player_id']
             #player_token = server_message['player_token']
@@ -79,6 +80,7 @@ class Client_message_handler:
                 if turn_status == 'movement':
                     print("Player " + player_id + " chooses to move to location ", server_message['player_location'])
                     print()
+                                
                 elif turn_status == 'suggestion':
                     print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
                           server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])

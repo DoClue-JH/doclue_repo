@@ -106,7 +106,9 @@ class Game:
     def get_game_board(self):
         return self.game_board
 
-
+    def get_backend_tilename(self, frontend_tilename):
+        tilename_dict = {'study_room':'Study'}
+        
     # return a player whose turn it is not currently
     def get_player(self, player):
         if player in self.players:
@@ -159,9 +161,13 @@ class Game:
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":  
-            print(f"  Player {player_turn['player_id']} chooses to move to location {player_turn['target_tile']}")
-            move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = player_turn['target_tile'])
+            backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
+            target_tile_obj = self.game_board[backend_tilename]
+            print(' GOT backend name!')
+            print(f"  Player {player_turn['player_id']} chooses to move to location {target_tile_obj.get_tile_name()}")
             
+            move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+            print(f" move_result_boolean ---> {move_result_boolean}")
         elif player_turn['turn_status'] == "accusation":
             print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
             # TO DO: extract from player_turn
