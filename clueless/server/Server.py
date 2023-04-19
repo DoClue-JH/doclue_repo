@@ -5,7 +5,7 @@ import pickle
 import sys
 from clueless.server.Game import Game
 from clueless.server.Game_message_handler import Game_message_handler
-from clueless.server.Game_processor import Game_processor
+from clueless.server.Game_processor import *
 
 HOST_ADDR = socket.gethostbyname(socket.gethostname())
 HOST_PORT = 8080
