@@ -185,9 +185,11 @@ class Game:
             print(f"  Player {curr_player.get_player_name()} chooses to move to location {target_tile_obj.get_tile_name()}")
             move_validated_boolean = Game_processor.validate_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             if move_validated_boolean:
-                move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-            
-            print(f"  {curr_player.get_player_name()} moved from {curr_player.get_player_old_location()} to {curr_player.get_player_current_location()}")
+                print('  move is valid')
+                # move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+                move_result_boolean = Game_processor.move(self.game_board, curr_player, destination = target_tile_obj)
+
+            print(f"  {curr_player.get_player_name()} moved from {curr_player.get_player_old_location().get_tile_name()} to {curr_player.get_player_current_location().get_tile_name()}")
             
         elif player_turn['turn_status'] == "accusation":
             print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")

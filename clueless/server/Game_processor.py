@@ -100,9 +100,9 @@ class Game_processor:
         return 
 
     def move(board_dict, player, destination):
+        print(f"  trying to move {player.get_player_name()} from {player.get_player_old_location().get_tile_name()} to {player.get_player_current_location().get_tile_name()}")
         player.update(destination)
-        print("old is", player.get_player_old_location())
-        print("new is", player.get_player_current_location())
+        print(f"  {player.get_player_name()} moved from {player.get_player_old_location().get_tile_name()} to {player.get_player_current_location().get_tile_name()}")
 
         # update tile_num_players
         if player.get_player_old_location() is not None:
@@ -141,7 +141,7 @@ class Game_processor:
                 'Mrs. White' : 'Hallway 12'
                 }
             # TO BE FIXED FOR TARGET INCREMENT 
-            print(f'COMPARING FIRST MOVE {player_first_move[player.get_player_name()]} to {destination.get_tile_name()}')
+            print(f'     comparing first move {player_first_move[player.get_player_name()]} to {destination.get_tile_name()}')
             if player_first_move.get(player.get_player_name()) == destination.get_tile_name():
                 return True
             else:

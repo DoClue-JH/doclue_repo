@@ -68,7 +68,7 @@ class Client_message_handler:
         return game
 
     def process_server_update(self, server_message, prev_server_message):
-        print("...processing server message")
+        print(f"...processing server message --> {server_message}")
         if server_message != prev_server_message:
             player_id = server_message['player_id']
             #player_token = server_message['player_token']
