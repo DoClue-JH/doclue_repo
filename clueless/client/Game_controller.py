@@ -72,6 +72,8 @@ class Game_controller:
 
                 
                 game = self.network.send_receive(game_data)
+                print("...sent and received client message")
+                
                 # self.network.send(game_data)
                 # print("sent client message")
 

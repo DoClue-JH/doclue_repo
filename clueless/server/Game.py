@@ -21,7 +21,7 @@ class Game:
         print(f'  with case_file {self.case_file}')
         print('   with players')
         for p in self.players:
-            print(p.get_player_name(), p.get_player_id())
+            print(f'       {p.get_player_name()}, {p.get_player_id()}')
         
         ############################
         ##### INITIALIZE TILES #####
@@ -186,9 +186,7 @@ class Game:
             move_validated_boolean = Game_processor.validate_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             if move_validated_boolean:
                 print('  move is valid')
-                # move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-                move_result_boolean = Game_processor.move(self.game_board, curr_player, destination = target_tile_obj)
-
+                move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             print(f"  {curr_player.get_player_name()} moved from {curr_player.get_player_old_location().get_tile_name()} to {curr_player.get_player_current_location().get_tile_name()}")
             
         elif player_turn['turn_status'] == "accusation":
