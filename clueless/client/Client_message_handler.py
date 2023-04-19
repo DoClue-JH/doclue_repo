@@ -3,6 +3,10 @@ import socket
 import pickle
 import threading
 
+import sys
+
+
+
 HOST_ADDR = socket.gethostbyname(socket.gethostname())
 HOST_PORT = 8080
 
@@ -34,21 +38,23 @@ class Client_message_handler:
 
     def send(self, data):
         #print("Player sending information to the Server")
+        print(f" data is {sys.getsizeof(data)} bytes")
         try:
             self.client.send(pickle.dumps(data))
         except socket.error as err:
-            print(err)
+            print(f"    {err} from send()")
+            
 
     def receive(self):
         #print("Player receiving information from the Server")
         try:
             return pickle.loads(self.client.recv(4096))
         except socket.error as err:
-            print(err)
+            print(f"    {err} from receive()")
 
     def build_client_package(self, player_id, state, contents):
         #start builing message package to send to server
-        #print("building client package")
+        print("building client package")
         client_package = dict({'player_id': player_id, 'turn_status': state})
 
         if (state == 'MOVEMENT'):
@@ -68,6 +74,7 @@ class Client_message_handler:
     def process_server_update(self, server_message, prev_server_message):
         #print("processing server message")
         if server_message != prev_server_message:
+            print('server_message is different than prev_server_message')
             player_id = server_message['player_id']
             #player_token = server_message['player_token']
             turn_status = server_message['turn_status']
@@ -75,15 +82,15 @@ class Client_message_handler:
             if turn_status != "get":
                 print("Player taking turn: ", player_id)
                 #based on player's turn and game status, update players with the status of the game
-                if turn_status == 'movement':
+                if turn_status == 'MOVEMENT':
                     print("Player " + player_id + " chooses to move to location ", server_message['player_location'])
                     print()
-                elif turn_status == 'suggestion':
+                elif turn_status == 'SUGGESTION':
                     print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
                           server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
                     print()
                     #if the player client is the same as the player who made the suggestion, reveal the suggestion result
-                elif turn_status == 'accusation':
+                elif turn_status == 'ACCUSATION':
                     print("Player " + player_id + " accused " + server_message['accused_cards']['character'] + " with the " + 
                         server_message['accused_cards']['weapon'] + " in the " + server_message['accused_cards']['room'])
                     print()

@@ -7,6 +7,7 @@ from clueless.client import Button, Client_game_board
 import pickle
 import pygame
 import random
+import time
 
 DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get'})
 server_update = dict({})
@@ -72,13 +73,13 @@ class Game_controller:
 
                 #game = self.network.send_receive(game_data)
                 self.network.send(game_data)
-                #print("sent client message")
+                print("sent client message")
 
                 game = self.network.receive()
-                #print("received server message")
+                print("received server message")
 
                 prev_game_state = self.network.process_server_update(game, prev_game_state)
-                #print(prev_game_state)
+                print(prev_game_state)
 
             except:
                 run = False

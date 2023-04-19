@@ -11,6 +11,7 @@ class Game_message_handler:
 
     def receive_client_update(conn):
         client_update = pickle.loads(conn.recv(4096))
+        print('    Game_msg_handler receive_client_update()')
         return client_update
 
     def process_client_update(client_message):

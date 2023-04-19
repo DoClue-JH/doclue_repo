@@ -22,7 +22,7 @@ class Server:
         self.id_count = 0
         self.max_players = PLAYER_MAX
         #hardcoding as a placeholder
-        self.game = Game([],3)
+        self.game = None # Game([],3)
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
@@ -112,4 +112,8 @@ class Server:
                 id_count = threading.active_count()-1
                 print("Active Players: ", threading.active_count()-1)
                 print()
-
+            elif id_count == 2:
+                print('STARTING GAME')
+                player_info_dict = {'1':'Colonel Mustard', 
+                    '2':'Miss Scarlet'}
+                self.game = Game(player_info_dict)
