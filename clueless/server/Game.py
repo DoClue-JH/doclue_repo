@@ -108,9 +108,23 @@ class Game:
     def get_game_board(self):
         return self.game_board
 
+    # TO DO: FILL IN THIS DICT
     def get_backend_tilename(self, frontend_tilename):
-        tilename_dict = {'study_room':'Study'}
-        return tilename_dict[frontend_tilename]
+        tilename_dict = {'study_room':'Study',
+                         'hallway_2':'Hallway 02',
+                         'hallway_3':'Hallway 03',
+                         'hallway_4':'Hallway 04',
+                         'hallway_5':'Hallway 05',
+                         'hallway_6':'Hallway 06',
+                         'hallway_7':'Hallway 07',
+                         'hallway_8':'Hallway 08',
+                         'hallway_9':'Hallway 09',
+                         'hallway_10':'Hallway 10',
+                         'hallway_11':'Hallway 11'}
+        try:  
+            return tilename_dict[frontend_tilename]
+        except:
+            return f"{frontend_tilename} not in dictionary!"
         
     # return a player whose turn it is not currently
     def get_player(self, player):
@@ -169,9 +183,12 @@ class Game:
             backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
             target_tile_obj = self.game_board[backend_tilename]
             print(f"  Player {curr_player.get_player_name()} chooses to move to location {target_tile_obj.get_tile_name()}")
+            move_validated_boolean = Game_processor.validate_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+            if move_validated_boolean:
+                move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             
-            move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-            print(f" move_result_boolean ---> {move_result_boolean}")
+            print(f"  {curr_player.get_player_name()} moved from {curr_player.get_player_old_location()} to {curr_player.get_player_current_location()}")
+            
         elif player_turn['turn_status'] == "accusation":
             print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
             # TO DO: extract from player_turn
@@ -190,7 +207,8 @@ class Game:
             # TO DO: assumes output of suggest has name of player who suggested cards
             game_status['suggest_result_player'] = player_w_match
             game_status['suggested_match_card']= matched_card
-            
+        
+        print(f'... return game_status {game_status}')
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 
 # Khue Test Statements for Move

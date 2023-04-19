@@ -22,7 +22,7 @@ class Server:
         self.id_count = 0
         self.max_players = PLAYER_MAX
         #hardcoding as a placeholder
-        player_info_dict = {1:'Colonel Mustard',
+        player_info_dict = {1:'Colonal Mustard',
                              2:'Miss Scarlet'}
         self.game = Game(player_info_dict)
 

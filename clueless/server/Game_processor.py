@@ -1,26 +1,28 @@
 import random
+from clueless.server.Player import Player
+from clueless.server.Tile import Tile
 
 class Game_processor:
-    WEAPONS = ['candlestick','dagger','leadpipe','revolver','rope','wrench']
-    TOKENS = ['Professor Plum','Mrs Peacock','Mr Green','Mrs White','Miss Scarlet','Colonel Mustard']
-    ROOMS = ['Study','Library','Lounge', 'Billiard Room', 'Dining Room', 'Conservatory', 'Ballroom', 'Kitchen']
+    # WEAPONS = ['candlestick','dagger','leadpipe','revolver','rope','wrench']
+    # TOKENS = ['Professor Plum','Mrs Peacock','Mr Green','Mrs White','Miss Scarlet','Colonel Mustard']
+    # ROOMS = ['Study','Library','Lounge', 'Billiard Room', 'Dining Room', 'Conservatory', 'Ballroom', 'Kitchen']
 
-    def __init__(self, players, weapons, rooms, solution):
-        self.players = players
-        self.weapons = weapons
-        self.rooms = rooms
-        self.solution = solution
-        self.cards = players + weapons + rooms
-        self.deck = self.cards.copy()
-        random.shuffle(self.deck)
-        self.player_positions = {player: None for player in players}
-        self.suggestions = []
-        self.accusations = []
-        self.player_cards = {player: [] for player in players}
-        self.game_over = False
+    # def __init__(self, players, weapons, rooms, solution):
+    #     self.players = players
+    #     self.weapons = weapons
+    #     self.rooms = rooms
+    #     self.solution = solution
+    #     self.cards = players + weapons + rooms
+    #     self.deck = self.cards.copy()
+    #     random.shuffle(self.deck)
+    #     self.player_positions = {player: None for player in players}
+    #     self.suggestions = []
+    #     self.accusations = []
+    #     self.player_cards = {player: [] for player in players}
+    #     self.game_over = False
 
-    def __init__(self) -> None:
-        pass
+    # def __init__(self) -> None:
+    #     pass
 
 
 #      # This method deals out the cards in the deck to each player. It does not
@@ -97,45 +99,37 @@ class Game_processor:
         print("####################################################################")
         return 
 
-    def move(self, board_dict, player, destination):
-        move_valid = self.validate_move(board_dict, player, destination)
-        print('     validated move')
-        # validate gets called first
-        if move_valid:
-            # update player old and new location
-            player.update(destination)
-            print("old is", player.get_player_old_location())
-            print("new is", player.get_player_current_location())
+    def move(board_dict, player, destination):
+        player.update(destination)
+        print("old is", player.get_player_old_location())
+        print("new is", player.get_player_current_location())
 
-            # update tile_num_players
-            if player.get_player_old_location() is not None:
-                board_dict.get(player.get_player_old_location()).tile_num_players -= 1
+        # update tile_num_players
+        if player.get_player_old_location() is not None:
+            board_dict.get(player.get_player_old_location()).tile_num_players -= 1
 
-            board_dict.get(player.get_player_current_location()).tile_num_players += 1
+        board_dict.get(player.get_player_current_location()).tile_num_players += 1
 
-            # print statements
-            print()
-            print("Success!")
-            print("Previous tile:", player.get_player_old_location())
-            if player.get_player_old_location() is not None:
-                print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
-            print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
-            print()
-            print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
-            print()
-            print("===============================")
-            return True
-        
-        elif self.validate_move(board_dict, player, destination) == False:
-            return False
+        # print statements
+        print()
+        print("Success!")
+        print("Previous tile:", player.get_player_old_location())
+        if player.get_player_old_location() is not None:
+            print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
+        print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
+        print()
+        print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
+        print()
+        print("===============================")
+        return True
 
 
     # check if move is in dict; if in dict, is it in the adj tiles?
     def validate_move(board_dict, player, destination):
-
         # check if this is the player's first move, the only time where
         # both old and new location are None
         if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
+            print("     players first move")
 
             # dict of player_name : starting tile_name
             player_first_move = {
@@ -146,8 +140,9 @@ class Game_processor:
                 'Mr. Green' : 'Hallway 11',
                 'Mrs. White' : 'Hallway 12'
                 }
-            
-            if player_first_move.get(player.get_player_name()) == destination:
+            # TO BE FIXED FOR TARGET INCREMENT 
+            print(f'COMPARING FIRST MOVE {player_first_move[player.get_player_name()]} to {destination.get_tile_name()}')
+            if player_first_move.get(player.get_player_name()) == destination.get_tile_name():
                 return True
             else:
                 return False
