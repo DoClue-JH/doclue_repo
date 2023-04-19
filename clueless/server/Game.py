@@ -6,9 +6,9 @@ from clueless.server.Player import Player
 
 class Game:
 
-    def __init__(self, player_info_dict):
+    def __init__(self, player_info_dict, num_players):
         # print('GAME INITIALIZED')
-        self.num_players = len(player_info_dict)
+        self.num_players = num_players
         self.players = []
 
         for player_id, player_name in player_info_dict.items():

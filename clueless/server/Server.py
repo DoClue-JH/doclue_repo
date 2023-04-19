@@ -23,8 +23,9 @@ class Server:
         self.max_players = PLAYER_MAX
         #hardcoding as a placeholder
         player_info_dict = {1:'Colonal Mustard',
-                            2:'Miss Scarlet'}
-        self.game = Game(player_info_dict)
+                            2:'Miss Scarlet',
+                            3: 'Mr. Green'}
+        self.game = Game(player_info_dict, 3)
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
