@@ -108,6 +108,7 @@ class Game:
 
     def get_backend_tilename(self, frontend_tilename):
         tilename_dict = {'study_room':'Study'}
+        return tilename_dict[frontend_tilename]
         
     # return a player whose turn it is not currently
     def get_player(self, player):
@@ -155,12 +156,13 @@ class Game:
         '''
         # Get player object
         curr_player = self.get_player_object(player_turn['player_id'])
-        
+        print(player_turn)
         #  Game status stores the result of player taking a turn
         game_status = player_turn.copy()
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":  
+            print('  Player chooses to move')
             backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
             target_tile_obj = self.game_board[backend_tilename]
             print(' GOT backend name!')
