@@ -94,4 +94,5 @@ class Client_message_handler:
                         print("Accusation was inccorect. Player " + player_id + " loses.")
                         print()
 
+        print("processed server message")
         return server_message

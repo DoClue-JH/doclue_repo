@@ -6,6 +6,7 @@ class Game_message_handler:
         pass
 
     def send_game_update(conn, game_update):
+        #print("sending to client")
         conn.send(pickle.dumps(game_update))
 
     def receive_client_update(conn):
@@ -16,7 +17,8 @@ class Game_message_handler:
         #print("processing client message")
         #print(client_message)
         turn_status = client_message['turn_status']
-        player_turn = {'player_id': client_message['player_id']}
+        #starting with client turn status form bc og the get condition
+        player_turn = dict({'player_id': client_message['player_id'], 'turn_status': turn_status})
 
         if turn_status == "reset":
             pass        
@@ -31,7 +33,7 @@ class Game_message_handler:
                 player_turn.update({'turn_status': 'accusation'})
                 player_turn.update({'accused_cards': client_message['accused_cards']})
 
-        #print(player_turn)
+        print(player_turn)
         return player_turn
 
 

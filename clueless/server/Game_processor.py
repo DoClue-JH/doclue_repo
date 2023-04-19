@@ -176,6 +176,16 @@ def validate_move(board_dict, player, destination):
     else: 
         return False
 
+# This method determines what turn the player is taking and then routes to 
+# appropriate game logic functions to carry out turn accordingly
+def player_take_turn(player_turn):
+    print("Player taking turn: Player ", player_turn['player_id'])
+
+    if player_turn['player_status'] == "movement":
+        print("Player chooses to move to location ", player_turn['player_location'])
+        print()
+
+    return player_turn
 
 
     # # This method moves a player to a new position. It does not return anything,
@@ -296,14 +306,3 @@ def validate_move(board_dict, player, destination):
 #     print("Valid suggestion!")
 # else:
 #     print("Invalid suggestion.")
-
-    # This method determines what turn the player is taking and then routes to 
-    # appropriate game logic functions to carry out turn accordingly
-    def player_take_turn(player_turn):
-        print("Player taking turn: Player ", player_turn['player_id'])
-
-        if player_turn['player_status'] == "movement":
-            print("Player chooses to move to location ", player_turn['player_location'])
-            print()
-
-        return player_turn

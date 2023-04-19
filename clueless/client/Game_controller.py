@@ -70,8 +70,13 @@ class Game_controller:
 
                 game_data = self.network.build_client_package(self.player_id, "get", '')
 
-                game = self.network.send_receive(game_data)
+                #game = self.network.send_receive(game_data)
+                self.network.send(game_data)
+                #print("sent client message")
+
+                game = self.network.receive()
                 #print("received server message")
+
                 prev_game_state = self.network.process_server_update(game, prev_game_state)
                 #print(prev_game_state)
 
@@ -272,8 +277,8 @@ class Game_controller:
             print(self.message_for_server)
 
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
-        #print(turn_data)
-        self.network.send(turn_data)
+            #print(turn_data)
+            self.network.send(turn_data)
 
     ################################################################################
     # add_accuse_view is the function to show accuse view
@@ -307,9 +312,10 @@ class Game_controller:
             print('Sending message to server for accusation: ')
             print(self.message_for_server)
         
-        turn_data = self.network.build_package(self.state, str(mousePos))
-        #print(turn_data)
-        self.network.send(turn_data)
+            turn_data = self.network.build_package(self.player_id, self.state, str(mousePos))
+            #print(turn_data)
+            self.network.send(turn_data)
+            
     def render(self):
         pygame.display.flip()
     
