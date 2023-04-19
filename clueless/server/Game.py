@@ -133,6 +133,11 @@ class Game:
                      weapon: 'weapon',
                      room:'room'}
     
+    def set_case_file(self, character, weapon, room):
+        self.case_file = {character:'character',
+                     weapon: 'weapon',
+                     room:'room'}
+        
 # Khue Test Statements for Move
 # show valid moves, prompt, take input is the loop
 # test statement
