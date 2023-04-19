@@ -1,3 +1,3 @@
-from clueless.Game import Game
+from clueless.server.Game import Game
 
 game = Game()

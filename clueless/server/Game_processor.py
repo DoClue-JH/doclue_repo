@@ -15,16 +15,16 @@ class Game_processor:
 
     
 
-# prompt still needs to be moved to FRONT END
-def prompt_move(player):
-    print()
-    print("===============================")
-    print("       **Movement Phase**      ")
-    print("      **", player.player_name, "**")
-    print("===============================")
-    print()
-    print("Instructions:")
-    print("Please enter a valid tile name from above, without apostrophes.")
+    # prompt still needs to be moved to FRONT END
+    def prompt_move(player):
+        print()
+        print("===============================")
+        print("       **Movement Phase**      ")
+        print("      **", player.player_name, "**")
+        print("===============================")
+        print()
+        print("Instructions:")
+        print("Please enter a valid tile name from above, without apostrophes.")
 
         player_input_tile = input("Where do you want to go? \n")
         return player_input_tile

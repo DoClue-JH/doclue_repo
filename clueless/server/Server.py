@@ -20,7 +20,8 @@ class Server:
     def __init__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.id_count = 0
-        self.game = Game()
+        # player_info_dict = {}
+        self.game = None # Game(player_info_dict)
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
@@ -108,4 +109,9 @@ class Server:
                 id_count = threading.active_count()-1
                 print("Active Players: ", threading.active_count()-1)
                 print()
+                
+            elif id_count == 2:
+                player_info_dict = {'1':'Colonel Mustard',
+                                    '2':'Miss Scarlet'}
+                self.game = Game(player_info_dict)
 

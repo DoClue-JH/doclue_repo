@@ -1,8 +1,8 @@
-from Tile import * 
-from Player import *
-from Game_processor import *
-from Deck import Deck
-from Player import Player
+from clueless.server.Tile import * 
+from clueless.server.Player import *
+from clueless.server.Game_processor import *
+from clueless.server.Deck import Deck
+# from Player import Player
 
 from clueless.server.Game_message_handler import Game_message_handler
 from clueless.server.Game_processor import Game_processor
