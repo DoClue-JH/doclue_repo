@@ -265,7 +265,7 @@ class Game:
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
     
     
-## ---------- MEGAN TESTING GROUNDS ----------
+## ---------- MEGAN TESTING GROUNDS -----------
 def pretty_print_dict(this_dict):
     for key in this_dict:
         print(f"  {key} : {this_dict[key]}")
