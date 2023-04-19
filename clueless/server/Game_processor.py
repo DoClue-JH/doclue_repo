@@ -185,7 +185,7 @@ class Game_processor:
             print("Player chooses to move to location ", player_turn['target_tile'])
             print()
             
-        return player_turn
+    #     return player_turn
 
     # This method records an accusation made by a player. It does not return
     # anything, but it modifies the accusations attribute of the ClueGame object. 
