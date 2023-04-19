@@ -97,9 +97,9 @@ class Game_processor:
         print("####################################################################")
         return 
 
-    def move(board_dict, player, destination):
+    def move(self, board_dict, player, destination):
         # validate gets called first
-        if validate_move(board_dict, player, destination) == True:
+        if self.validate_move(board_dict, player, destination) == True:
             # update player old and new location
             player.update(destination)
             print("old is", player.get_player_old_location())
@@ -124,7 +124,7 @@ class Game_processor:
             print("===============================")
             return True
         
-        elif validate_move(board_dict, player, destination) == False:
+        elif self.validate_move(board_dict, player, destination) == False:
             return False
 
 

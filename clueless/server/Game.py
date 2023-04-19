@@ -91,10 +91,10 @@ class Game:
         return self.get_turn_status
 
     def get_game_status(self):
-        return self.get_turn_status
+        return self.game_status
 
     def get_case_file(self):
-        return self.get_case_file
+        return self.case_file
     
     def get_game_board(self):
         return self.game_board
@@ -115,6 +115,60 @@ class Game:
         for i, player in enumerate(self.players):
             Player.set_player_hand(dealt_decks[i])
 
+    # This method determines what turn the player is taking and then routes to 
+    # appropriate game logic functions to carry out turn accordingly
+    def player_take_turn(self, player_turn):
+        '''
+        INPUT: player_turn : dictionary from Game_message_handler.process_client_update(client_message)
+            {'player_id': str,
+            'turn_status': str,                                 # movement, accusation, or suggestion
+            'suggested_cards': dict,                            # client_message['suggested_cards']
+            'accused_cards': dict,
+            'target_tile': str
+            } 
+            
+        OUTPUT: game_status : dictionary to be sent back to the Server containing information about the turn result
+            {'player_token': str,
+            'turn_status': str,                   # movement, accusation, or suggestion
+            'suggested_cards': dict,
+            'suggested_match_card' : str,
+            'suggest_result_player': str,         # Name of player who provided suggested cards, None if no matching cards were found
+            'accused_cards': dict,
+            'accused_result_player' : str,        # Name of player who accused correctly, None accused incorrectly
+            'target_tile': str
+            } 
+        '''
+        # Get player object
+        curr_player = self.get_player_object(player_turn['player_id'])
+        
+        #  Game status stores the result of player taking a turn
+        game_status = player_turn.copy()
+        
+        # Execute specific turn and update corresponding game_status with result
+        if player_turn['turn_status'] == "movement":  
+            print(f"  Player {player_turn['player_id']} chooses to move to location {player_turn['target_tile']}")
+            move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = player_turn['target_tile'])
+            
+        elif player_turn['turn_status'] == "accusation":
+            print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
+            # TO DO: extract from player_turn
+            accuse_result = Game_processor.accuse(player_turn['accused_cards']['character'], player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], self.case_file)
+            if accuse_result:
+                print('    Player accused correctly')
+                # Include name of current player if they accused correctly
+                game_status['accused_result_player'] = curr_player.get_player_name()
+            else: 
+                curr_player.set_player_status('LOST')
+            
+        elif player_turn['turn_status'] == "suggestion":
+            print('  Player chooses to suggest')
+            # TO DO: extract from player_turn
+            player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
+            # TO DO: assumes output of suggest has name of player who suggested cards
+            game_status['suggest_result_player'] = player_w_match
+            game_status['suggested_match_card']= matched_card
+            
+        return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 
 # Khue Test Statements for Move
 # show valid moves, prompt, take input is the loop
