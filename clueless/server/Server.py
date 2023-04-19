@@ -95,7 +95,7 @@ class Server:
         #Enter the number of players and their names
         num_players= int(input("Enter the number of players: "))
         
-        while (num_players < 3 or num_players > 6):
+        while (num_players < PLAYER_MIN or num_players > PLAYER_MAX):
             print("A total number of 3-6 players are allowed to participate in this game.")
             num_players= int(input("Enter the number of players: "))
 
