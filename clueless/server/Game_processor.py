@@ -98,8 +98,10 @@ class Game_processor:
         return 
 
     def move(self, board_dict, player, destination):
+        move_valid = self.validate_move(board_dict, player, destination)
+        print('     validated move')
         # validate gets called first
-        if self.validate_move(board_dict, player, destination) == True:
+        if move_valid:
             # update player old and new location
             player.update(destination)
             print("old is", player.get_player_old_location())
@@ -145,7 +147,7 @@ class Game_processor:
                 'Mrs. White' : 'Hallway 12'
                 }
             
-            if player_first_move.get(player.player_name) == destination:
+            if player_first_move.get(player.get_player_name()) == destination:
                 return True
             else:
                 return False

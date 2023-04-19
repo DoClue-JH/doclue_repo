@@ -19,7 +19,9 @@ class Game:
         # self.turn_state = None                              # turn state for current player
         self.game_status = None                             # game state of entire game
         print(f'  with case_file {self.case_file}')
-        print(f'  with players {self.players}')
+        print('   with players')
+        for p in self.players:
+            print(p.get_player_name(), p.get_player_id())
         
         ############################
         ##### INITIALIZE TILES #####
@@ -120,8 +122,9 @@ class Game:
 
     def get_player_object(self, player_id):
         for i, player in enumerate(self.players):
+            print(f'...comparing {player.get_player_id()} to {player_id}')
             if player.get_player_id() == player_id:
-                return 
+                return player
             
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:
@@ -155,18 +158,17 @@ class Game:
             } 
         '''
         # Get player object
-        curr_player = self.get_player_object(player_turn['player_id'])
-        print(player_turn)
+        curr_player = self.get_player_object(int(player_turn['player_id']))
+        
+        print(f'  with player_turn dict {player_turn} and curr_player obj {curr_player}')
         #  Game status stores the result of player taking a turn
         game_status = player_turn.copy()
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":  
-            print('  Player chooses to move')
             backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
             target_tile_obj = self.game_board[backend_tilename]
-            print(' GOT backend name!')
-            print(f"  Player {player_turn['player_id']} chooses to move to location {target_tile_obj.get_tile_name()}")
+            print(f"  Player {curr_player.get_player_name()} chooses to move to location {target_tile_obj.get_tile_name()}")
             
             move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             print(f" move_result_boolean ---> {move_result_boolean}")
