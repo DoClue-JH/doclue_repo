@@ -16,20 +16,20 @@ class Game_message_handler:
         #print("processing client message")
         #print(client_message)
         turn_status = client_message['turn_status']
-        player_turn = {'player_id': client_message['player_id'], 'turn_status': turn_status}
+        player_turn = {'player_id': client_message['player_id']}
 
         if turn_status == "reset":
             pass        
         elif turn_status != "get":
-            if turn_status == 'CHOOSING_ROOM':
-                player_turn.update('turn_status', 'movement')
-                player_turn.update('target_tile', client_message['target_tile'])
-            elif turn_status == 'SUGGESTING':
-                player_turn.update('turn_status', 'suggestion')
-                player_turn.update('suggested_cards', client_message['suggested_cards'])
-            elif turn_status == 'ACCUSING':
-                player_turn.update('turn_status', 'accusation')
-                player_turn.update('accused_cards', client_message['accused_cards'])
+            if turn_status == 'MOVEMENT':
+                player_turn.update({'turn_status': 'movement'})
+                player_turn.update({'target_tile': client_message['target_tile']})
+            elif turn_status == 'SUGGESTION':
+                player_turn.update({'turn_status': 'suggestion'})
+                player_turn.update({'suggested_cards': client_message['suggested_cards']})
+            elif turn_status == 'ACCUSATION':
+                player_turn.update({'turn_status': 'accusation'})
+                player_turn.update({'accused_cards': client_message['accused_cards']})
 
         #print(player_turn)
         return player_turn

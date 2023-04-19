@@ -20,7 +20,8 @@ class Server:
     def __init__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.id_count = 0
-        self.game = Game()
+        #hardcoding as a placeholder
+        self.game = Game([],3)
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))

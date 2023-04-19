@@ -52,16 +52,16 @@ class Client_message_handler:
         client_package = dict({'player_id': player_id, 'turn_status': state})
 
         if (state == 'MOVEMENT'):
-            client_package.update('target_tile', contents)
-        # elif (state == 'SUGGESTION'):
-        #     client_package.update('suggested_cards', contents)
-        # elif (state == 'ACCUSATION'):
-        #     client_package.update('accused_cards', contents)
+            client_package.update({'target_tile': contents})
+        elif (state == 'SUGGESTION'):
+            client_package.update({'suggested_cards': contents})
+        elif (state == 'ACCUSATION'):
+            client_package.update({'accused_cards': contents})
 
         return client_package
     
     def get_server_update(self):
-        game_data = self.build_client_package("get", "")
+        game_data = self.build_client_package(self.id, "get", "")
         game = self.send_receive(game_data)
         return game
 
@@ -78,20 +78,20 @@ class Client_message_handler:
                 if turn_status == 'movement':
                     print("Player " + player_id + " chooses to move to location ", server_message['player_location'])
                     print()
-                # elif turn_status == 'suggestion':
-                #     print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
-                #           server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
-                #     print()
-                #     #if the player client is the same as the player who made the suggestion, reveal the suggestion result
-                # elif (player_token == 'accusation'):
-                #     print("Player " + player_id + " accused " + server_message['accused_cards']['character'] + " with the " + 
-                #         server_message['accused_cards']['weapon'] + " in the " + server_message['accused_cards']['room'])
-                #     print()
-                #     if(server_message['accuse_result'] == True):
-                #         print("Accusation Correct! Player " + player_id + " wins!")
-                #         print()
-                #     else:
-                #         print("Accusation was inccorect. Player " + player_id + " loses.")
-                #         print()
+                elif turn_status == 'suggestion':
+                    print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
+                          server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
+                    print()
+                    #if the player client is the same as the player who made the suggestion, reveal the suggestion result
+                elif turn_status == 'accusation':
+                    print("Player " + player_id + " accused " + server_message['accused_cards']['character'] + " with the " + 
+                        server_message['accused_cards']['weapon'] + " in the " + server_message['accused_cards']['room'])
+                    print()
+                    if(server_message['accuse_result'] == True):
+                        print("Accusation Correct! Player " + player_id + " wins!")
+                        print()
+                    else:
+                        print("Accusation was inccorect. Player " + player_id + " loses.")
+                        print()
 
         return server_message
