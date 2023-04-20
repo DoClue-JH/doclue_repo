@@ -6,13 +6,13 @@ from clueless.server.Player import Player
 
 class Game:
 
-    def __init__(self, players, num_players):
+    def __init__(self, num_players):
         self.num_players = num_players
-        self.players = players                              # list of all players
+        self.players = []                              # list of all players
         self.game_deck = Deck()                    # dict for initial overall game deck
         self.case_file = self.game_deck.get_secret_deck()             # dict of three secret cards
         # self.turn_state = None                              # turn state for current player
-        self.game_status = None                             # game state of entire game
+        self.game_status = dict()                             # game state of entire game
 
         ############################
         ##### INITIALIZE TILES #####
@@ -107,6 +107,12 @@ class Game:
         else:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
+
+    #method to add a new player object to the game
+    def add_player(self, player_id, player_token):
+        #print("adding new player")
+        new_player = Player(player_token, player_id)
+        self.players.append(new_player)
 
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:

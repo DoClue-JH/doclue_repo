@@ -99,7 +99,7 @@ class Game_processor:
 
     def move(board_dict, player, destination):
         # validate gets called first
-        if validate_move(board_dict, player, destination) == True:
+        if Game_processor.validate_move(board_dict, player, destination) == True:
             # update player old and new location
             player.update(destination)
             print("old is", player.get_player_old_location())
@@ -124,7 +124,7 @@ class Game_processor:
             print("===============================")
             return True
         
-        elif validate_move(board_dict, player, destination) == False:
+        elif Game_processor.validate_move(board_dict, player, destination) == False:
             return False
 
 
@@ -184,7 +184,7 @@ class Game_processor:
         if player_turn['turn_status'] == "movement":
             print("Player chooses to move to location ", player_turn['target_tile'])
             print()
-            
+
         return player_turn
 
 
@@ -240,48 +240,48 @@ class Game_processor:
     #                 player_suggestions.append(suggestion)
     #         return player_suggestions
         
-        # This method records an accusation made by a player. It does not return
-        # anything, but it modifies the accusations attribute of the ClueGame object. 
-        # If the accusation is correct, it also sets the game_over attribute to True.  
-        def accuse(self, player, weapon, room):
-            accusation = {'player': player, 'weapon': weapon, 'room': room}
-            self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
-            # If accusation is correct
-            if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
-                self.game_over = True
-                # return winner name
-                return True
-            # If accusation is incorrect
-            else: 
-                # TO DO 
-                # set player to lost/inactive
-                # only display lost and case file to losing player
-                # continue to next turn
-                return False
+    # This method records an accusation made by a player. It does not return
+    # anything, but it modifies the accusations attribute of the ClueGame object. 
+    # If the accusation is correct, it also sets the game_over attribute to True.  
+    def accuse(self, player, weapon, room):
+        accusation = {'player': player, 'weapon': weapon, 'room': room}
+        self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
+        # If accusation is correct
+        if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
+            self.game_over = True
+            # return winner name
+            return True
+        # If accusation is incorrect
+        else: 
             # TO DO 
-            #   update game_status?
-            #   send game_status to Game_message_handler
-            #   Game_message_handler receive_game_status()
-            #   Game_message_handler build_return_package()
-            #   someone send package to Client_message_handler
+            # set player to lost/inactive
+            # only display lost and case file to losing player
+            # continue to next turn
+            return False
+        # TO DO 
+        #   update game_status?
+        #   send game_status to Game_message_handler
+        #   Game_message_handler receive_game_status()
+        #   Game_message_handler build_return_package()
+        #   someone send package to Client_message_handler
 
-        # This method checks if an accusation is valid. It returns a Boolean value 
-        # indicating whether or not the accusation is valid.   
-        def validate_accusation(self, accusation):
-            '''
-            INPUT: accusation : list of three user inputs
-            OUTPUT: True if accusation is valid, False otherwise
-            '''
-            # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
-            has_weapon = False
-            has_token = False
-            has_room = False
-            for guess in accusation:
-                if guess in self.WEAPONS: has_weapon = True
-                elif guess in self.TOKENS: has_token = True
-                elif guess in self.ROOMS: has_room = True
-            return has_weapon and has_token and has_room
-        
+    # This method checks if an accusation is valid. It returns a Boolean value 
+    # indicating whether or not the accusation is valid.   
+    def validate_accusation(self, accusation):
+        '''
+        INPUT: accusation : list of three user inputs
+        OUTPUT: True if accusation is valid, False otherwise
+        '''
+        # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
+        has_weapon = False
+        has_token = False
+        has_room = False
+        for guess in accusation:
+            if guess in self.WEAPONS: has_weapon = True
+            elif guess in self.TOKENS: has_token = True
+            elif guess in self.ROOMS: has_room = True
+        return has_weapon and has_token and has_room
+    
     #     # This method returns the list of accusations made by a specific player.
     #     def get_accusations_for_player(self, player):
     #         player_accusations = []
