@@ -101,18 +101,20 @@ class Game_processor:
 
     def move(board_dict, player, destination):
         old_location_obj = player.get_player_old_location()
-        old_location_name = old_location_obj.get_tile_name()
+        old_location_name = ''
         
+        player.update(destination)
+        # Get current location AFTER updating the player's location
         curr_location_obj = player.get_player_current_location()
         curr_location_name = curr_location_obj.get_tile_name()
-        player.update(destination)
-
-        # update tile_num_players
-        if old_location_obj is not None:
-            board_dict.get(old_location_name).tile_num_players -= 1
-
+        # Incremement the now occupied tile by 1
         board_dict.get(curr_location_name).tile_num_players += 1
-
+        
+        # Decrement the old tile by 1 if it exists (not None)
+        if old_location_obj is not None:
+            old_location_name = old_location_obj.get_tile_name()
+            board_dict.get(old_location_name).tile_num_players -= 1
+            
         # print statements
         print()
         print("Success!")
@@ -121,7 +123,7 @@ class Game_processor:
             print(old_location_name, "now has", board_dict.get(old_location_name).get_tile_num_players(), "players on it.")
         print(curr_location_name, "now has", board_dict.get(curr_location_name).get_tile_num_players(), "players on it.")
         print()
-        print(player.get_player_name(), "has moved to", board_dict.get(curr_location_name))
+        print(player.get_player_name(), "has moved to", curr_location_name)
         print()
         print("===============================")
         return True
