@@ -179,7 +179,7 @@ class Game_controller:
                             self.suggest_suspect_dict[key][3] = True
                             self.message_for_server['suspect'] = key
 
-            if (self.state == 'ACCUSATION'):
+            if (self.state == 'ACCUSING'): #'ACCUSATION'):
                 self.add_accuse_view(events)
                 for key in self.accuse_weapon_dict:
                     if self.accuse_weapon_dict[key][3] == True:
@@ -244,7 +244,7 @@ class Game_controller:
 
         mousePos = pygame.mouse.get_pos()
         if is_Room_Selection_Active:
-            self.state = "MOVEMENT"
+            # self.state = "MOVEMENT"
             self.board.load_options(self.screen, self.state, events)
             self.state = "MOVING"
             print('Player chose to move')
@@ -255,6 +255,7 @@ class Game_controller:
 
         if is_Accuse_Selection_Active:
             self.state = "ACCUSATION"
+            self.state = "ACCUSING"
             self.board.load_options(self.screen, self.state, events)
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
             #print(turn_data)
