@@ -97,6 +97,14 @@ class Game_controller:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     print(f'server update: {prev_game_state} ')   
                     # TO DO read prev_game_state and display messages to corresponding players
+                    if prev_game_state['turn_status']=='accusation':
+                        this_player_id = prev_game_state['player_id']
+                        if 'accused_result_player' not in prev_game_state:
+                            print("You lost!")
+                            self.board.display_update(self.screen, "You lost!")
+                            # ISSUE: how to access other player id
+                        else: 
+                            print("You win!")
                 except:
                     print("Couldn't process_server_update")
                     break
