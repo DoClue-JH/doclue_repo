@@ -230,7 +230,7 @@ class Game:
 # TO DO convert front to back end accused card names
             backend_playername = self.get_backend_playername(player_turn['accused_cards']['character'])
             backend_roomname = self.get_backend_tilename(player_turn['accused_cards']['room'])
-            backend_weaponname = self.get_backend_weapon(player_turn['accused_cards']['room'])
+            backend_weaponname = self.get_backend_weaponname(player_turn['accused_cards']['weapon'])
             
             print(f"  Player chooses to accuse {backend_playername},{backend_weaponname},{backend_roomname}")
             accuse_result = Game_processor.accuse(backend_playername, backend_weaponname, backend_roomname, self.case_file)
