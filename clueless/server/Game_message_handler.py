@@ -58,7 +58,8 @@ class Game_message_handler:
                 game_package.update({'suggested_player_location': game_status['suggested_cards']['room']})
             elif turn_status == 'accusation':
                 game_package.update({'accused_cards': game_status['accused_cards']})
-                game_package.update({'accuse_result': game_status['accuse_result']})
+                if 'accuse_result' in game_package:
+                    game_package.update({'accuse_result': game_status['accuse_result']})
 
         #print(game_package)
         return game_package

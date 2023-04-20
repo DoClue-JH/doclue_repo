@@ -189,8 +189,8 @@ class Game:
                 move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             
         elif player_turn['turn_status'] == "accusation":
+# TO DO convert front to back end accused card names
             print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
-            # TO DO: extract from player_turn
             accuse_result = Game_processor.accuse(player_turn['accused_cards']['character'], player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], self.case_file)
             if accuse_result:
                 print('    Player accused correctly')
@@ -198,6 +198,7 @@ class Game:
                 game_status['accused_result_player'] = curr_player.get_player_name()
             else: 
                 curr_player.set_player_status('LOST')
+                print('    Player accused incorrectly')
             
         elif player_turn['turn_status'] == "suggestion":
             print('  Player chooses to suggest')

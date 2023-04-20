@@ -51,6 +51,8 @@ class Game_controller:
         self.clock = pygame.time.Clock()
         self.board = Client_game_board.Client_game_board()
         self.message_for_server = {}
+        self.character_choice = None
+        self.weapon_choice = None
         self.room_choice = None
         self.game_loop()
 
@@ -191,6 +193,7 @@ class Game_controller:
                             print('Player choose weapon: ' + key)
                             self.accuse_weapon_dict[key][3] = True
                             self.message_for_server['weapon'] = key
+                            self.weapon_choice = key
 
                 for key in self.accuse_suspect_dict:
                     if self.accuse_suspect_dict[key][3] == True:
@@ -202,6 +205,7 @@ class Game_controller:
                             print('Player choose suspect: ' + key)
                             self.accuse_suspect_dict[key][3] = True
                             self.message_for_server['suspect'] = key
+                            self.character_choice = key
 
                 for key in self.accuse_room_dict:
                     if self.accuse_room_dict[key][3] == True:
@@ -213,6 +217,7 @@ class Game_controller:
                             print('Player choose room: ' + key)
                             self.accuse_room_dict[key][3] = True
                             self.message_for_server['room'] = key
+                            self.room_choice = key
 
         return turn_data
 
@@ -335,10 +340,13 @@ class Game_controller:
             # SEND MESSAGE TO SERVER
             print('Sending message to server for accusation: ')
             print(self.message_for_server)
-        
-            turn_data = self.network.build_package(self.player_id, self.state, str(mousePos))
-            #print(turn_data)
+            accused_card_dict = {'character':self.character_choice,
+                                 'weapon':self.weapon_choice,
+                                 'room':self.room_choice}
+            turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict)
+            # turn_data = self.network.build_package(self.player_id, self.state, str(mousePos))
             self.network.send(turn_data)
+            print(f"Sending message to server for accusation: {accused_card_dict}")
             
     def render(self):
         pygame.display.flip()
