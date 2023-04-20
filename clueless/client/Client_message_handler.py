@@ -47,14 +47,15 @@ class Client_message_handler:
                 print(err)
 
     def receive(self):
-        #print("Player receiving information from the Server")
-        rec = self.client.recv(4096)
-        dic1 = pickle.loads(rec)
-        if dic1:
-            try:
-                return dic1
-            except socket.error as err:
-                print(err)
+        server_update = pickle.loads(self.client.recv(4096))
+        print(f"...client receiving update from server {server_update}")
+        return server_update     
+        # print(f"...player receiving information from the Server {dic1}")
+        # if dic1:
+        #     try:
+        #         return dic1
+        #     except socket.error as err:
+        #         print(err)
 
     def build_client_package(self, player_id, state, contents):
         #start builing message package to send to server
@@ -76,6 +77,7 @@ class Client_message_handler:
         game = self.send_receive(game_data)
         return game
 
+    # TO DO: move and suggest
     def process_server_update(self, server_message, prev_server_message):
         print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
         if server_message != prev_server_message:
@@ -87,24 +89,19 @@ class Client_message_handler:
                 print("Player taking turn: ", player_id)
                 #based on player's turn and game status, update players with the status of the game
                 if turn_status == 'movement':
-                    print("Player " + player_id + " chooses to move to location ", server_message['player_location'])
-                    print()
+                    print(f"player {player_id} chose to move to location {server_message['player_location']}")
                                 
                 elif turn_status == 'suggestion':
                     print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
                           server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
-                    print()
                     #if the player client is the same as the player who made the suggestion, reveal the suggestion result
+                    
                 elif turn_status == 'accusation':
-                    print("Player " + player_id + " accused " + server_message['accused_cards']['character'] + " with the " + 
-                        server_message['accused_cards']['weapon'] + " in the " + server_message['accused_cards']['room'])
-                    print()
-                    if(server_message['accuse_result'] == True):
-                        print("Accusation Correct! Player " + player_id + " wins!")
-                        print()
+                    print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
+                    if('accused_result_player' in server_message):
+                        print("...accusation correct! Player " + player_id + " wins!")
                     else:
-                        print("Accusation was inccorect. Player " + player_id + " loses.")
-                        print()
+                        print("...accusation incorrect. Player " + player_id + " loses.")
 
-        #print("processed server message")
+        print("...processed server message")
         return server_message

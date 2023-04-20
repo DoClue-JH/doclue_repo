@@ -1,4 +1,7 @@
+import socket
+import threading
 import pickle
+import sys
 
 class Game_message_handler:
 
@@ -6,16 +9,16 @@ class Game_message_handler:
         pass
 
     def send_game_update(conn, game_update):
-        #print("sending to client")
+        print(f"... sending to client {game_update}")
         conn.send(pickle.dumps(game_update))
 
     def receive_client_update(conn):
         client_update = pickle.loads(conn.recv(4096))
+        print(f"...player receiving information from the client {client_update}")
         return client_update
 
     def process_client_update(client_message):
-        print("...processing client message")
-        #print(client_message)
+        print(f"...processing client message {client_message}")
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
         player_turn = dict({'player_id': client_message['player_id'], 'turn_status': turn_status})
@@ -58,8 +61,8 @@ class Game_message_handler:
                 game_package.update({'suggested_player_location': game_status['suggested_cards']['room']})
             elif turn_status == 'accusation':
                 game_package.update({'accused_cards': game_status['accused_cards']})
-                if 'accuse_result' in game_package:
-                    game_package.update({'accuse_result': game_status['accuse_result']})
+                if 'accused_result_player' in game_status:
+                    game_package.update({'accused_result_player': game_status['accused_result_player']})
 
-        #print(game_package)
+        print(f'...built message package for client{game_package}')
         return game_package
