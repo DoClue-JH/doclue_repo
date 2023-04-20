@@ -8,6 +8,10 @@ import pickle
 import pygame
 import random
 
+from datetime import datetime
+import time
+import traceback
+
 DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get'})
 server_update = dict({})
 
@@ -69,17 +73,35 @@ class Game_controller:
 
             try:
                 #game_update = self.network.get_server_update()
-
+                # game = self.network.send_receive(game_data)
+                # print("...sent and received client message")
+                current_time = datetime.now()#.strftime("%H:%M:%S")
+                print("....current Time =", current_time)
                 
-                game = self.network.send_receive(game_data)
-                print("...sent and received client message")
-                
-                # self.network.send(game_data)
-                # print("sent client message")
+                self.network.send(game_data)
+                print("...sent client message")
 
-                # game = self.network.receive()
-                # print("received server message")
+                game = self.network.receive()
+                print(f'......{prev_game_state} ')
+                # print(f'......{temp_game} ')
+                print(f'......{game_data} ')                                            
+                # While prev and curr state are same, and a player is still taking a turn, keep receiving
+                # while (prev_game_state == temp_game) and (game_data['turn_status']!='get') and (game_data['turn_status']!='MOVING'):
+                #     print("...received server message")
+                #     print('...player isnt done taking turn')
+                #     print(f'........prev_game_state {prev_game_state} ')
+                #     print(f'........temp_game {temp_game} ')
+                #     print(f'........game_data {game_data} ')
+                #     try:
+                #         temp_game = self.network.receive()
+                #     except Exception as err:
+                #         print(traceback.format_exc())
+                #         print(err)
+                        
+                #     print("...received server message again")
+                #     print()
 
+                # game = temp_game.copy()
                 prev_game_state = self.network.process_server_update(game, prev_game_state)
                 #print(prev_game_state)
 
@@ -91,6 +113,7 @@ class Game_controller:
             events = pygame.event.get()
             game_data = self.check_events(events)
             print(f'game_data is now {game_data}')
+            print()
             
         # when pygame.QUIT event happens, change self.playing to False 
         # the while loop will end and quit the game
@@ -101,6 +124,7 @@ class Game_controller:
     # Input : events [type: Pygame Event]
     ################################################################################
     def check_events(self, events) :
+        print('...checking events')
         mousePos = pygame.mouse.get_pos()
         turn_data = DEFAULT_GAME
         for event in events:
@@ -138,8 +162,7 @@ class Game_controller:
                         # SEND MESSAGE TO SERVER
                         turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice)
                         self.network.send(turn_data)
-                        print("Sending message to server for movement:")
-                        print(f'     {self.player_id}, {self.state},{self.room_choice}')
+                        print(f"Sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
                 closeRect = pygame.Rect(970, 570, 25, 25)

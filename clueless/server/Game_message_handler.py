@@ -14,7 +14,7 @@ class Game_message_handler:
         return client_update
 
     def process_client_update(client_message):
-        #print("processing client message")
+        print("...processing client message")
         #print(client_message)
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
@@ -33,7 +33,7 @@ class Game_message_handler:
                 player_turn.update({'turn_status': 'accusation'})
                 player_turn.update({'accused_cards': client_message['accused_cards']})
 
-        print(player_turn)
+        print(f'...processed player_turn {player_turn}')
         return player_turn
 
 

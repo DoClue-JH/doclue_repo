@@ -187,7 +187,6 @@ class Game:
             if move_validated_boolean:
                 print('  move is valid')
                 move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-            print(f"  {curr_player.get_player_name()} moved from {curr_player.get_player_old_location().get_tile_name()} to {curr_player.get_player_current_location().get_tile_name()}")
             
         elif player_turn['turn_status'] == "accusation":
             print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
@@ -209,6 +208,7 @@ class Game:
             game_status['suggested_match_card']= matched_card
         
         print(f'... return game_status {game_status}')
+        game_status['ready']=True
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 
 # Khue Test Statements for Move

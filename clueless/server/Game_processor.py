@@ -35,90 +35,93 @@ class Game_processor:
 
     
 
-    # prompt still needs to be moved to FRONT END
-    def prompt_move(player):
-        print()
-        print("===============================")
-        print("       **Movement Phase**      ")
-        print("      **", player.player_name, "**")
-        print("===============================")
-        print()
-        print("Instructions:")
-        print("Please enter a valid tile name from above, without apostrophes.")
+    # # prompt still needs to be moved to FRONT END
+    # def prompt_move(player):
+    #     print()
+    #     print("===============================")
+    #     print("       **Movement Phase**      ")
+    #     print("      **", player.player_name, "**")
+    #     print("===============================")
+    #     print()
+    #     print("Instructions:")
+    #     print("Please enter a valid tile name from above, without apostrophes.")
 
-        player_input_tile = input("Where do you want to go? \n")
-        return player_input_tile
+    #     player_input_tile = input("Where do you want to go? \n")
+    #     return player_input_tile
 
     # split into server-side retrieve and client-display valid moves
-    def show_valid_moves(player, board_dict):
+    # def show_valid_moves(player, board_dict):
 
-        if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
+    #     if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
 
-            player_first_move = {
-            'Miss Scarlet' : 'Hallway 02',
-            'Professor Plum' : 'Hallway 03',
-            'Colonal Mustard' : 'Hallway 05',
-            'Mrs. Peacock' : 'Hallway 08',
-            'Mr. Green' : 'Hallway 11',
-            'Mrs. White' : 'Hallway 12'
-            }
+    #         player_first_move = {
+    #         'Miss Scarlet' : 'Hallway 02',
+    #         'Professor Plum' : 'Hallway 03',
+    #         'Colonal Mustard' : 'Hallway 05',
+    #         'Mrs. Peacock' : 'Hallway 08',
+    #         'Mr. Green' : 'Hallway 11',
+    #         'Mrs. White' : 'Hallway 12'
+    #         }
 
             
-            print()
-            print("####################################################################")
-            print("Looks like this is your first move! You have to move to your starting")
-            print("tile, but don't worry, you'll get to pick where you go next time.")
-            print()
-            print("**********************************")
-            print("Your starting tile is:", player_first_move.get(player.get_player_name()))
-            print("**********************************")
-            return
+    #         print()
+    #         print("####################################################################")
+    #         print("Looks like this is your first move! You have to move to your starting")
+    #         print("tile, but don't worry, you'll get to pick where you go next time.")
+    #         print()
+    #         print("**********************************")
+    #         print("Your starting tile is:", player_first_move.get(player.get_player_name()))
+    #         print("**********************************")
+    #         return
 
-        print(player.get_player_name(), "is in", player.get_player_current_location())
+    #     print(player.get_player_name(), "is in", player.get_player_current_location())
 
-        # create list of ALL adjacent tiles
-        # create empty list for valid tiles player can move to after they've been checked for validity
-        print(player.get_player_current_location())
-        temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
-        temp_valid_tiles = []
+    #     # create list of ALL adjacent tiles
+    #     # create empty list for valid tiles player can move to after they've been checked for validity
+    #     print(player.get_player_current_location())
+    #     temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
+    #     temp_valid_tiles = []
 
-        print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
+    #     print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
 
-        # iterate over all tiles in the adjacent list
-        for tile in temp_adjacent_tiles:
-            # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
-            #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
-            # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
-            if board_dict.get(tile).get_tile_num_players() == 0:
-                temp_valid_tiles.append(tile)
-            elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
-                temp_valid_tiles.append(tile)
-        print()
-        print("####################################################################")
-        print("Tiles that are valid moves are:", temp_valid_tiles)
-        print("####################################################################")
-        return 
+    #     # iterate over all tiles in the adjacent list
+    #     for tile in temp_adjacent_tiles:
+    #         # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
+    #         #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
+    #         # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
+    #         if board_dict.get(tile).get_tile_num_players() == 0:
+    #             temp_valid_tiles.append(tile)
+    #         elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
+    #             temp_valid_tiles.append(tile)
+    #     print()
+    #     print("####################################################################")
+    #     print("Tiles that are valid moves are:", temp_valid_tiles)
+    #     print("####################################################################")
+    #     return 
 
     def move(board_dict, player, destination):
-        print(f"  trying to move {player.get_player_name()} from {player.get_player_old_location().get_tile_name()} to {player.get_player_current_location().get_tile_name()}")
+        old_location_obj = player.get_player_old_location()
+        old_location_name = old_location_obj.get_tile_name()
+        
+        curr_location_obj = player.get_player_current_location()
+        curr_location_name = curr_location_obj.get_tile_name()
         player.update(destination)
-        print(f"  {player.get_player_name()} moved from {player.get_player_old_location().get_tile_name()} to {player.get_player_current_location().get_tile_name()}")
 
         # update tile_num_players
-        if player.get_player_old_location() is not None:
-            board_dict.get(player.get_player_old_location()).tile_num_players -= 1
+        if old_location_obj is not None:
+            board_dict.get(old_location_name).tile_num_players -= 1
 
-        board_dict.get(player.get_player_current_location()).tile_num_players += 1
+        board_dict.get(curr_location_name).tile_num_players += 1
 
         # print statements
         print()
         print("Success!")
-        print("Previous tile:", player.get_player_old_location())
-        if player.get_player_old_location() is not None:
-            print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
-        print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
+        print("Previous tile:", old_location_name)
+        if old_location_obj is not None:
+            print(old_location_name, "now has", board_dict.get(old_location_name).get_tile_num_players(), "players on it.")
+        print(curr_location_name, "now has", board_dict.get(curr_location_name).get_tile_num_players(), "players on it.")
         print()
-        print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
+        print(player.get_player_name(), "has moved to", board_dict.get(curr_location_name))
         print()
         print("===============================")
         return True
