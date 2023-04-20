@@ -135,7 +135,35 @@ class Game:
             return tilename_dict[frontend_tilename]
         except:
             return f"{frontend_tilename} not in dictionary!"
+     
+    # NOTE: can move this to message handling later
+    def get_backend_playername(self, frontend_playername):
+        playername_dict = {'colonel_mustard':'Colonel Mustard',
+                         'miss_scarlet':'Miss Scarlet',
+                         'mr_green':'Mr. Green',
+                         'mrs_peacock':'Mrs. Peacock',
+                         'mrs_white':'Mrs. White',
+                         'prof_plum':'Professor Plum'
+                         }
+        try:  
+            return playername_dict[frontend_playername]
+        except:
+            return f"{frontend_playername} not in dictionary!"
         
+    # NOTE: can move this to message handling later
+    def get_backend_weaponname(self, frontend_weaponname):
+        weaponname_dict = {'candlestick':'Candlestick',
+                         'dagger':'Dagger',
+                         'lead_pipe':'Lead Pipe',
+                         'revolver':'Revolver',
+                         'rope':'Rope',
+                         'wrench':'Wrench'
+                        }
+        try:  
+            return weaponname_dict[frontend_weaponname]
+        except:
+            return f"{frontend_weaponname} not in dictionary!"
+       
     # return a player whose turn it is not currently
     def get_player(self, player):
         if player in self.players:
@@ -200,8 +228,12 @@ class Game:
             
         elif player_turn['turn_status'] == "accusation":
 # TO DO convert front to back end accused card names
-            print(f"  Player chooses to accuse {player_turn['accused_cards']['character']},{player_turn['accused_cards']['weapon']},{player_turn['accused_cards']['room']}")
-            accuse_result = Game_processor.accuse(player_turn['accused_cards']['character'], player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], self.case_file)
+            backend_playername = self.get_backend_playername(player_turn['accused_cards']['character'])
+            backend_roomname = self.get_backend_tilename(player_turn['accused_cards']['room'])
+            backend_weaponname = self.get_backend_weapon(player_turn['accused_cards']['room'])
+            
+            print(f"  Player chooses to accuse {backend_playername},{backend_weaponname},{backend_roomname}")
+            accuse_result = Game_processor.accuse(backend_playername, backend_weaponname, backend_roomname, self.case_file)
             if accuse_result:
                 print('    Player accused correctly')
                 # Include name of current player if they accused correctly
@@ -212,7 +244,6 @@ class Game:
             
         elif player_turn['turn_status'] == "suggestion":
             print('  Player chooses to suggest')
-            # TO DO: extract from player_turn
             player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
             # TO DO: assumes output of suggest has name of player who suggested cards
             game_status['suggest_result_player'] = player_w_match
