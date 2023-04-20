@@ -14,6 +14,7 @@ import traceback
 
 DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get'})
 server_update = dict({})
+CHARACTER_TOKENS = ["Mrs. Peacock", "Mrs. White", "Miss Scarlet", "Mr. Green", "Colonel Mustard", "Professor Plum"]
 
 class Game_controller:
 
@@ -63,11 +64,14 @@ class Game_controller:
 
         prev_game_state = DEFAULT_GAME
         print("You are Player ", self.id)
+        self.player_token = self.choose_player_token()
+
         self.game_state['player_id'] = self.player_id
         self.game_state['player_token'] = self.player_token
         self.game_state['turn_status'] = "get"
 
-        game_data = self.network.build_client_package(self.player_id, "get", '')
+        game_data = self.network.build_client_package(self.player_id, "join", self.player_token)
+        self.network.send(game_data)
 
         while self.playing:
             self.tick()
@@ -75,6 +79,7 @@ class Game_controller:
 
             try:
                 #game_update = self.network.get_server_update()
+<<<<<<< HEAD
                 current_time = datetime.now() 
                 # print("....current Time =", current_time)
                 
@@ -83,6 +88,12 @@ class Game_controller:
                 
                 self.network.send(game_data)
                 # print("...sent client message")
+=======
+                game_data = self.network.build_client_package(self.player_id, "get", '')
+                game = self.network.send_receive(game_data)
+                # self.network.send(game_data)
+                # print("sent client message")
+>>>>>>> 98dca88 (client choose character server generate player)
 
                 try:
                     game = self.network.receive()
@@ -373,6 +384,20 @@ class Game_controller:
             # game = self.network.send_receive(turn_data)
             # print(f"game_controller ... receiving message from server for accusation: {game}")
             
+    def choose_player_token(self):
+        token = "None"
+        print("Please choose your character token")
+        print(CHARACTER_TOKENS)
+        token = input("Please enter you character choice: ")
+        while token not in CHARACTER_TOKENS:
+            token = print("Please enter a valid character choice: ")
+
+        print("You have chosen: " + token)
+        print()
+        
+        return token
+
+
     def render(self):
         pygame.display.flip()
     

@@ -100,6 +100,7 @@ class Game_processor:
     #     return 
 
     def move(board_dict, player, destination):
+<<<<<<< HEAD
         old_location_obj = player.get_player_old_location()
         old_location_name = ''
         
@@ -127,6 +128,36 @@ class Game_processor:
         print()
         print("===============================")
         return True
+=======
+        # validate gets called first
+        if Game_processor.validate_move(board_dict, player, destination) == True:
+            # update player old and new location
+            player.update(destination)
+            print("old is", player.get_player_old_location())
+            print("new is", player.get_player_current_location())
+
+            # update tile_num_players
+            if player.get_player_old_location() is not None:
+                board_dict.get(player.get_player_old_location()).tile_num_players -= 1
+
+            board_dict.get(player.get_player_current_location()).tile_num_players += 1
+
+            # print statements
+            print()
+            print("Success!")
+            print("Previous tile:", player.get_player_old_location())
+            if player.get_player_old_location() is not None:
+                print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
+            print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
+            print()
+            print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
+            print()
+            print("===============================")
+            return True
+        
+        elif Game_processor.validate_move(board_dict, player, destination) == False:
+            return False
+>>>>>>> 98dca88 (client choose character server generate player)
 
 
     # check if move is in dict; if in dict, is it in the adj tiles?
@@ -183,9 +214,17 @@ class Game_processor:
     # def player_take_turn(player_turn):
     #     print("Player taking turn: Player ", player_turn['player_id'])
 
+<<<<<<< HEAD
     #     if player_turn['turn_status'] == "movement":
     #         print("Player chooses to move to location ", player_turn['target_tile'])
     #         print()
+=======
+        if player_turn['turn_status'] == "movement":
+            print("Player chooses to move to location ", player_turn['target_tile'])
+            print()
+
+        return player_turn
+>>>>>>> 98dca88 (client choose character server generate player)
 
     #     return player_turn
 
@@ -195,12 +234,65 @@ class Game_processor:
     def accuse(player, weapon, room, case_file):
         case_file_reversed = {card_type: card_val for card_val, card_type in case_file.items()}
         
+<<<<<<< HEAD
         # If accusation is correct, return True
         return player == case_file_reversed['character'] and weapon == case_file_reversed['weapon'] and room == case_file_reversed['room']   
 
         
         
         
+=======
+    #     # This method returns the list of suggestions made by a specific player.
+    #     def get_suggestions_for_player(self, player):
+    #         player_suggestions = []
+    #         for suggestion in self.suggestions:
+    #             if suggestion['player'] == player:
+    #                 player_suggestions.append(suggestion)
+    #         return player_suggestions
+        
+    # This method records an accusation made by a player. It does not return
+    # anything, but it modifies the accusations attribute of the ClueGame object. 
+    # If the accusation is correct, it also sets the game_over attribute to True.  
+    def accuse(self, player, weapon, room):
+        accusation = {'player': player, 'weapon': weapon, 'room': room}
+        self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
+        # If accusation is correct
+        if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
+            self.game_over = True
+            # return winner name
+            return True
+        # If accusation is incorrect
+        else: 
+            # TO DO 
+            # set player to lost/inactive
+            # only display lost and case file to losing player
+            # continue to next turn
+            return False
+        # TO DO 
+        #   update game_status?
+        #   send game_status to Game_message_handler
+        #   Game_message_handler receive_game_status()
+        #   Game_message_handler build_return_package()
+        #   someone send package to Client_message_handler
+
+    # This method checks if an accusation is valid. It returns a Boolean value 
+    # indicating whether or not the accusation is valid.   
+    def validate_accusation(self, accusation):
+        '''
+        INPUT: accusation : list of three user inputs
+        OUTPUT: True if accusation is valid, False otherwise
+        '''
+        # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
+        has_weapon = False
+        has_token = False
+        has_room = False
+        for guess in accusation:
+            if guess in self.WEAPONS: has_weapon = True
+            elif guess in self.TOKENS: has_token = True
+            elif guess in self.ROOMS: has_room = True
+        return has_weapon and has_token and has_room
+    
+>>>>>>> 98dca88 (client choose character server generate player)
     #     # This method returns the list of accusations made by a specific player.
     #     def get_accusations_for_player(self, player):
     #         player_accusations = []

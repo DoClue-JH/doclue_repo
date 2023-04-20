@@ -64,6 +64,8 @@ class Client_message_handler:
             client_package.update({'suggested_cards': contents})
         elif (state == 'ACCUSATION'):
             client_package.update({'accused_cards': contents})
+        elif (state == 'join'):
+            client_package.update({'player_token': contents})
 
         return client_package
     

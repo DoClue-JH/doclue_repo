@@ -22,10 +22,14 @@ class Server:
         self.id_count = 0
         self.max_players = PLAYER_MAX
         #hardcoding as a placeholder
+<<<<<<< HEAD
         player_info_dict = {1:'Colonal Mustard',
                             2:'Miss Scarlet',
                             3: 'Mr. Green'}
         self.game = Game(player_info_dict, 3)
+=======
+        #self.game = Game([],3)
+>>>>>>> 98dca88 (client choose character server generate player)
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
@@ -35,11 +39,11 @@ class Server:
         print("Waiting for a connection, server started")
         self.start()
 
-    def threaded_client(self, conn, player_id, game):
+    def threaded_client(self, conn, player_id, game_status):
         conn.send(pickle.dumps(player_id))
         reply = ""
         prev_client_message = DEFAULT_TURN
-        server_update = game
+        server_update = game_status
         connected = True
 
         while connected:
@@ -57,7 +61,17 @@ class Server:
                         player_turn = Game_message_handler.process_client_update(client_message)
                         #print("processed client message")
 
+<<<<<<< HEAD
                         if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING":
+=======
+                        if player_turn['turn_status'] == "join":
+                            # add new player to the game
+                            self.game.add_player(player_turn['player_id'], player_turn['player_token'])
+                            #print("added new player to the game: " + self.game.get_player_object(player_turn['player_id']))
+                            player_turn['turn_status'] = "get"
+                            server_update = Game_message_handler.build_game_package(player_turn)
+                        elif player_turn['turn_status'] != "get":
+>>>>>>> 98dca88 (client choose character server generate player)
                             #print(player_turn)
                             # game_status = Game_processor.player_take_turn(player_turn)
                             game_status = self.game.player_take_turn(player_turn)
@@ -100,18 +114,24 @@ class Server:
             num_players= int(input("Enter the number of players: "))
 
         self.max_players = num_players
+<<<<<<< HEAD
                 
+=======
+        self.game = Game(num_players)
+
+        #this is the while loop that will continue to run indefinietly for the server
+>>>>>>> 98dca88 (client choose character server generate player)
         while True:
             self.id_count = id_count
-        #this loops runs forever, so any print statements outside of 
-        # the if statement will print forever
 
             if (id_count < PLAYER_MAX):
+                #socket function called, waiting for an incoming connection from a new client
                 conn, addr = self.server.accept()
                 print("Connected to:", addr)
                 
                 game_status['player_count'] = id_count+1
 
+                #open new thread for new client server connection to run on
                 thread = threading.Thread(target=self.threaded_client, args=(conn, id_count+1, game_status))
                 thread.start()
                 id_count = threading.active_count()-1
