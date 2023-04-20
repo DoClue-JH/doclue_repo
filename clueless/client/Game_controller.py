@@ -83,25 +83,8 @@ class Game_controller:
 
                 game = self.network.receive()
                 print(f'......{prev_game_state} ')
-                # print(f'......{temp_game} ')
-                print(f'......{game_data} ')                                            
-                # While prev and curr state are same, and a player is still taking a turn, keep receiving
-                # while (prev_game_state == temp_game) and (game_data['turn_status']!='get') and (game_data['turn_status']!='MOVING'):
-                #     print("...received server message")
-                #     print('...player isnt done taking turn')
-                #     print(f'........prev_game_state {prev_game_state} ')
-                #     print(f'........temp_game {temp_game} ')
-                #     print(f'........game_data {game_data} ')
-                #     try:
-                #         temp_game = self.network.receive()
-                #     except Exception as err:
-                #         print(traceback.format_exc())
-                #         print(err)
-                        
-                #     print("...received server message again")
-                #     print()
-
-                # game = temp_game.copy()
+                print(f'......{game_data} ')      
+                                                      
                 prev_game_state = self.network.process_server_update(game, prev_game_state)
                 #print(prev_game_state)
 
@@ -346,7 +329,7 @@ class Game_controller:
 
         if is_submit_button_active:
             self.reset_weapon_and_suspect_dict(self.state)
-            self.state = "START"
+            self.state = "ACCUSATION" #START"
             self.screen.fill(self.base_color)
             # SEND MESSAGE TO SERVER
             print('Sending message to server for accusation: ')

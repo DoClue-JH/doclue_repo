@@ -49,7 +49,6 @@ class Client_message_handler:
     def receive(self):
         #print("Player receiving information from the Server")
         rec = self.client.recv(4096)
-        print(rec)
         dic1 = pickle.loads(rec)
         if dic1:
             try:
