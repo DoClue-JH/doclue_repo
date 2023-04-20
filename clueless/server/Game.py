@@ -108,9 +108,18 @@ class Game:
     def get_game_board(self):
         return self.game_board
 
-    # TO DO: FILL IN THIS DICT
+    # NOTE: can move this to message handling later
     def get_backend_tilename(self, frontend_tilename):
         tilename_dict = {'study_room':'Study',
+                         'hall':'Hall',
+                         'lounge':'Lounge',
+                         'library':'Library',
+                         'billiard_room':'Billiard Room',
+                         'dining_room':'Dining Room',
+                         'conservatory':'Conservatory',
+                         'ballroom':'Ballroom',
+                         'kitchen':'Kitchen',
+                         'hallway_1':'Hallway 01',
                          'hallway_2':'Hallway 02',
                          'hallway_3':'Hallway 03',
                          'hallway_4':'Hallway 04',
@@ -120,7 +129,8 @@ class Game:
                          'hallway_8':'Hallway 08',
                          'hallway_9':'Hallway 09',
                          'hallway_10':'Hallway 10',
-                         'hallway_11':'Hallway 11'}
+                         'hallway_11':'Hallway 11',
+                         'hallway_12':'Hallway 12'}
         try:  
             return tilename_dict[frontend_tilename]
         except:
