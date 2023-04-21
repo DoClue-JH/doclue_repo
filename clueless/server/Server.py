@@ -71,8 +71,8 @@ class Server:
 
                 
                 Game_message_handler.send_game_update(conn, server_update)
-                print("... sent server update to client")
-                print()
+                # print("... sent server update to client")
+                # print()
             except:
                 break
 

@@ -29,10 +29,11 @@ class Client_message_handler:
         #print("Player sending information to the Server")
         #print(data)
         try:
-            print('...sending client -> server data')
+            # print('...sending client -> server data
+            # ')
             self.client.send(pickle.dumps(data))
             
-            print('...receiving server -> client data')
+            # print('...receiving server -> client data')
             return pickle.loads(self.client.recv(4096))
         except socket.error as err:
             print(err)
@@ -48,19 +49,13 @@ class Client_message_handler:
 
     def receive(self):
         server_update = pickle.loads(self.client.recv(4096))
-        print(f"...client receiving update from server {server_update}")
+        # print(f"...client receiving update from server {server_update}")
         return server_update     
-        # print(f"...player receiving information from the Server {dic1}")
-        # if dic1:
-        #     try:
-        #         return dic1
-        #     except socket.error as err:
-        #         print(err)
 
     def build_client_package(self, player_id, state, contents):
         #start builing message package to send to server
-        print("...building client package")
-        print(f'   for player {player_id}, {state}, {contents}')
+        # print("...building client package")
+        # print(f'   for player {player_id}, {state}, {contents}')
         client_package = dict({'player_id': player_id, 'turn_status': state})
 
         if (state == 'MOVEMENT'):
@@ -79,7 +74,7 @@ class Client_message_handler:
 
     # TO DO: move and suggest
     def process_server_update(self, server_message, prev_server_message):
-        print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
+        # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
         # if server_message != prev_server_message:
         player_id = server_message['player_id']
         #player_token = server_message['player_token']
@@ -98,10 +93,10 @@ class Client_message_handler:
                 
             elif turn_status == 'accusation':
                 print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
-                if('accused_result_player' in server_message):
-                    print("...accusation correct! Player " + player_id + " wins!")
-                else:
-                    print("...accusation incorrect. Player " + player_id + " loses.")
+                # if('accused_result_player' in server_message):
+                #     print("...accusation correct! Player " + player_id + " wins!")
+                # else:
+                #     print("...accusation incorrect. Player " + player_id + " loses.")
 
-        print("...processed server message")
+        # print("...processed server message")
         return server_message
