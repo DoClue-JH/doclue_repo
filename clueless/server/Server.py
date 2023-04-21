@@ -38,7 +38,7 @@ class Server:
         self.start()
 
     def threaded_client(self, conn, player_id, game):
-        conn.sendall(pickle.dumps(player_id))
+        conn.send(pickle.dumps(player_id))
         reply = ""
         prev_client_message = DEFAULT_TURN
         server_update = game
@@ -46,7 +46,7 @@ class Server:
 
         while connected:
             try:
-                #print("Server receiving player data")
+                #print("Server receiving player data")'
                 client_message = Game_message_handler.receive_client_update(conn)
                 #print("Server received player data")
     
@@ -65,14 +65,12 @@ class Server:
                             game_status = self.game.player_take_turn(player_turn)
                             #print(game_status)
                             server_update = Game_message_handler.build_game_package(game_status)
-                            
+                                                   
                         else:
                             server_update = player_turn
-
                         prev_client_message = client_message
 
                 #print(server_update)
-
                 with self.clients_lock:
                     for c in self.clients:
                         Game_message_handler.send_game_update(c, server_update)
@@ -115,8 +113,6 @@ class Server:
                 conn, addr = self.server.accept()
                 self.clients.add(conn)
                 print("Connected to:", addr)
-                print("Clients are now:", self.clients)
-                
                 game_status['player_count'] = id_count+1
 
                 thread = threading.Thread(target=self.threaded_client, args=(conn, id_count+1, game_status))

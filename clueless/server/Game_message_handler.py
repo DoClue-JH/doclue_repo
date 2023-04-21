@@ -10,7 +10,7 @@ class Game_message_handler:
 
     def send_game_update(conn, game_update):
         # print(f"... sending to client {game_update}")
-        conn.sendall(pickle.dumps(game_update))
+        conn.send(pickle.dumps(game_update))
 
     def receive_client_update(conn):
         client_update = pickle.loads(conn.recv(4096))

@@ -31,7 +31,7 @@ class Client_message_handler:
         try:
             # print('...sending client -> server data
             # ')
-            self.client.sendall(pickle.dumps(data))
+            self.client.send(pickle.dumps(data))
             
             # print('...receiving server -> client data')
             return pickle.loads(self.client.recv(4096))
@@ -43,7 +43,7 @@ class Client_message_handler:
         if data:
             dic1 = pickle.dumps(data)
             try:
-                self.client.sendall(dic1)
+                self.client.send(dic1)
             except socket.error as err:
                 print(err)
 

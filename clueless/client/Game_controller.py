@@ -100,9 +100,15 @@ class Game_controller:
                     if prev_game_state['turn_status']=='accusation':
                         this_player_id = prev_game_state['player_id']
                         if 'accused_result_player' not in prev_game_state:
-                            print("You lost!")
-                            self.board.display_update(self.screen, "You lost!")
-                            # ISSUE: how to access other player id
+                            print(f"{this_player_id} vs {self.player_id}")
+                            print(f"Player {this_player_id} lost!")
+                            self.board.display_update(self.screen, f"Player {this_player_id} lost!")
+                            # if this_player_id == self.player_id:
+                            #     print("You lost!")
+                            #     self.board.display_update(self.screen, "You lost!")
+                            # else:
+                            #     print(f"Player {this_player_id} lost!")
+                            #     self.board.display_update(self.screen, f"Player {this_player_id} lost!")
                         else: 
                             print("You win!")
                             self.board.display_update(self.screen, "You win!")
