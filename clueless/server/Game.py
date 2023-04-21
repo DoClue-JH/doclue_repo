@@ -21,10 +21,11 @@ class Game:
         self.deal_to_players()
         # self.turn_state = None                                # turn state for current player
         self.game_status = None                                 # game state of entire game
-        print(f'  with case_file {self.case_file}')
-        print('   with players')
-        for p in self.players:
-            print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
+        case_file_reversed = {card_type: card_val for card_val, card_type in self.case_file.items()}
+        print(f"Game initiated; secret is that {case_file_reversed['character']} did it in the {case_file_reversed['room']} with a {case_file_reversed['weapon']}")
+        # print('   with players')
+        # for p in self.players:
+        #     print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
         
         ############################
         ##### INITIALIZE TILES #####

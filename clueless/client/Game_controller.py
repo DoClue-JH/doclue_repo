@@ -105,6 +105,7 @@ class Game_controller:
                             # ISSUE: how to access other player id
                         else: 
                             print("You win!")
+                            self.board.display_update(self.screen, "You win!")
                     # elif  # print move stuff here
                 except:
                     print("Couldn't process_server_update")

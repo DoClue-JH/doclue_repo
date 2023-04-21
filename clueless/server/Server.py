@@ -22,9 +22,12 @@ class Server:
         self.id_count = 0
         self.max_players = PLAYER_MAX
         #hardcoding as a placeholder
-        player_info_dict = {1:'Colonal Mustard',
-                            2:'Miss Scarlet'}
+        player_info_dict = {1:'Colonel Mustard',
+                            2:'Miss Scarlet',
+                            3:'Professor Plum'}
         self.game = Game(player_info_dict)
+        self.clients = set()
+        self.clients_lock = threading.Lock()
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
@@ -35,7 +38,7 @@ class Server:
         self.start()
 
     def threaded_client(self, conn, player_id, game):
-        conn.send(pickle.dumps(player_id))
+        conn.sendall(pickle.dumps(player_id))
         reply = ""
         prev_client_message = DEFAULT_TURN
         server_update = game
@@ -62,6 +65,7 @@ class Server:
                             game_status = self.game.player_take_turn(player_turn)
                             #print(game_status)
                             server_update = Game_message_handler.build_game_package(game_status)
+                            
                         else:
                             server_update = player_turn
 
@@ -69,8 +73,10 @@ class Server:
 
                 #print(server_update)
 
-                
-                Game_message_handler.send_game_update(conn, server_update)
+                with self.clients_lock:
+                    for c in self.clients:
+                        Game_message_handler.send_game_update(c, server_update)
+                # Game_message_handler.send_game_update(conn, server_update)
                 # print("... sent server update to client")
                 # print()
             except:
@@ -107,7 +113,9 @@ class Server:
 
             if (id_count < PLAYER_MAX):
                 conn, addr = self.server.accept()
+                self.clients.add(conn)
                 print("Connected to:", addr)
+                print("Clients are now:", self.clients)
                 
                 game_status['player_count'] = id_count+1
 
