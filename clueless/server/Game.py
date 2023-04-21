@@ -6,24 +6,14 @@ from clueless.server.Player import Player
 
 class Game:
 
-<<<<<<< HEAD
     def __init__(self, player_info_dict, num_players):
         # print('GAME INITIALIZED')
         self.num_players = num_players
         self.players = []
-=======
-    def __init__(self, num_players):
-        self.num_players = num_players
-        self.players = []                              # list of all players
-        self.game_deck = Deck()                    # dict for initial overall game deck
-        self.case_file = self.game_deck.get_secret_deck()             # dict of three secret cards
-        # self.turn_state = None                              # turn state for current player
-        self.game_status = dict()                             # game state of entire game
->>>>>>> 98dca88 (client choose character server generate player)
 
-        for player_id, player_name in player_info_dict.items():
-            this_player = Player(player_name, player_id)
-            self.players.append(this_player)
+        # for player_id, player_name in player_info_dict.items():
+        #     this_player = Player(player_name, player_id)
+        #     self.players.append(this_player)
         self.game_deck = Deck()                                 # dict for initial overall game deck
         self.case_file = self.game_deck.get_secret_deck()       # dict of three secret cards
         
@@ -183,21 +173,20 @@ class Game:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
 
-<<<<<<< HEAD
+
     def get_player_object(self, player_id):
         for i, player in enumerate(self.players):
             # print(f'...comparing {player.get_player_id()} to {player_id}')
             if player.get_player_id() == player_id:
                 return player
             
-=======
     #method to add a new player object to the game
     def add_player(self, player_id, player_token):
         #print("adding new player")
         new_player = Player(player_token, player_id)
         self.players.append(new_player)
 
->>>>>>> 98dca88 (client choose character server generate player)
+
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:
         num_players= len(self.players)
@@ -303,5 +292,3 @@ class Game:
 
 #     else:
 #         print("Invalid move, try again!")
-
-

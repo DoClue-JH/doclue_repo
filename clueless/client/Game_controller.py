@@ -79,7 +79,6 @@ class Game_controller:
 
             try:
                 #game_update = self.network.get_server_update()
-<<<<<<< HEAD
                 current_time = datetime.now() 
                 # print("....current Time =", current_time)
                 
@@ -88,12 +87,10 @@ class Game_controller:
                 
                 self.network.send(game_data)
                 # print("...sent client message")
-=======
                 game_data = self.network.build_client_package(self.player_id, "get", '')
                 game = self.network.send_receive(game_data)
                 # self.network.send(game_data)
                 # print("sent client message")
->>>>>>> 98dca88 (client choose character server generate player)
 
                 try:
                     game = self.network.receive()

@@ -100,7 +100,6 @@ class Game_processor:
     #     return 
 
     def move(board_dict, player, destination):
-<<<<<<< HEAD
         old_location_obj = player.get_player_old_location()
         old_location_name = ''
         
@@ -128,7 +127,7 @@ class Game_processor:
         print()
         print("===============================")
         return True
-=======
+
         # validate gets called first
         if Game_processor.validate_move(board_dict, player, destination) == True:
             # update player old and new location
@@ -157,8 +156,6 @@ class Game_processor:
         
         elif Game_processor.validate_move(board_dict, player, destination) == False:
             return False
->>>>>>> 98dca88 (client choose character server generate player)
-
 
     # check if move is in dict; if in dict, is it in the adj tiles?
     def validate_move(board_dict, player, destination):
@@ -214,17 +211,15 @@ class Game_processor:
     # def player_take_turn(player_turn):
     #     print("Player taking turn: Player ", player_turn['player_id'])
 
-<<<<<<< HEAD
     #     if player_turn['turn_status'] == "movement":
     #         print("Player chooses to move to location ", player_turn['target_tile'])
     #         print()
-=======
+
         if player_turn['turn_status'] == "movement":
             print("Player chooses to move to location ", player_turn['target_tile'])
             print()
 
         return player_turn
->>>>>>> 98dca88 (client choose character server generate player)
 
     #     return player_turn
 
@@ -234,14 +229,12 @@ class Game_processor:
     def accuse(player, weapon, room, case_file):
         case_file_reversed = {card_type: card_val for card_val, card_type in case_file.items()}
         
-<<<<<<< HEAD
         # If accusation is correct, return True
         return player == case_file_reversed['character'] and weapon == case_file_reversed['weapon'] and room == case_file_reversed['room']   
 
         
         
         
-=======
     #     # This method returns the list of suggestions made by a specific player.
     #     def get_suggestions_for_player(self, player):
     #         player_suggestions = []
@@ -292,7 +285,6 @@ class Game_processor:
             elif guess in self.ROOMS: has_room = True
         return has_weapon and has_token and has_room
     
->>>>>>> 98dca88 (client choose character server generate player)
     #     # This method returns the list of accusations made by a specific player.
     #     def get_accusations_for_player(self, player):
     #         player_accusations = []
