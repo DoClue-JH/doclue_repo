@@ -68,6 +68,8 @@ class Server:
                         prev_client_message = client_message
 
                 #print(server_update)
+
+                
                 Game_message_handler.send_game_update(conn, server_update)
                 print("... sent server update to client")
                 print()

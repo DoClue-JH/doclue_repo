@@ -105,6 +105,7 @@ class Game_controller:
                             # ISSUE: how to access other player id
                         else: 
                             print("You win!")
+                    # elif  # print move stuff here
                 except:
                     print("Couldn't process_server_update")
                     break
@@ -201,7 +202,8 @@ class Game_controller:
                             self.message_for_server['suspect'] = key
 
             if (self.state == 'ACCUSING'): #'ACCUSATION'):
-                self.add_accuse_view(events)
+                accused_card_dict = self.add_accuse_view(events)
+                
                 for key in self.accuse_weapon_dict:
                     if self.accuse_weapon_dict[key][3] == True:
                         self.board.highlight_rect(self.screen,(0,200,0),self.accuse_weapon_dict[key][2],key)
@@ -240,6 +242,8 @@ class Game_controller:
                 # # Testing receive here
                 # turn_data = self.network.receive()
                 # print(f"receiving message from server after accusation: {turn_data}")
+                turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict)
+
         return turn_data
 
     ################################################################################
@@ -271,15 +275,15 @@ class Game_controller:
         mousePos = pygame.mouse.get_pos()
         if is_Room_Selection_Active:
             # self.state = "MOVEMENT"
-            self.board.load_options(self.screen, self.state, events)
             self.state = "MOVING"
+            self.board.load_options(self.screen, self.state, events)
             print('Player chose to move')
             # This data stores the mouse position of the button
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
             self.network.send(turn_data)
 
         if is_Accuse_Selection_Active:
-            self.state = "ACCUSATION"
+            # self.state = "ACCUSATION"
             self.state = "ACCUSING"
             self.board.load_options(self.screen, self.state, events)
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
@@ -334,6 +338,7 @@ class Game_controller:
     # Input : events [type: Pygame Event]
     ################################################################################
     def add_accuse_view(self, events):
+        accused_card_dict = {}
         mousePos = pygame.mouse.get_pos()
         pygame.display.set_caption("Accuse Player : ")
         self.screen.fill(self.base_color)
@@ -361,11 +366,12 @@ class Game_controller:
             accused_card_dict = {'character':self.character_choice,
                                  'weapon':self.weapon_choice,
                                  'room':self.room_choice}
-            turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict)
-            # self.network.send(turn_data)
-            print(f"game_controller ... sending message to server for accusation: {accused_card_dict}")
-            game = self.network.send_receive(turn_data)
-            print(f"game_controller ... receiving message from server for accusation: {game}")
+            # turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict)
+        return accused_card_dict
+            # # self.network.send(turn_data)
+            # print(f"game_controller ... sending message to server for accusation: {accused_card_dict}")
+            # game = self.network.send_receive(turn_data)
+            # print(f"game_controller ... receiving message from server for accusation: {game}")
             
     def render(self):
         pygame.display.flip()
