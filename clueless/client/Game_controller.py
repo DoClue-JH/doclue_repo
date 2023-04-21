@@ -85,22 +85,21 @@ class Game_controller:
                 # game = self.network.send_receive(game_data)
                 # print("...sent and received client message")
                 
-                self.network.send(game_data)
+                #self.network.send(game_data)
                 # print("...sent client message")
-                game_data = self.network.build_client_package(self.player_id, "get", '')
-                game = self.network.send_receive(game_data)
-                # self.network.send(game_data)
-                # print("sent client message")
+                #game_data = self.network.build_client_package(self.player_id, "get", '')
+                #game = self.network.send_receive(game_data)
+                self.network.send(game_data)
+                #print("sent client message")
 
                 try:
                     game = self.network.receive()
+                    # print(f'......{game} ')
+                    # print(f'......{game_data} ')     
                 except:
                     print("Couldn't receive server update")
                     break
-                # game = self.network.receive()
-                # print(f'......{game} ')
-                # print(f'......{game_data} ')      
-                                                      
+
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     # print(f'server update: {prev_game_state} ')   
@@ -387,10 +386,9 @@ class Game_controller:
         print(CHARACTER_TOKENS)
         token = input("Please enter you character choice: ")
         while token not in CHARACTER_TOKENS:
-            token = print("Please enter a valid character choice: ")
+            token = input("Please enter a valid character choice: ")
 
         print("You have chosen: " + token)
-        print()
         
         return token
 

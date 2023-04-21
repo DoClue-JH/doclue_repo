@@ -6,10 +6,14 @@ from clueless.server.Player import Player
 
 class Game:
 
-    def __init__(self, player_info_dict, num_players):
+    def __init__(self, num_players):
         # print('GAME INITIALIZED')
         self.num_players = num_players
         self.players = []
+        self.dealt = False
+        self.player_info_dict = {1:'Colonal Mustard',
+                                2:'Miss Scarlet',
+                                3:'Professor Plum'}
 
         # for player_id, player_name in player_info_dict.items():
         #     this_player = Player(player_name, player_id)
@@ -18,13 +22,13 @@ class Game:
         self.case_file = self.game_deck.get_secret_deck()       # dict of three secret cards
         
         # Below needs ALL player objects initialized
-        self.deal_to_players()
+        #self.deal_to_players()
         # self.turn_state = None                                # turn state for current player
         self.game_status = None                                 # game state of entire game
-        print(f'  with case_file {self.case_file}')
-        print('   with players')
-        for p in self.players:
-            print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
+        print(f'  case_file: {self.case_file}')
+        # print('   with players')
+        # for p in self.players:
+        #     print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
         
         ############################
         ##### INITIALIZE TILES #####
@@ -193,6 +197,8 @@ class Game:
         dealt_decks = self.game_deck.deal(num_players)
         for i, player in enumerate(self.players):
             player.set_player_hand(dealt_decks[i])
+            print(f'Player {player.get_player_id()} is playing {player.get_player_name()} with hand {player.get_hand()}')
+            print()
 
     # This method determines what turn the player is taking and then routes to 
     # appropriate game logic functions to carry out turn accordingly
