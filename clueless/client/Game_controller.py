@@ -166,8 +166,8 @@ class Game_controller:
                         self.state = "MOVEMENT"
                         # SEND MESSAGE TO SERVER
                         turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice)
-                        self.network.send(turn_data)
-                        print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
+                        # self.network.send(turn_data)
+                        # print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
                 closeRect = pygame.Rect(970, 570, 25, 25)

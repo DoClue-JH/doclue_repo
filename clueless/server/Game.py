@@ -6,7 +6,7 @@ from clueless.server.Player import Player
 
 class Game:
 
-    def __init__(self, player_info_dict): # players, num_players):
+    def __init__(self, player_info_dict):
         print('GAME INITIALIZED')
         self.num_players = len(player_info_dict)
         self.players = []
@@ -14,14 +14,17 @@ class Game:
         for player_id, player_name in player_info_dict.items():
             this_player = Player(player_name, player_id)
             self.players.append(this_player)
-        self.game_deck = Deck()                    # dict for initial overall game deck
-        self.case_file = self.game_deck.get_secret_deck()             # dict of three secret cards
-        # self.turn_state = None                              # turn state for current player
-        self.game_status = None                             # game state of entire game
+        self.game_deck = Deck()                                 # dict for initial overall game deck
+        self.case_file = self.game_deck.get_secret_deck()       # dict of three secret cards
+        
+        # Below needs ALL player objects initialized
+        self.deal_to_players()
+        # self.turn_state = None                                # turn state for current player
+        self.game_status = None                                 # game state of entire game
         print(f'  with case_file {self.case_file}')
         print('   with players')
         for p in self.players:
-            print(f'       {p.get_player_name()}, {p.get_player_id()}')
+            print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
         
         ############################
         ##### INITIALIZE TILES #####
@@ -90,8 +93,6 @@ class Game:
             'Hallway 12' : tile_hallway_12
             }
         
-        # Find out where Game is initialized, loop through players and map their name to id
-        # self.player_name_to_connectionid_dict = 
 
     def get_turn_status(self):
         return self.get_turn_status
@@ -183,7 +184,7 @@ class Game:
         num_players= len(self.players)
         dealt_decks = self.game_deck.deal(num_players)
         for i, player in enumerate(self.players):
-            Player.set_player_hand(dealt_decks[i])
+            player.set_player_hand(dealt_decks[i])
 
     # This method determines what turn the player is taking and then routes to 
     # appropriate game logic functions to carry out turn accordingly
