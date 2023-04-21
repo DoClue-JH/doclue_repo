@@ -74,6 +74,9 @@ class Server:
                 with self.clients_lock:
                     for c in self.clients:
                         Game_message_handler.send_game_update(c, server_update)
+                        # if server_update['turn_status']!='get':
+                            # print(f'client {c} received {server_update}')
+                # print()
                 # Game_message_handler.send_game_update(conn, server_update)
                 # print("... sent server update to client")
                 # print()

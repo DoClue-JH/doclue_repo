@@ -75,28 +75,28 @@ class Client_message_handler:
     # TO DO: move and suggest
     def process_server_update(self, server_message, prev_server_message):
         # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
-        # if server_message != prev_server_message:
-        player_id = server_message['player_id']
-        #player_token = server_message['player_token']
-        turn_status = server_message['turn_status']
+        if server_message != prev_server_message:
+            player_id = server_message['player_id']
+            # player_token = server_message['player_token']
+            turn_status = server_message['turn_status']
 
-        if turn_status != "get":
-            print("Player taking turn: ", player_id)
-            #based on player's turn and game status, update players with the status of the game
-            if turn_status == 'movement':
-                print(f"player {player_id} chose to move to location {server_message['player_location']}")
-                            
-            elif turn_status == 'suggestion':
-                print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
-                        server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
-                #if the player client is the same as the player who made the suggestion, reveal the suggestion result
-                
-            elif turn_status == 'accusation':
-                print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
-                # if('accused_result_player' in server_message):
-                #     print("...accusation correct! Player " + player_id + " wins!")
-                # else:
-                #     print("...accusation incorrect. Player " + player_id + " loses.")
+            if turn_status != "get":
+                print("Player taking turn: ", player_id)
+                #based on player's turn and game status, update players with the status of the game
+                if turn_status == 'movement':
+                    print(f"player {player_id} chose to move to location {server_message['player_location']}")
+                                
+                elif turn_status == 'suggestion':
+                    print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
+                            server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
+                    #if the player client is the same as the player who made the suggestion, reveal the suggestion result
+                    
+                elif turn_status == 'accusation':
+                    print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
+                    # if('accused_result_player' in server_message):
+                    #     print("...accusation correct! Player " + player_id + " wins!")
+                    # else:
+                    #     print("...accusation incorrect. Player " + player_id + " loses.")
 
         # print("...processed server message")
         return server_message
