@@ -116,18 +116,46 @@ class Game_processor:
             board_dict.get(old_location_name).tile_num_players -= 1
             
         # print statements
-        print()
-        print("Success!")
-        print("Previous tile:", old_location_name)
-        if old_location_obj is not None:
-            print(old_location_name, "now has", board_dict.get(old_location_name).get_tile_num_players(), "players on it.")
-        print(curr_location_name, "now has", board_dict.get(curr_location_name).get_tile_num_players(), "players on it.")
-        print()
-        print(player.get_player_name(), "has moved to", curr_location_name)
-        print()
-        print("===============================")
+        # print()
+        # print("Success!")
+        # print("Previous tile:", old_location_name)
+        # if old_location_obj is not None:
+        #     print(old_location_name, "now has", board_dict.get(old_location_name).get_tile_num_players(), "players on it.")
+        # print(curr_location_name, "now has", board_dict.get(curr_location_name).get_tile_num_players(), "players on it.")
+        # print()
+        # print(player.get_player_name(), "has moved to", curr_location_name)
+        # print()
+        # print("===============================")
         return True
 
+        # validate gets called first
+        if Game_processor.validate_move(board_dict, player, destination) == True:
+            # update player old and new location
+            player.update(destination)
+            print("old is", player.get_player_old_location())
+            print("new is", player.get_player_current_location())
+
+            # update tile_num_players
+            if player.get_player_old_location() is not None:
+                board_dict.get(player.get_player_old_location()).tile_num_players -= 1
+
+            board_dict.get(player.get_player_current_location()).tile_num_players += 1
+
+            # print statements
+            print()
+            print("Success!")
+            print("Previous tile:", player.get_player_old_location())
+            if player.get_player_old_location() is not None:
+                print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
+            print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
+            print()
+            print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
+            print()
+            print("===============================")
+            return True
+        
+        elif Game_processor.validate_move(board_dict, player, destination) == False:
+            return False
 
     # check if move is in dict; if in dict, is it in the adj tiles?
     def validate_move(board_dict, player, destination):
@@ -148,8 +176,10 @@ class Game_processor:
             # TO BE FIXED FOR TARGET INCREMENT 
             print(f'     comparing first move {player_first_move[player.get_player_name()]} to {destination.get_tile_name()}')
             if player_first_move.get(player.get_player_name()) == destination.get_tile_name():
+                print("Valid move, proceed!")
                 return True
             else:
+                print("Invalid move submitted, try again.")
                 return False
         
 
@@ -187,6 +217,12 @@ class Game_processor:
     #         print("Player chooses to move to location ", player_turn['target_tile'])
     #         print()
 
+        if player_turn['turn_status'] == "movement":
+            print("Player chooses to move to location ", player_turn['target_tile'])
+            print()
+
+        return player_turn
+
     #     return player_turn
 
     # This method records an accusation made by a player. It does not return
@@ -199,8 +235,129 @@ class Game_processor:
         return player == case_file_reversed['character'] and weapon == case_file_reversed['weapon'] and room == case_file_reversed['room']   
 
         
+    def suggest(suggest_dict, players, board_dict):
+        # NEEDS TO MOVE PLAYER TO PLAYER'S ROOM
+        # suggested_room = board_dict.suggestplayer.get_player_current_location()
+
+        # move the suggested player first
+        # find the player in the list with the value of 'player' entry in suggest_cards
+        for suggested_player in players:
+            if suggested_player.player_name == suggest_dict.get('player'):
+                # update the location
+                # DEFINE WHAT OLD LOCATION MEANS
+                # if old location means anything before your own turn
+                # then old_location and current_location should be equal
+                # we may need new setter functions in player
+                # OR, we use if_placed flag for player
+
+                # check the player's current location against the entry in the suggest_dict
+                # update the suggested player's location
+                if suggested_player.get_player_current_location().get_tile_name() != suggest_dict.get('room'):
+                    placed_tile = board_dict.get(suggest_dict.get('room'))
+                    suggested_player.update(placed_tile)
+                    print(suggested_player.player_name, "has been moved to", suggested_player.get_player_current_location().get_tile_name(), "!")
+                    # suggested_player.if_placed = False
+                else:
+                    print()
+                    print("error checking")
+                    # suggested_player.if_placed = True
+                    
+
+                # change numbers of players on each tile, old and new
+                if suggested_player.get_player_old_location() is not None:
+                    # print("Flag", suggested_player.get_player_old_location().get_tile_name())
+                    suggested_player.get_player_old_location().tile_num_players -= 1
+
+                suggested_player.get_player_current_location().tile_num_players += 1
+                
+                # return if_placed flag for player?
+                break 
+
+            else:
+                continue
+                # print(suggested_player.get_player_name(), "is not the player with that name.")
+
+    def get_suggest_matches_for_player(player, suggest_dict, players):
+        # looping through all players in Game.players EXCEPT for current player
+        # if any entry in dictionary matches 
+        # print()
+        # print("Can you disprove this suggestion? Show", player.get_player_name(), "a matching card if you do!")
+        # print()
+
+        match_found = False
+
+        for other_player in players:
+            if other_player != player:
+                print("    Checking", other_player.get_player_name(), "for matching cards...")
+                print()
+                
+                for suggested_card in suggest_dict.values():
+                    if suggested_card in other_player.get_hand():
+                        matched_card = suggested_card
+                        print("   ",other_player.get_player_name(), "has revealed to", player.get_player_name(), matched_card)
+                        match_found = True
+                        break
+                    else:
+                        # print("No match found for", suggested_card, "in", other_player.get_player_name(), "'s hand.")
+                        continue
         
+        if match_found == True:
+            print("    Match has been found, can proceed to next turn.")
+        else:
+            print("    No match found! Pick what you would like to do next.")
         
+        return other_player, matched_card
+        
+    #     # This method returns the list of suggestions made by a specific player.
+    #     def get_suggestions_for_player(self, player):
+    #         player_suggestions = []
+    #         for suggestion in self.suggestions:
+    #             if suggestion['player'] == player:
+    #                 player_suggestions.append(suggestion)
+    #         return player_suggestions
+        
+    # This method records an accusation made by a player. It does not return
+    # anything, but it modifies the accusations attribute of the ClueGame object. 
+    # If the accusation is correct, it also sets the game_over attribute to True.  
+    def accuse(self, player, weapon, room):
+        accusation = {'player': player, 'weapon': weapon, 'room': room}
+        self.accusations.append(accusation) # QUESTION: What's the purpose of appending accusations?
+        # If accusation is correct
+        if player == self.solution['player'] and weapon == self.solution['weapon'] and room == self.solution['room']:
+            self.game_over = True
+            # return winner name
+            return True
+        # If accusation is incorrect
+        else: 
+            # TO DO 
+            # set player to lost/inactive
+            # only display lost and case file to losing player
+            # continue to next turn
+            return False
+        # TO DO 
+        #   update game_status?
+        #   send game_status to Game_message_handler
+        #   Game_message_handler receive_game_status()
+        #   Game_message_handler build_return_package()
+        #   someone send package to Client_message_handler
+
+    # This method checks if an accusation is valid. It returns a Boolean value 
+    # indicating whether or not the accusation is valid.   
+    def validate_accusation(self, accusation):
+        '''
+        INPUT: accusation : list of three user inputs
+        OUTPUT: True if accusation is valid, False otherwise
+        '''
+        # Precondition: accusation is cleaned up syntax to match my lists of weapons, tokens, and rooms
+        has_weapon = False
+        has_token = False
+        has_room = False
+        for guess in accusation:
+            if guess in self.WEAPONS: has_weapon = True
+            elif guess in self.TOKENS: has_token = True
+            elif guess in self.ROOMS: has_room = True
+        return has_weapon and has_token and has_room
+    
     #     # This method returns the list of accusations made by a specific player.
     #     def get_accusations_for_player(self, player):
     #         player_accusations = []

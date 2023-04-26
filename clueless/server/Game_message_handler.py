@@ -35,6 +35,8 @@ class Game_message_handler:
             elif turn_status == 'ACCUSATION':
                 player_turn.update({'turn_status': 'accusation'})
                 player_turn.update({'accused_cards': client_message['accused_cards']})
+            elif turn_status == "join":
+                player_turn.update({'player_token': client_message['player_token']})
 
         # print(f'...processed player_turn {player_turn}')
         return player_turn
@@ -44,7 +46,7 @@ class Game_message_handler:
         # print("...building message package for client")
         game_package = dict({
             'player_id': game_status['player_id'],
-            #'player_token': game_status['player_token'],
+            'player_token': game_status['player_token'],
             'turn_status': game_status['turn_status']
         })
 
@@ -56,9 +58,12 @@ class Game_message_handler:
                 game_package.update({'player_location': game_status['target_tile']})
             elif turn_status == 'suggestion':
                 game_package.update({'suggested_cards': game_status['suggested_cards']})
-                game_package.update({'suggest_result': game_status['suggest_result']})
-                game_package.update({'suggest_result_player': game_status['suggest_result_player']})
-                game_package.update({'suggested_player_location': game_status['suggested_cards']['room']})
+                # game_package.update({'suggest_result': game_status['suggest_result']})
+                if 'suggested_match_card' in game_status:
+                    game_package.update({'suggest_result_player': game_status['suggest_result_player']})
+                # game_package.update({'suggested_player_location': game_status['suggested_cards']['room']})
+                if 'suggested_match_card' in game_status:
+                    game_package.update({'suggested_match_card': game_status['suggested_match_card']})
             elif turn_status == 'accusation':
                 game_package.update({'accused_cards': game_status['accused_cards']})
                 if 'accused_result_player' in game_status:

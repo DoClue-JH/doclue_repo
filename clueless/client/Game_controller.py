@@ -14,6 +14,7 @@ import traceback
 
 DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get'})
 server_update = dict({})
+CHARACTER_TOKENS = ["Mrs. Peacock", "Mrs. White", "Miss Scarlet", "Mr. Green", "Colonel Mustard", "Professor Plum"]
 
 class Game_controller:
 
@@ -63,11 +64,14 @@ class Game_controller:
 
         prev_game_state = DEFAULT_GAME
         print("You are Player ", self.id)
+        self.player_token = self.choose_player_token()
+
         self.game_state['player_id'] = self.player_id
         self.game_state['player_token'] = self.player_token
         self.game_state['turn_status'] = "get"
 
-        game_data = self.network.build_client_package(self.player_id, "get", '')
+        game_data = self.network.build_client_package(self.player_id, "join", self.player_token)
+        self.network.send(game_data)
 
         while self.playing:
             self.tick()
@@ -81,6 +85,10 @@ class Game_controller:
                 # game = self.network.send_receive(game_data)
                 # print("...sent and received client message")
                 
+                #self.network.send(game_data)
+                # print("...sent client message")
+                #game_data = self.network.build_client_package(self.player_id, "get", '')
+                #game = self.network.send_receive(game_data)
                 self.network.send(game_data)
                 # print("...sent client message")
 
@@ -93,6 +101,7 @@ class Game_controller:
                 # print(f'......{game} ')
                 # print(f'......{game_data} ')      
                                                       
+
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     # print(f'server update: {prev_game_state} ')   
@@ -115,6 +124,7 @@ class Game_controller:
                     # elif  # print move stuff here
                 except:
                     print("Couldn't process_server_update")
+
                     break
 
             except:
@@ -183,8 +193,8 @@ class Game_controller:
                     self.state = "START"
                     #is_Room_Selection_Active = False
 
-            if (self.state == 'SUGGESTION'):
-                self.add_suggest_view(events)
+            if (self.state == 'SUGGESTING'):
+                suggested_card_dict = self.add_suggest_view(events)
 
                 for key in self.suggest_weapon_dict:
                     if self.suggest_weapon_dict[key][3] == True:
@@ -196,6 +206,7 @@ class Game_controller:
                             # print('Player choose weapon: ' + key)
                             self.suggest_weapon_dict[key][3] = True
                             self.message_for_server['weapon'] = key
+                            self.weapon_choice = key
 
                 for key in self.suggest_suspect_dict:
                     if self.suggest_suspect_dict[key][3] == True:
@@ -207,6 +218,9 @@ class Game_controller:
                             # print('Player choose suspect: ' + key)
                             self.suggest_suspect_dict[key][3] = True
                             self.message_for_server['suspect'] = key
+                            self.character_choice = key
+
+                turn_data = self.network.build_client_package(self.player_id, self.state, suggested_card_dict)
 
             if (self.state == 'ACCUSING'): #'ACCUSATION'):
                 accused_card_dict = self.add_accuse_view(events)
@@ -298,7 +312,11 @@ class Game_controller:
             self.network.send(turn_data)
 
         if is_Suggest_Selection_Active:
-            self.state = "SUGGESTION"
+            self.state = "SUGGESTING"
+            self.board.load_options(self.screen, self.state, events)
+            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            #print(turn_data)
+            self.network.send(turn_data)
 
         # if player chooose end turn, then it passes the turn to others.
 
@@ -309,6 +327,7 @@ class Game_controller:
     # Input : events [type: Pygame Event]
     ################################################################################
     def add_suggest_view(self, events):
+        suggested_card_dict = {}
         mousePos = pygame.mouse.get_pos()
         pygame.display.set_caption("Suggest Player : ")
         self.screen.fill(self.base_color)
@@ -330,15 +349,21 @@ class Game_controller:
 
         if is_submit_button_active:
             self.reset_weapon_and_suspect_dict(self.state)
-            self.state = "START"
+            self.state = "SUGGESTION"
             self.screen.fill(self.base_color)
             # SEND MESSAGE TO SERVER
             print('Sending message to server for suggestion: ')
-            print(self.message_for_server)
+            suggested_card_dict = {'character':self.character_choice,
+                                    'weapon':self.weapon_choice}
+                                    #'room': None}
+            print("this is suggested card dict", suggested_card_dict)
+            # print(self.message_for_server)
 
-            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            # turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
             #print(turn_data)
-            self.network.send(turn_data)
+            # self.network.send(turn_data)
+
+        return suggested_card_dict
 
     ################################################################################
     # add_accuse_view is the function to show accuse view
@@ -380,6 +405,19 @@ class Game_controller:
             # game = self.network.send_receive(turn_data)
             # print(f"game_controller ... receiving message from server for accusation: {game}")
             
+    def choose_player_token(self):
+        token = "None"
+        print("Please choose your character token")
+        print(CHARACTER_TOKENS)
+        token = input("Please enter you character choice: ")
+        while token not in CHARACTER_TOKENS:
+            token = input("Please enter a valid character choice: ")
+
+        print("You have chosen: " + token)
+        
+        return token
+
+
     def render(self):
         pygame.display.flip()
     

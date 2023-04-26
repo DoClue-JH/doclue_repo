@@ -6,23 +6,29 @@ from clueless.server.Player import Player
 
 class Game:
 
-    def __init__(self, player_info_dict):
-        # print('GAME INITIALIZED')
-        self.num_players = len(player_info_dict)
-        self.players = []
 
-        for player_id, player_name in player_info_dict.items():
-            this_player = Player(player_name, player_id)
-            self.players.append(this_player)
+    def __init__(self, num_players):
+        # print('GAME INITIALIZED')
+        self.num_players = num_players
+        self.players = []
+        self.dealt = False
+        self.player_info_dict = {1:'Colonal Mustard',
+                                2:'Miss Scarlet',
+                                3:'Professor Plum'}
+
+
+        # for player_id, player_name in player_info_dict.items():
+        #     this_player = Player(player_name, player_id)
+        #     self.players.append(this_player)
         self.game_deck = Deck()                                 # dict for initial overall game deck
         self.case_file = self.game_deck.get_secret_deck()       # dict of three secret cards
         
         # Below needs ALL player objects initialized
-        self.deal_to_players()
+
+        #self.deal_to_players()
         # self.turn_state = None                                # turn state for current player
         self.game_status = None                                 # game state of entire game
-        case_file_reversed = {card_type: card_val for card_val, card_type in self.case_file.items()}
-        print(f"Game initiated; secret is that {case_file_reversed['character']} did it in the {case_file_reversed['room']} with a {case_file_reversed['weapon']}")
+        print(f'  case_file: {self.case_file}')
         # print('   with players')
         # for p in self.players:
         #     print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
@@ -174,18 +180,28 @@ class Game:
             # unsure what we would want returned here, placeholder print
             print("That player is not in this game, please try again.")
 
+
     def get_player_object(self, player_id):
         for i, player in enumerate(self.players):
             # print(f'...comparing {player.get_player_id()} to {player_id}')
             if player.get_player_id() == player_id:
                 return player
             
+    #method to add a new player object to the game
+    def add_player(self, player_id, player_token):
+        #print("adding new player")
+        new_player = Player(player_token, player_id)
+        self.players.append(new_player)
+
+
     # A method that deals a deck of cards to players 
     def deal_to_players(self)->dict:
         num_players= len(self.players)
         dealt_decks = self.game_deck.deal(num_players)
         for i, player in enumerate(self.players):
             player.set_player_hand(dealt_decks[i])
+            print(f'Player {player.get_player_id()} is playing {player.get_player_name()} with hand {player.get_hand()}')
+            print()
 
     # This method determines what turn the player is taking and then routes to 
     # appropriate game logic functions to carry out turn accordingly
@@ -223,9 +239,10 @@ class Game:
             target_tile_obj = self.game_board[backend_tilename]
             # print(f"  Player {curr_player.get_player_name()} chooses to move to location {target_tile_obj.get_tile_name()}")
             move_validated_boolean = Game_processor.validate_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-            if move_validated_boolean:
-                # print('  move is valid')
-                move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+            #if move_validated_boolean:
+            #    # print('  move is valid')
+            #    move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+            # else:
             
         elif player_turn['turn_status'] == "accusation":
             backend_playername = self.get_backend_playername(player_turn['accused_cards']['character'])
@@ -242,12 +259,56 @@ class Game:
                 curr_player.set_player_status('LOST')
                 # print('    Player accused incorrectly')
             
-        elif player_turn['turn_status'] == "suggestion":
-            # print('  Player chooses to suggest')
-            player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
+        elif player_turn['turn_status'] == "suggestion":        
+            print("  Player chooses to suggest")
+            print(player_turn['suggested_cards'])
+
+
+            # convert string names with megan's dict
+            backend_playername = self.get_backend_playername(player_turn['suggested_cards']['character'])
+            # print(backend_playername)
+            backend_weaponname = self.get_backend_weaponname(player_turn['suggested_cards']['weapon'])
+            # print(backend_weaponname)
+            # print(curr_player)
+            # print(curr_player.get_player_current_location())
+            # {'character': 'mr_green', 'weapon': 'lead_pipe', 'room': None}
+            # get the suggesting player's location, UPDATE ROOM ENTRY IN DICT
+
+            Game_processor.move(self.game_board, curr_player, self.game_board.get('Billiard Room'))
+
+            # update suggested_cards and print
+            player_turn['suggested_cards']['room'] = curr_player.get_player_current_location().get_tile_name()
+            #print(player_turn['suggested_cards'])
+            #print("currplayer and location", curr_player.get_player_current_location())
+
+            suggest_dict = {'character': backend_playername,
+                            'weapon': backend_weaponname,
+                            'room': curr_player.get_player_current_location().get_tile_name()
+            }
+
+            # print("We made it!")
+            print(suggest_dict)
+
+            # update suggest inputs/outputs
+            # suggest input currently takes: (suggest_dict, players, board_dict)
+            # suggest will move players and decrement/increment tiles
+            Game_processor.suggest(suggest_dict, self.players, self.game_board)
+
+            # get the player's matched cards
+            player_w_match, matched_card = Game_processor.get_suggest_matches_for_player(curr_player, suggest_dict, self.players)
             # TO DO: assumes output of suggest has name of player who suggested cards
-            game_status['suggest_result_player'] = player_w_match
-            game_status['suggested_match_card']= matched_card
+            if player_w_match is not None:
+                game_status['suggest_result_player'] = player_w_match.get_player_name()
+            # print("matched_card is:", matched_card)
+            if matched_card is not None:
+                game_status['suggested_match_card']= matched_card
+            # else:
+            #     game_status['suggested_match_card']= str(matched_card)
+        # #     # print('  Player chooses to suggest')
+        #     player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
+        #     # TO DO: assumes output of suggest has name of player who suggested cards
+        #     game_status['suggest_result_player'] = player_w_match
+        #     game_status['suggested_match_card']= matched_card
         
         # print(f'... return game_status {game_status}')
         game_status['ready']=True
@@ -285,5 +346,3 @@ class Game:
 
 #     else:
 #         print("Invalid move, try again!")
-
-
