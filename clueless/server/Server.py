@@ -56,10 +56,10 @@ class Server:
                 else:
                     if client_message != prev_client_message:
                         player_turn = Game_message_handler.process_client_update(client_message)
-                        #print("processed client message")
+
                         #print("processed client message")
 
-                        if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING":
+                        if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING" and player_turn['turn_status'] != "SUGGESTING":
 
                             if player_turn['turn_status'] == "join":
                                 # add new player to the game
