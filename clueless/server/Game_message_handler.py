@@ -37,6 +37,8 @@ class Game_message_handler:
                 player_turn.update({'accused_cards': client_message['accused_cards']})
             elif turn_status == "join":
                 player_turn.update({'player_token': client_message['player_token']})
+            elif turn_status == 'END TURN':
+                player_turn.update({'turn_status': 'end turn'})
 
         # print(f'...processed player_turn {player_turn}')
         return player_turn

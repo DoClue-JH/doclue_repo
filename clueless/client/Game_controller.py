@@ -319,6 +319,12 @@ class Game_controller:
             self.network.send(turn_data)
 
         # if player chooose end turn, then it passes the turn to others.
+        if isEndTurnSelectionActive:
+            self.state = "END TURN"
+            self.board.load_options(self.screen, self.state, events)
+            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            #print(turn_data)
+            self.network.send(turn_data)
 
         return turn_data
 

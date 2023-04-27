@@ -22,9 +22,10 @@ class Server:
         self.id_count = 0
         self.max_players = PLAYER_MAX
         #hardcoding as a placeholder
+
         #self.game = Game(player_info_dict, 3)
-        #self.game = Game([],3)'
-        self.clients = []
+
+        #self.game = Game([],3)
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
@@ -44,7 +45,7 @@ class Server:
 
         while connected:
             try:
-                #print("Server receiving player data")'
+                #print("Server receiving player data")
                 client_message = Game_message_handler.receive_client_update(conn)
                 #print("Server received player data")
     
@@ -55,9 +56,10 @@ class Server:
                 else:
                     if client_message != prev_client_message:
                         player_turn = Game_message_handler.process_client_update(client_message)
-
                         #print("processed client message")
-                        if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING" and player_turn['turn_status'] != "SUGGESTING":
+                        #print("processed client message")
+
+                        if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING":
 
                             if player_turn['turn_status'] == "join":
                                 # add new player to the game
@@ -72,6 +74,7 @@ class Server:
                                     print()
                                     self.game.deal_to_players()
                                     self.game.dealt = True
+                                    self.game.set_turn_order()
                                     print("Let's start the game!")
                                     print()
 
@@ -89,14 +92,7 @@ class Server:
 
                         prev_client_message = client_message
 
-# TO FIX 
-                        # # #print(server_update)
-                        # with self.clients_lock:
-                        #     for c in self.clients:
-                        #         Game_message_handler.send_game_update(c, server_update)
-                        #         # if server_update['turn_status']!='get':
-                        #             # print(f'client {c} received {server_update}')
-                # print()
+                #print(server_update)
                 Game_message_handler.send_game_update(conn, server_update)
                 # print("... sent server update to client")
                 # print()
@@ -140,8 +136,8 @@ class Server:
             if (id_count < PLAYER_MAX):
                 #socket function called, waiting for an incoming connection from a new client
                 conn, addr = self.server.accept()
-                self.clients.append(conn)
                 print("Connected to:", addr)
+                
                 game_status['player_count'] = id_count+1
 
                 #open new thread for new client server connection to run on
