@@ -79,8 +79,6 @@ class Server:
                                 server_update = Game_message_handler.build_game_package(player_turn)
 
                             elif player_turn['turn_status'] != "get":
-                                #print(player_turn)
-                                # game_status = Game_processor.player_take_turn(player_turn)
                                 game_status = self.game.player_take_turn(player_turn)
                                 #print(game_status)
                                 server_update = Game_message_handler.build_game_package(game_status)

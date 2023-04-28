@@ -183,9 +183,9 @@ class Game:
 
     def get_player_object(self, player_id):
         for i, player in enumerate(self.players):
-            print(f'...comparing {player.get_player_id()} to {player_id}')
+            # print(f'...comparing {player.get_player_id()} to {player_id}')
             if player.get_player_id() == player_id:
-                print(f'...returning player obj for {player.get_player_id()}')
+                # print(f'...returning player obj for {player.get_player_id()}')
                 return player
             
     #method to add a new player object to the game
