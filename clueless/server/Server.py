@@ -86,8 +86,6 @@ class Server:
                                 server_update = player_turn
 
                         prev_client_message = client_message
-
-# TO FIX 
                         # #print(server_update)
                         # with self.clients_lock:
                         #     for c in self.clients:
@@ -97,7 +95,6 @@ class Server:
                 # print()
                 # Game_message_handler.send_game_update(conn, server_update)
                 try:
-                    print('HERE',server_update)
                     self.broadcast(server_update)
                 except Exception as err:
                     # index = self.clients.index(conn)
@@ -125,7 +122,8 @@ class Server:
         print(f'...broadcasting {message} to this many clients: {len(self.clients)}')
         # client is same as conn
         for client in self.clients:
-            try: Game_message_handler.send_game_update(client, message)
+            try: 
+                Game_message_handler.send_game_update(client, message)
             except Exception as err:
                 print(err)
             # client.send(message)
