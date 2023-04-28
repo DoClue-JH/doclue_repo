@@ -110,6 +110,12 @@ class Client_message_handler:
                     print("Player " + player_id + "'s turn ended.")
                     print("It is now Player " + server_message['next_player_turn'] + "'s turn.")
                     print()
+                elif turn_status == 'start game':
+                    print("Game has begun. Let's play ClueLess!")
+                    print("Player " + server_message['next_player_turn'] + " starts")
+                    print()
+                else:
+                    print("Server message not recognized")
 
         # print("...processed server message")
         return server_message

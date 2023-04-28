@@ -72,6 +72,8 @@ class Game_message_handler:
                     game_package.update({'accused_result_player': game_status['accused_result_player']})
             elif turn_status == 'end turn':
                 game_package.update({'next_player': game_status['next_player']})
+            else:
+                print("Client message not recognized")
 
         # print(f'...built message package for client{game_package}')
         return game_package
