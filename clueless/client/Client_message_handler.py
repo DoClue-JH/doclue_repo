@@ -108,6 +108,10 @@ class Client_message_handler:
                     #     print("...accusation correct! Player " + player_id + " wins!")
                     # else:
                     #     print("...accusation incorrect. Player " + player_id + " loses.")
+                elif turn_status == 'end turn':
+                    print("Player " + player_id + "'s turn ended.")
+                    print("It is now Player " + server_message['next_player_turn'] + "'s turn.")
+                    print()
 
         # print("...processed server message")
         return server_message

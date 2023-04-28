@@ -70,6 +70,8 @@ class Game_message_handler:
                 game_package.update({'accused_cards': game_status['accused_cards']})
                 if 'accused_result_player' in game_status:
                     game_package.update({'accused_result_player': game_status['accused_result_player']})
+            elif turn_status == 'end turn':
+                game_package.update({'next_player': game_status['next_player']})
 
         # print(f'...built message package for client{game_package}')
         return game_package

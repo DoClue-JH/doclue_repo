@@ -10,7 +10,7 @@ class Player:
         self.player_status = 'ACTIVE'                           # Enum (int)
         # TO DO initialize dict from all tokens, weapons, room : 'unknown'
         self.player_notebook = dict()                             # Dict
-        self.next_player = None
+        self.next_player = None                                 #int id of next player
 
     ''' GETTER FUNCTIONS '''
     # Returns the player's name
