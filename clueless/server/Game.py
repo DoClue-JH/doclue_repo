@@ -326,7 +326,7 @@ class Game:
         #     game_status['suggested_match_card']= matched_card
         
         #when current player has submitted that they want to end their turn
-        elif player_turn['turn_status' == "end turn"]:
+        elif player_turn['turn_status'] == 'end turn':
             print("Player " + curr_player.get_player_id() + " is ending their turn.")
             print("Player " + curr_player.get_next_player() + " is starting their turn next.")
             game_status.update({'next_player_turn': curr_player.get_next_player()})
