@@ -90,7 +90,7 @@ class Server:
                         prev_client_message = client_message
 
 # TO FIX 
-                        # # #print(server_update)
+                        # #print(server_update)
                         # with self.clients_lock:
                         #     for c in self.clients:
                         #         Game_message_handler.send_game_update(c, server_update)
