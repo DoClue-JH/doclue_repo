@@ -95,7 +95,7 @@ class Server:
                 # print()
                 # Game_message_handler.send_game_update(conn, server_update)
                 try:
-                    self.broadcast(server_update)
+                    Game_message_handler.broadcast(self.clients, server_update)
                 except Exception as err:
                     # index = self.clients.index(conn)
                     # self.clients.remove(conn)
@@ -117,16 +117,6 @@ class Server:
 
         sys.exit("Server Closed")
 
-
-    def broadcast(self, message):
-        print(f'...broadcasting {message} to this many clients: {len(self.clients)}')
-        # client is same as conn
-        for client in self.clients:
-            try: 
-                Game_message_handler.send_game_update(client, message)
-            except Exception as err:
-                print(err)
-            # client.send(message)
     
     def start(self):
         id_count = self.id_count

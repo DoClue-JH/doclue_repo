@@ -71,3 +71,13 @@ class Game_message_handler:
 
         # print(f'...built message package for client{game_package}')
         return game_package
+
+    def broadcast(clients, message):
+        print(f'...broadcasting {message} to this many clients: {len(clients)}')
+        # client is same as conn
+        for client in clients:
+            try: 
+                Game_message_handler.send_game_update(client, message)
+            except Exception as err:
+                print(err)
+            # client.send(message)
