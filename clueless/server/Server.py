@@ -68,6 +68,8 @@ class Server:
                                 print("Added new player to the game: Player "+ player.get_player_id() + " is playing " + player.get_player_name())
                                 print()
 
+                                player_turn['turn_status'] = "get"
+
                                 if (self.id_count == self.max_players and not self.game.dealt):
                                     print("All players have joined the game")
                                     print("dealing cards to players")
@@ -77,8 +79,9 @@ class Server:
                                     self.game.set_turn_order()
                                     print("Let's start the game!")
                                     print()
+                                    player_turn['turn_status'] = "start game"
+                                    player_turn['next_player_turn'] = self.game.get_first_player()
 
-                                player_turn['turn_status'] = "get"
                                 server_update = Game_message_handler.build_game_package(player_turn)
 
                             elif player_turn['turn_status'] != "get":
