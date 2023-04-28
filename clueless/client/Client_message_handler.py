@@ -41,7 +41,7 @@ class Client_message_handler:
             print(err)
 
     def send(self, data):
-        #print("Player sending information to the Server") 
+        # print(f"Player sending information to the Server {data}") 
         if data:
             dic1 = pickle.dumps(data)
             try:
@@ -51,8 +51,9 @@ class Client_message_handler:
 
     def receive(self):
         server_update = pickle.loads(self.client.recv(4096))
-        if server_update['turn_status']!='get':
-            print(f"...client receiving update from server {server_update}")
+        # print(f"...client receiving update from server {server_update}")
+        # if server_update['turn_status']!='get':
+        #     print(f"...client receiving update from server {server_update}")
         return server_update     
 
     def build_client_package(self, player_id, state, contents):

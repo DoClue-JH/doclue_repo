@@ -95,7 +95,16 @@ class Server:
                         #         # if server_update['turn_status']!='get':
                         #             # print(f'client {c} received {server_update}')
                 # print()
-                Game_message_handler.send_game_update(conn, server_update)
+                # Game_message_handler.send_game_update(conn, server_update)
+                try:
+                    print('HERE',server_update)
+                    self.broadcast(server_update)
+                except Exception as err:
+                    # index = self.clients.index(conn)
+                    # self.clients.remove(conn)
+                    # conn.close()
+                    print(err)
+                    break
                 # print("... sent server update to client")
                 # print()
             except:
@@ -111,6 +120,16 @@ class Server:
 
         sys.exit("Server Closed")
 
+
+    def broadcast(self, message):
+        print(f'...broadcasting {message} to this many clients: {len(self.clients)}')
+        # client is same as conn
+        for client in self.clients:
+            try: Game_message_handler.send_game_update(client, message)
+            except Exception as err:
+                print(err)
+            # client.send(message)
+    
     def start(self):
         id_count = self.id_count
         game_status = DEFAULT_GAME

@@ -9,7 +9,7 @@ class Game_message_handler:
         pass
 
     def send_game_update(conn, game_update):
-        # print(f"... sending to client {game_update}")
+        print(f"... sending to client {game_update}")
         conn.send(pickle.dumps(game_update))
 
     def receive_client_update(conn):
