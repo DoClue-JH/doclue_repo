@@ -99,6 +99,12 @@ class Game_controller:
                     print("Couldn't receive server update")
                     print(err)
                     # break
+                # game = self.network.receive()
+                # print(f'......{game} ')
+                # print(f'......{game_data} ')      
+                                                      
+                # if game['player_id'] != self.player_id:
+                #     print(f"... received from different player { game['player_id']}")   
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     
