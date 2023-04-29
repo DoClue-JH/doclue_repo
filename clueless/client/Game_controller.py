@@ -114,11 +114,11 @@ class Game_controller:
                                 self.board.display_update(self.screen, f"Player {this_player_id} Lost!")
                         else: 
                             if this_player_id == self.player_id:
-                                self.add_win_view(winner=True, winner_player_id=this_player_id)
+                                self.add_win_view(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                                 print("You Won!")
                                 # self.board.display_update(self.screen, "You Won!")
                             else:
-                                self.add_win_view(winner=False, winner_player_id=this_player_id)
+                                self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                                 print(f"Player {this_player_id} Won!")
                                 # self.board.display_update(self.screen, f"Player {this_player_id} Won!")
                     # elif  # print move stuff here
@@ -405,11 +405,10 @@ class Game_controller:
             # game = self.network.send_receive(turn_data)
             # print(f"game_controller ... receiving message from server for accusation: {game}")
         
-    def add_win_view(self, winner, winner_player_id):
-        mousePos = pygame.mouse.get_pos()
+    def add_win_view(self, winner, winner_player_id, case_file):
         # pygame.display.set_caption("Player : ")
         self.screen.fill(self.base_color)
-        self.board.load_win_board(self.screen, self.board, winner, winner_player_id)
+        self.board.load_win_board(self.screen, self.board, winner, winner_player_id, case_file)
                     
     def choose_player_token(self):
         token = "None"
