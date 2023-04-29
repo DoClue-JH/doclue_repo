@@ -102,7 +102,11 @@ class Game_controller:
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     
-                    self.update_views(self, prev_game_state)
+                    try: 
+                        self.update_views(prev_game_state)
+                    except Exception as err:
+                        print(err)   
+                    
                 except:
                     print("Couldn't process_server_update")
                     break
@@ -385,6 +389,10 @@ class Game_controller:
             # game = self.network.send_receive(turn_data)
             # print(f"game_controller ... receiving message from server for accusation: {game}")
         
+    ################################################################################
+    # add_win_view is the function to show win view
+    # Input : winner [type: Boolean], winner_player_id [type: int],  case_file [type: dict]
+    ################################################################################
     def add_win_view(self, winner, winner_player_id, case_file):
         # pygame.display.set_caption("Player : ")
         self.screen.fill(self.base_color)
@@ -393,6 +401,10 @@ class Game_controller:
         readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
         self.board.load_win_board(self.screen, self.board, winner, winner_player_id, readable_character, readable_weapon, readable_room)
     
+    ################################################################################
+    # update_views is the function to read the processed game state and update views correspondingly
+    # Input : prev_game_state [type: dict]
+    ################################################################################
     def update_views(self, prev_game_state):
         if prev_game_state['turn_status']=='accusation':
             this_player_id = prev_game_state['player_id']
@@ -410,7 +422,8 @@ class Game_controller:
                 else:
                     self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print(f"Player {this_player_id} Won!")
-    # elif  # print move stuff here       
+        # elif  # print move stuff here    
+ 
                     
     def choose_player_token(self):
         token = "None"
