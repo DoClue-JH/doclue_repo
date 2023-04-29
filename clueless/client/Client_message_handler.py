@@ -110,3 +110,50 @@ class Client_message_handler:
 
         # print("...processed server message")
         return server_message
+    
+    def get_readable_tilename(frontend_tilename):
+        tilename_dict = {'study_room':'Study',
+                         'hall':'Hall',
+                         'lounge':'Lounge',
+                         'library':'Library',
+                         'billiard_room':'Billiard Room',
+                         'dining_room':'Dining Room',
+                         'conservatory':'Conservatory',
+                         'ballroom':'Ballroom',
+                         'kitchen':'Kitchen',
+                         'hallway_1':'Hallway 01',
+                         'hallway_2':'Hallway 02',
+                         'hallway_3':'Hallway 03',
+                         'hallway_4':'Hallway 04',
+                         'hallway_5':'Hallway 05',
+                         'hallway_6':'Hallway 06',
+                         'hallway_7':'Hallway 07',
+                         'hallway_8':'Hallway 08',
+                         'hallway_9':'Hallway 09',
+                         'hallway_10':'Hallway 10',
+                         'hallway_11':'Hallway 11',
+                         'hallway_12':'Hallway 12'}
+        try: return tilename_dict[frontend_tilename]
+        except: return f"{frontend_tilename} not in dictionary!"
+     
+    def get_readable_playername(frontend_playername):
+        playername_dict = {'colonel_mustard':'Colonel Mustard',
+                         'miss_scarlet':'Miss Scarlet',
+                         'mr_green':'Mr. Green',
+                         'mrs_peacock':'Mrs. Peacock',
+                         'mrs_white':'Mrs. White',
+                         'prof_plum':'Professor Plum'
+                         }
+        try:  return playername_dict[frontend_playername]
+        except: return f"{frontend_playername} not in dictionary!"
+        
+    def get_readable_weaponname(frontend_weaponname):
+        weaponname_dict = {'candlestick':'Candlestick',
+                         'dagger':'Dagger',
+                         'lead_pipe':'Lead Pipe',
+                         'revolver':'Revolver',
+                         'rope':'Rope',
+                         'wrench':'Wrench'
+                        }
+        try:  return weaponname_dict[frontend_weaponname]
+        except: return f"{frontend_weaponname} not in dictionary!"
