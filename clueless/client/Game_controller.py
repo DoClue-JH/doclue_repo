@@ -99,12 +99,6 @@ class Game_controller:
                     print("Couldn't receive server update")
                     print(err)
                     # break
-                # game = self.network.receive()
-                # print(f'......{game} ')
-                # print(f'......{game_data} ')      
-                                                      
-                # if game['player_id'] != self.player_id:
-                #     print(f"... received from different player { game['player_id']}")   
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     # print(f'server update: {prev_game_state} ')   
@@ -113,14 +107,20 @@ class Game_controller:
                         this_player_id = prev_game_state['player_id']
                         if 'accused_result_player' not in prev_game_state:
                             if this_player_id == self.player_id:
-                                print("You lost!")
-                                self.board.display_update(self.screen, "You lost!")
+                                print("You Lost!")
+                                self.board.display_update(self.screen, "You Lost!")
                             else:
-                                print(f"Player {this_player_id} lost!")
-                                self.board.display_update(self.screen, f"Player {this_player_id} lost!")
+                                print(f"Player {this_player_id} Lost!")
+                                self.board.display_update(self.screen, f"Player {this_player_id} Lost!")
                         else: 
-                            print("You win!")
-                            self.board.display_update(self.screen, "You win!")
+                            if this_player_id == self.player_id:
+                                self.add_win_view(winner=True, winner_player_id=this_player_id)
+                                print("You Won!")
+                                # self.board.display_update(self.screen, "You Won!")
+                            else:
+                                self.add_win_view(winner=False, winner_player_id=this_player_id)
+                                print(f"Player {this_player_id} Won!")
+                                # self.board.display_update(self.screen, f"Player {this_player_id} Won!")
                     # elif  # print move stuff here
                 except:
                     print("Couldn't process_server_update")
@@ -134,7 +134,7 @@ class Game_controller:
 
             events = pygame.event.get()
             game_data = self.check_events(events)
-            # print(f'game_data is now {game_data}')
+            print(f'game_data is now {game_data}')
             # print()
             
         # when pygame.QUIT event happens, change self.playing to False 
@@ -404,7 +404,13 @@ class Game_controller:
             # print(f"game_controller ... sending message to server for accusation: {accused_card_dict}")
             # game = self.network.send_receive(turn_data)
             # print(f"game_controller ... receiving message from server for accusation: {game}")
-            
+        
+    def add_win_view(self, winner, winner_player_id):
+        mousePos = pygame.mouse.get_pos()
+        # pygame.display.set_caption("Player : ")
+        self.screen.fill(self.base_color)
+        self.board.load_win_board(self.screen, self.board, winner, winner_player_id)
+                    
     def choose_player_token(self):
         token = "None"
         print("Please choose your character token")
