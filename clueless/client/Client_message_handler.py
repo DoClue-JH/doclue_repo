@@ -58,10 +58,13 @@ class Client_message_handler:
         #start builing message package to send to server
         # print("...building client package")
         # print(f'   for player {player_id}, {state}, {contents}')
-        client_package = dict({'player_id': player_id, 'turn_status': state})
+        client_package = dict({'player_id': player_id, 'turn_status': state, 'player_token': contents})
+
 
         if (state == 'MOVEMENT'):
             client_package.update({'target_tile': contents})
+        elif (state == 'MOVING'):
+            client_package.update({'player_token': contents})
         elif (state == 'SUGGESTION'):
             client_package.update({'suggested_cards': contents})
         elif (state == 'ACCUSATION'):
@@ -69,6 +72,7 @@ class Client_message_handler:
         elif (state == 'join'):
             client_package.update({'player_token': contents})
 
+        print("client package is", client_package)
         return client_package
     
     def get_server_update(self):
@@ -80,7 +84,7 @@ class Client_message_handler:
     def process_server_update(self, server_message, prev_server_message):
         # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
         player_id = server_message['player_id']
-        #player_token = server_message['player_token']
+        # player_token = server_message['player_token']
         turn_status = server_message['turn_status']
         
         if server_message != prev_server_message:
@@ -89,7 +93,11 @@ class Client_message_handler:
                 #based on player's turn and game status, update players with the status of the game
                 if turn_status == 'movement':
                     print(f"player {player_id} chose to move to location {server_message['player_location']}")
-                                
+                
+                elif turn_status == 'MOVING':
+                    print(f"    Player {player_id} has these room options available!")
+                    print(f"    {server_message['valid_tile_names_for_player']}")
+
                 elif turn_status == 'suggestion':
                     print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
                             # server_message['suggested_cards']['weapon'])

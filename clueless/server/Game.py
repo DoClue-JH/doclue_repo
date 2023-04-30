@@ -12,9 +12,9 @@ class Game:
         self.num_players = num_players
         self.players = []
         self.dealt = False
-        self.player_info_dict = {1:'Colonal Mustard',
-                                2:'Miss Scarlet',
-                                3:'Professor Plum'}
+        # self.player_info_dict = {1:'Colonal Mustard',
+        #                         2:'Miss Scarlet',
+        #                         3:'Professor Plum'}
 
 
         # for player_id, player_name in player_info_dict.items():
@@ -183,8 +183,8 @@ class Game:
 
     def get_player_object(self, player_id):
         for i, player in enumerate(self.players):
-            # print(f'...comparing {player.get_player_id()} to {player_id}')
-            if player.get_player_id() == player_id:
+            print(f'...comparing {player.get_player_id()} to {player_id}')
+            if (int(player.get_player_id()) == int(player_id)):
                 return player
             
     #method to add a new player object to the game
@@ -192,6 +192,7 @@ class Game:
         #print("adding new player")
         new_player = Player(player_token, player_id)
         self.players.append(new_player)
+        print(self.players)
 
 
     # A method that deals a deck of cards to players 
@@ -229,20 +230,31 @@ class Game:
         '''
         # Get player object
         curr_player = self.get_player_object(int(player_turn['player_id']))
-        
+        print("curr_player is", curr_player)
         #  Game status stores the result of player taking a turn
         game_status = player_turn.copy()
         
         # Execute specific turn and update corresponding game_status with result
-        if player_turn['turn_status'] == "movement":  
-            backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
-            target_tile_obj = self.game_board[backend_tilename]
+        if player_turn['turn_status'] == "movement":
+            
+            # backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
+            # target_tile_obj = self.game_board[backend_tilename]
             # print(f"  Player {curr_player.get_player_name()} chooses to move to location {target_tile_obj.get_tile_name()}")
-            move_validated_boolean = Game_processor.validate_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-            #if move_validated_boolean:
-            #    # print('  move is valid')
-            #    move_result_boolean = Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
-            # else:
+            
+            #backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
+            target_tile_obj = self.game_board.get(player_turn['target_tile'])
+            print("target_tile_obj is", target_tile_obj)
+
+            Game_processor.updated_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+            if curr_player.get_player_old_location() is not None:
+                print(f"Player {player_turn['player_id']} was on {curr_player.get_player_old_location().get_tile_name()}")
+            print(f"Player {player_turn['player_id']} is now on {curr_player.get_player_current_location().get_tile_name()}")
+            # game_status['move_completed'] = True
+            # if move_completed_boolean is False:
+            #     game_status['move_completed'] = False
+            # else: 
+            #     game_status['move_completed'] = True
+
             
         elif player_turn['turn_status'] == "accusation":
             backend_playername = self.get_backend_playername(player_turn['accused_cards']['character'])
@@ -274,7 +286,7 @@ class Game:
             # {'character': 'mr_green', 'weapon': 'lead_pipe', 'room': None}
             # get the suggesting player's location, UPDATE ROOM ENTRY IN DICT
 
-            Game_processor.move(self.game_board, curr_player, self.game_board.get('Billiard Room'))
+            # Game_processor.move(self.game_board, curr_player, self.game_board.get('Billiard Room'))
 
             # update suggested_cards and print
             player_turn['suggested_cards']['room'] = curr_player.get_player_current_location().get_tile_name()

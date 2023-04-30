@@ -18,7 +18,7 @@ class Game_message_handler:
         return client_update
 
     def process_client_update(client_message):
-        # print(f"...processing client message {client_message}")
+        print(f"...processing client message {client_message}")
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
         player_turn = dict({'player_id': client_message['player_id'], 'turn_status': turn_status})
@@ -29,6 +29,10 @@ class Game_message_handler:
             if turn_status == 'MOVEMENT':
                 player_turn.update({'turn_status': 'movement'})
                 player_turn.update({'target_tile': client_message['target_tile']})
+                player_turn.update({'player_token': client_message['player_token']})
+                print(player_turn)
+            elif turn_status == 'MOVING':
+                player_turn.update({'player_token': client_message['player_token']})
             elif turn_status == 'SUGGESTION':
                 player_turn.update({'turn_status': 'suggestion'})
                 player_turn.update({'suggested_cards': client_message['suggested_cards']})
@@ -56,6 +60,9 @@ class Game_message_handler:
         if turn_status != "get":
             if turn_status == 'movement':
                 game_package.update({'player_location': game_status['target_tile']})
+                print(game_package)
+            elif turn_status == 'MOVING':
+                game_package.update({'valid_tile_names_for_player': game_status['valid_tile_names_for_player']})
             elif turn_status == 'suggestion':
                 game_package.update({'suggested_cards': game_status['suggested_cards']})
                 # game_package.update({'suggest_result': game_status['suggest_result']})
@@ -69,5 +76,5 @@ class Game_message_handler:
                 if 'accused_result_player' in game_status:
                     game_package.update({'accused_result_player': game_status['accused_result_player']})
 
-        # print(f'...built message package for client{game_package}')
+        print(f'...built message package for client{game_package}')
         return game_package

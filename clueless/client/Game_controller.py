@@ -122,6 +122,22 @@ class Game_controller:
                             print("You win!")
                             self.board.display_update(self.screen, "You win!")
                     # elif  # print move stuff here
+                    elif prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
+                        input_tile_name = ''
+                        while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
+                           input_tile_name = input("Please input a room from the list above: \n    ")
+                        
+                        print("    Success! Sending room selection to server...")
+
+                        # update game data
+                        game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name)
+                        continue
+                    
+                    elif prev_game_state['turn_status'] == 'movement':
+                        print(f"Success! {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
+                        
+                        game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
+
                 except:
                     print("Couldn't process_server_update")
 
@@ -133,6 +149,7 @@ class Game_controller:
                 break
 
             events = pygame.event.get()
+            print("events is", events)
             game_data = self.check_events(events)
             # print(f'game_data is now {game_data}')
             # print()
@@ -154,6 +171,7 @@ class Game_controller:
                 self.playing = False
 
             if (self.state == 'START'):
+                print("check_events start")
                 self.message_for_server = {}
                 self.room_choice = None
                 self.screen.fill(self.base_color)
@@ -161,6 +179,7 @@ class Game_controller:
 
             # This is to highlight rectangle when choosing the room and print the choosen one on the options box
             if (self.state == 'MOVING'): #'MOVEMENT'):
+                print("check_events moving")
                 turn_data = self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
                 for key in self.tiles_directory:
@@ -184,6 +203,7 @@ class Game_controller:
                         # SEND MESSAGE TO SERVER
                         turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice)
                         # self.network.send(turn_data)
+                        print(turn_data)
                         # print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
@@ -298,9 +318,10 @@ class Game_controller:
             # self.state = "MOVEMENT"
             self.state = "MOVING"
             self.board.load_options(self.screen, self.state, events)
-            # print('Player chose to move')
+            print('Player chose to move')
             # This data stores the mouse position of the button
-            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            #turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            turn_data = self.network.build_client_package(self.player_id, self.state, self.player_token)
             self.network.send(turn_data)
 
         if is_Accuse_Selection_Active:

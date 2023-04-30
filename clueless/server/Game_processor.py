@@ -99,7 +99,48 @@ class Game_processor:
     #     print("####################################################################")
     #     return 
 
-    def move(board_dict, player, destination):
+    def get_valid_moves(board_dict, player):
+
+        valid_tile_names = []
+
+        # define strings for first move tiles
+        if player.get_player_old_location() is None and player.get_player_current_location() is None:
+            player_first_move = {
+                'Miss Scarlet' : 'Hallway 02',
+                'Professor Plum' : 'Hallway 03',
+                'Colonal Mustard' : 'Hallway 05',
+                'Mrs. Peacock' : 'Hallway 08',
+                'Mr. Green' : 'Hallway 11',
+                'Mrs. White' : 'Hallway 12'
+                }
+            
+            valid_tile_names.append(player_first_move.get(player.get_player_name()))
+        
+        else:
+            
+            # get adjacent tiles for that tile
+            temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
+
+            valid_tile_names.append(player.get_player_current_location().get_tile_name())
+
+            # check if the player is allowed to move there
+            for tile in temp_adjacent_tiles:
+            # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
+            #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
+            # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
+
+                if board_dict.get(tile).get_tile_num_players() == 0:
+                    valid_tile_names.append(tile.get_tile_name())
+
+                elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
+                    valid_tile_names.append(tile.get_tile_name())
+        
+        # may need to convert to frontend names
+        return valid_tile_names
+
+    def updated_move(board_dict, player, destination):
+        # get backend tile name
+
         old_location_obj = player.get_player_old_location()
         old_location_name = ''
         
@@ -114,6 +155,22 @@ class Game_processor:
         if old_location_obj is not None:
             old_location_name = old_location_obj.get_tile_name()
             board_dict.get(old_location_name).tile_num_players -= 1
+
+    # def move(board_dict, player, destination):
+    #     old_location_obj = player.get_player_old_location()
+    #     old_location_name = ''
+        
+    #     player.update(destination)
+    #     # Get current location AFTER updating the player's location
+    #     curr_location_obj = player.get_player_current_location()
+    #     curr_location_name = curr_location_obj.get_tile_name()
+    #     # Incremement the now occupied tile by 1
+    #     board_dict.get(curr_location_name).tile_num_players += 1
+        
+    #     # Decrement the old tile by 1 if it exists (not None)
+    #     if old_location_obj is not None:
+    #         old_location_name = old_location_obj.get_tile_name()
+    #         board_dict.get(old_location_name).tile_num_players -= 1
             
         # print statements
         # print()
@@ -126,87 +183,87 @@ class Game_processor:
         # print(player.get_player_name(), "has moved to", curr_location_name)
         # print()
         # print("===============================")
-        return True
+        # return True
 
         # validate gets called first
-        if Game_processor.validate_move(board_dict, player, destination) == True:
-            # update player old and new location
-            player.update(destination)
-            print("old is", player.get_player_old_location())
-            print("new is", player.get_player_current_location())
+    #     if Game_processor.validate_move(board_dict, player, destination) == True:
+    #         # update player old and new location
+    #         player.update(destination)
+    #         print("old is", player.get_player_old_location())
+    #         print("new is", player.get_player_current_location())
 
-            # update tile_num_players
-            if player.get_player_old_location() is not None:
-                board_dict.get(player.get_player_old_location()).tile_num_players -= 1
+    #         # update tile_num_players
+    #         if player.get_player_old_location() is not None:
+    #             board_dict.get(player.get_player_old_location()).tile_num_players -= 1
 
-            board_dict.get(player.get_player_current_location()).tile_num_players += 1
+    #         board_dict.get(player.get_player_current_location()).tile_num_players += 1
 
-            # print statements
-            print()
-            print("Success!")
-            print("Previous tile:", player.get_player_old_location())
-            if player.get_player_old_location() is not None:
-                print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
-            print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
-            print()
-            print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
-            print()
-            print("===============================")
-            return True
+    #         # print statements
+    #         print()
+    #         print("Success!")
+    #         print("Previous tile:", player.get_player_old_location())
+    #         if player.get_player_old_location() is not None:
+    #             print(player.get_player_old_location(), "now has", board_dict.get(player.get_player_old_location()).get_tile_num_players(), "players on it.")
+    #         print(player.get_player_current_location(), "now has", board_dict.get(player.get_player_current_location()).get_tile_num_players(), "players on it.")
+    #         print()
+    #         print(player.get_player_name(), "has moved to", board_dict.get(player.get_player_current_location()).tile_name)
+    #         print()
+    #         print("===============================")
+    #         return True
         
-        elif Game_processor.validate_move(board_dict, player, destination) == False:
-            return False
+    #     elif Game_processor.validate_move(board_dict, player, destination) == False:
+    #         return False
 
-    # check if move is in dict; if in dict, is it in the adj tiles?
-    def validate_move(board_dict, player, destination):
-        # check if this is the player's first move, the only time where
-        # both old and new location are None
-        if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
-            print("     players first move")
+    # # check if move is in dict; if in dict, is it in the adj tiles?
+    # def validate_move(board_dict, player, destination):
+    #     # check if this is the player's first move, the only time where
+    #     # both old and new location are None
+    #     if (player.get_player_old_location() is None) and (player.get_player_current_location() is None):
+    #         print("     players first move")
 
-            # dict of player_name : starting tile_name
-            player_first_move = {
-                'Miss Scarlet' : 'Hallway 02',
-                'Professor Plum' : 'Hallway 03',
-                'Colonal Mustard' : 'Hallway 05',
-                'Mrs. Peacock' : 'Hallway 08',
-                'Mr. Green' : 'Hallway 11',
-                'Mrs. White' : 'Hallway 12'
-                }
-            # TO BE FIXED FOR TARGET INCREMENT 
-            print(f'     comparing first move {player_first_move[player.get_player_name()]} to {destination.get_tile_name()}')
-            if player_first_move.get(player.get_player_name()) == destination.get_tile_name():
-                print("Valid move, proceed!")
-                return True
-            else:
-                print("Invalid move submitted, try again.")
-                return False
+    #         # dict of player_name : starting tile_name
+    #         player_first_move = {
+    #             'Miss Scarlet' : 'Hallway 02',
+    #             'Professor Plum' : 'Hallway 03',
+    #             'Colonal Mustard' : 'Hallway 05',
+    #             'Mrs. Peacock' : 'Hallway 08',
+    #             'Mr. Green' : 'Hallway 11',
+    #             'Mrs. White' : 'Hallway 12'
+    #             }
+    #         # TO BE FIXED FOR TARGET INCREMENT 
+    #         print(f'     comparing first move {player_first_move[player.get_player_name()]} to {destination.get_tile_name()}')
+    #         if player_first_move.get(player.get_player_name()) == destination.get_tile_name():
+    #             print("Valid move, proceed!")
+    #             return True
+    #         else:
+    #             print("Invalid move submitted, try again.")
+    #             return False
         
 
         # create list of ALL adjacent tiles
         # create empty list for valid tiles player can move to after they've been checked for validity
         # print(player.get_player_current_location())
-        temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
-        temp_valid_tiles = []
+        # temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
+        # temp_valid_tiles = []
 
-        # print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
+        # # print("Tiles adjacent to", player.get_player_current_location(), "are",  temp_adjacent_tiles)
 
-        # iterate over all tiles in the adjacent list
-        for tile in temp_adjacent_tiles:
-            # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
-            #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
-            # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
-            if board_dict.get(tile).get_tile_num_players() == 0:
-                temp_valid_tiles.append(tile)
-            elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
-                temp_valid_tiles.append(tile)
+        # # iterate over all tiles in the adjacent list
+        # for tile in temp_adjacent_tiles:
+        #     # if NO ONE is on the tile, then automatically valid move (adj and empty); append to valid tiles
+        #     #   else if the tile type is ROOM and there are 1 or more players on it, this is also valid, append
+        #     # all other cases are INVALID (1 player and HALLWAY is invalid, hallway is considered full)
+        #     if board_dict.get(tile).get_tile_num_players() == 0:
+        #         temp_valid_tiles.append(tile)
+        #     elif board_dict.get(tile).get_tile_num_players() >= 1 and board_dict.get(tile).get_tile_type() == "room":
+        #         temp_valid_tiles.append(tile)
 
 
-        # check if the tile player wants to move to is in the list of remaining valid move options
-        if destination in temp_valid_tiles:
-            return True
-        else: 
-            return False
+        # # check if the tile player wants to move to is in the list of remaining valid move options
+        # if destination in temp_valid_tiles:
+        #     return True
+        # else: 
+        #     return False
 
     # # This method determines what turn the player is taking and then routes to 
     # # appropriate game logic functions to carry out turn accordingly
@@ -217,11 +274,11 @@ class Game_processor:
     #         print("Player chooses to move to location ", player_turn['target_tile'])
     #         print()
 
-        if player_turn['turn_status'] == "movement":
-            print("Player chooses to move to location ", player_turn['target_tile'])
-            print()
+        # if player_turn['turn_status'] == "movement":
+        #     print("Player chooses to move to location ", player_turn['target_tile'])
+        #     print()
 
-        return player_turn
+        # return player_turn
 
     #     return player_turn
 
@@ -285,6 +342,8 @@ class Game_processor:
         # print()
 
         match_found = False
+        other_player = "No player has a matching card!"
+        matched_card = "No matched card found!"
 
         for other_player in players:
             if other_player != player:
