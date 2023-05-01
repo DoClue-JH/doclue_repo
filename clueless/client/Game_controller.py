@@ -406,6 +406,11 @@ class Game_controller:
     # Input : prev_game_state [type: dict]
     ################################################################################
     def update_views(self, prev_game_state):
+        # Suggestion finished
+        
+        # Move finished
+        
+        # Accusation finished
         if prev_game_state['turn_status']=='accusation':
             this_player_id = prev_game_state['player_id']
             if 'accused_result_player' not in prev_game_state:
@@ -422,7 +427,6 @@ class Game_controller:
                 else:
                     self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print(f"Player {this_player_id} Won!")
-        # elif  # print move stuff here    
  
                     
     def choose_player_token(self):
