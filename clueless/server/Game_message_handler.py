@@ -9,7 +9,7 @@ class Game_message_handler:
         pass
 
     def send_game_update(conn, game_update):
-        if game_update['turn_status'] != 'pass':
+        #if game_update['turn_status'] != 'pass':
             # print(f"... sending to client {game_update}")
             conn.send(pickle.dumps(game_update))
 

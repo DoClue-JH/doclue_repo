@@ -111,9 +111,14 @@ class Client_message_handler:
                     # else:
                     #     print("...accusation incorrect. Player " + player_id + " loses.")
                 elif turn_status == 'end turn':
+                    next_player_id = server_message['next_player']
                     print("Player " + player_id + "'s turn ended.")
-                    print("It is now Player " + server_message['next_player'] + "'s turn.")
+                    if next_player_id == self.id:
+                        print("It is now your turn!")
+                    else:
+                        print(f"It is now Player {next_player_id}'s turn.")
                     print()
+                    
                 elif turn_status == 'start game':
                     if not self.game_has_started:
                         print("Game has begun. Let's play ClueLess!")
