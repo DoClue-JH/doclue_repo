@@ -15,6 +15,11 @@ class Client_message_handler:
         self.addr = (self.server, self.port)
         self.id = self.connect()
         self.game_has_started = False
+        self.player_moved = False
+        self.player_suggested = False
+        self.player_accused = False
+        self.player_ended_turn = False
+        self.player_taking_turn = False
 
     def get_id(self):
         return self.id
@@ -88,37 +93,53 @@ class Client_message_handler:
         turn_status = server_message['turn_status']
         
         if server_message != prev_server_message:
-            print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
+            #print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
             if turn_status != "get" and turn_status != 'pass':
-                print("Player taking turn: ", player_id)
+                if not self.player_taking_turn:
+                    print("Player taking turn: ", player_id)
+                    self.player_taking_turn = True
                 #based on player's turn and game status, update players with the status of the game
                 if turn_status == 'movement':
-                    print(f"player {player_id} chose to move to location {server_message['player_location']}")
+                    if not self.player_moved:
+                        print(f"player {player_id} chose to move to location {server_message['player_location']}")
+                        self.player_moved = True
                                 
                 elif turn_status == 'suggestion':
-                    print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
-                            # server_message['suggested_cards']['weapon'])
-                            server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
-                    #if the player client is the same as the player who made the suggestion, reveal the suggestion result
-                    if 'suggest_result_player' in server_message:
-                        print(server_message['suggest_result_player'], "has shown you:", server_message['suggested_match_card'])
-                    else:
-                        print("No match found amongst other hands!")
+                    if not self.player_suggested:
+                        print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 
+                                # server_message['suggested_cards']['weapon'])
+                                server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
+                        #if the player client is the same as the player who made the suggestion, reveal the suggestion result
+                        if 'suggest_result_player' in server_message:
+                            print(server_message['suggest_result_player'], "has shown you:", server_message['suggested_match_card'])
+                        else:
+                            print("No match found amongst other hands!")
+                        self.player_suggested = True
                 elif turn_status == 'accusation':
-                    print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
-                    # if('accused_result_player' in server_message):
-                    #     print("...accusation correct! Player " + player_id + " wins!")
-                    # else:
-                    #     print("...accusation incorrect. Player " + player_id + " loses.")
+                    if not self.player_accused:
+                        print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
+                        # if('accused_result_player' in server_message):
+                        #     print("...accusation correct! Player " + player_id + " wins!")
+                        # else:
+                        #     print("...accusation incorrect. Player " + player_id + " loses.")
+                        self.player_accused = True
                 elif turn_status == 'end turn':
-                    next_player_id = server_message['next_player']
-                    print("Player " + player_id + "'s turn ended.")
-                    if next_player_id == self.id:
-                        print("It is now your turn!")
-                    else:
-                        print(f"It is now Player {next_player_id}'s turn.")
-                    print()
-                    
+                    if not self.player_ended_turn:
+                        next_player_id = server_message['next_player']
+                        print("Player " + player_id + "'s turn ended.")
+                        self.player_ended_turn = True
+
+                        if next_player_id == self.id:
+                            print("It is now your turn!")
+                        else:
+                            print(f"It is now Player {next_player_id}'s turn.")
+                            self.player_moved = False
+                            self.player_suggested = False
+                            self.player_accused = False
+                            self.player_ended_turn = False
+                            self.player_taking_turn = False
+                        print()
+
                 elif turn_status == 'start game':
                     if not self.game_has_started:
                         print("Game has begun. Let's play ClueLess!")
@@ -126,7 +147,6 @@ class Client_message_handler:
                         print()
                         self.game_has_started = True
                 else:
-                    print("Server message not recognized")
                     server_message['turn_status'] = 'pass'
 
         prev_server_message = server_message
