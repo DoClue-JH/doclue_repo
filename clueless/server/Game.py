@@ -192,7 +192,10 @@ class Game:
     def add_player(self, player_id, player_token):
         #print("adding new player")
         new_player = Player(player_token, player_id)
-        self.players.append(new_player)
+        if new_player.get_player_name() == "Miss Scarlet":
+            self.players.insert(0, new_player)
+        else:
+            self.players.append(new_player)
 
 
     # A method that deals a deck of cards to players 
@@ -203,6 +206,18 @@ class Game:
             player.set_player_hand(dealt_decks[i])
             print(f'Player {player.get_player_id()} is playing {player.get_player_name()} with hand {player.get_hand()}')
             print()
+
+    def set_turn_order(self):
+        for i, player in enumerate(self.players):
+            if i < self.num_players-1:
+                player.set_next_player(self.players[i+1].get_player_id())
+            else:
+                #end of the list, must circle back to player one
+                player.set_next_player(self.players[0].get_player_id())
+            
+            print("Player Name: " + player.get_player_name())
+            print("Player ID: " + player.get_player_id())
+            print("Next Player: " + player.get_next_player())
 
     # This method determines what turn the player is taking and then routes to 
     # appropriate game logic functions to carry out turn accordingly
@@ -311,7 +326,13 @@ class Game:
         #     game_status['suggest_result_player'] = player_w_match
         #     game_status['suggested_match_card']= matched_card
         
-        print(f'... return game_status {game_status}')
+        #when current player has submitted that they want to end their turn
+        elif player_turn['turn_status' == "end turn"]:
+            print("Player " + curr_player.get_player_id() + " is ending their turn.")
+            print("Player " + curr_player.get_next_player() + " is starting their turn next.")
+            game_status.update({'next_player_turn': curr_player.get_next_player()})
+
+        # print(f'... return game_status {game_status}')
         game_status['ready']=True
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 

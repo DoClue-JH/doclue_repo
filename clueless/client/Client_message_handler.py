@@ -14,7 +14,6 @@ class Client_message_handler:
         self.port = HOST_PORT
         self.addr = (self.server, self.port)
         self.id = self.connect()
-        
 
     def get_id(self):
         return self.id
@@ -70,6 +69,8 @@ class Client_message_handler:
             client_package.update({'accused_cards': contents})
         elif (state == 'join'):
             client_package.update({'player_token': contents})
+        elif (state == "END TURN"):
+            pass
 
         return client_package
     
