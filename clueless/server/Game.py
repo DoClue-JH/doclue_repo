@@ -190,6 +190,7 @@ class Game:
             
     def get_first_player(self):
         #returns the id of the first player
+        print("First player: " + self.players[0].get_player_id())
         return self.players[0].get_player_id()
             
     #method to add a new player object to the game

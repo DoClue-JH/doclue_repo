@@ -14,6 +14,7 @@ class Client_message_handler:
         self.port = HOST_PORT
         self.addr = (self.server, self.port)
         self.id = self.connect()
+        self.game_has_started = False
 
     def get_id(self):
         return self.id
@@ -21,13 +22,13 @@ class Client_message_handler:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            return pickle.loads(self.client.recv(4096))
+            return pickle.loads(self.client.recv(4096*10))
         except socket.error as err:
             print(err)
             # pass
 
     def send_receive(self, data):
-        #print("Player sending information to the Server")
+        print("Player sending information to the Server")
         #print(data)
         try:
             # print('...sending client -> server data
@@ -35,7 +36,7 @@ class Client_message_handler:
             self.client.send(pickle.dumps(data))
             
             # print('...receiving server -> client data')
-            return pickle.loads(self.client.recv(4096))
+            return pickle.loads(self.client.recv(4096*10))
         except socket.error as err:
             print(err)
 
@@ -49,7 +50,7 @@ class Client_message_handler:
                 print(err)
 
     def receive(self):
-        server_update = pickle.loads(self.client.recv(4096))
+        server_update = pickle.loads(self.client.recv(4096*10))
         # print(f"...client receiving update from server {server_update}")
         # if server_update['turn_status']!='get':
         #     print(f"...client receiving update from server {server_update}")
@@ -81,13 +82,14 @@ class Client_message_handler:
 
     # TO DO: move and suggest
     def process_server_update(self, server_message, prev_server_message):
-        # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
+        #print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
         player_id = server_message['player_id']
         #player_token = server_message['player_token']
         turn_status = server_message['turn_status']
         
         if server_message != prev_server_message:
-            if turn_status != "get":
+            print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
+            if turn_status != "get" and turn_status != 'pass':
                 print("Player taking turn: ", player_id)
                 #based on player's turn and game status, update players with the status of the game
                 if turn_status == 'movement':
@@ -110,15 +112,19 @@ class Client_message_handler:
                     #     print("...accusation incorrect. Player " + player_id + " loses.")
                 elif turn_status == 'end turn':
                     print("Player " + player_id + "'s turn ended.")
-                    print("It is now Player " + server_message['next_player_turn'] + "'s turn.")
+                    print("It is now Player " + server_message['next_player'] + "'s turn.")
                     print()
                 elif turn_status == 'start game':
-                    print("Game has begun. Let's play ClueLess!")
-                    print("Player " + server_message['next_player_turn'] + " starts")
-                    print()
+                    if not self.game_has_started:
+                        print("Game has begun. Let's play ClueLess!")
+                        print("Player " + server_message['next_player'] + " starts")
+                        print()
+                        self.game_has_started = True
                 else:
                     print("Server message not recognized")
+                    server_message['turn_status'] = 'pass'
 
+        prev_server_message = server_message
         # print("...processed server message")
         return server_message
     

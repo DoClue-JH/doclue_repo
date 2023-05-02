@@ -64,6 +64,7 @@ class Game_controller:
     def game_loop(self):
 
         prev_game_state = DEFAULT_GAME
+        prev_game_data = DEFAULT_GAME
         print("You are Player ", self.id)
         self.player_token = self.choose_player_token()
 
@@ -90,8 +91,10 @@ class Game_controller:
                 # print("...sent client message")
                 #game_data = self.network.build_client_package(self.player_id, "get", '')
                 #game = self.network.send_receive(game_data)
+                #if game_data != prev_game_data:
                 self.network.send(game_data)
                 # print("...sent client message")
+                #  prev_game_data = game_data
 
                 try:
                     game = self.network.receive()
@@ -124,7 +127,7 @@ class Game_controller:
 
             events = pygame.event.get()
             game_data = self.check_events(events)
-            print(f'game_data is now {game_data}')
+            # print(f'game_data is now {game_data}')
             # print()
             
         # when pygame.QUIT event happens, change self.playing to False 

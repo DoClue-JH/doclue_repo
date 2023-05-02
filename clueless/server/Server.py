@@ -21,11 +21,7 @@ class Server:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.id_count = 0
         self.max_players = PLAYER_MAX
-        #hardcoding as a placeholder
-
-        #self.game = Game(player_info_dict, 3)
-
-        #self.game = Game([],3)
+        self.clients = []
 
         try:
             self.server.bind((HOST_ADDR, HOST_PORT))
@@ -55,36 +51,18 @@ class Server:
                     break
                 else:
                     if client_message != prev_client_message:
+                        #print(f"previous client message: {prev_client_message} ... current client message: {client_message}")
                         player_turn = Game_message_handler.process_client_update(client_message)
                         #print("processed client message")
-                        #print("processed client message")
 
-                        if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING":
-
+                        #if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "MOVING" and player_turn['turn_status'] != "ACCUSING":
+                        if player_turn['turn_status'] != 'pass':
                             if player_turn['turn_status'] == "join":
                                 # add new player to the game
-                                self.game.add_player(player_turn['player_id'], player_turn['player_token'])
-                                player = self.game.get_player_object(player_turn['player_id'])
-                                print("Added new player to the game: Player "+ player.get_player_id() + " is playing " + player.get_player_name())
-                                print()
-
-                                player_turn['turn_status'] = "get"
-
-                                if (self.id_count == self.max_players and not self.game.dealt):
-                                    print("All players have joined the game")
-                                    print("dealing cards to players")
-                                    print()
-                                    self.game.deal_to_players()
-                                    self.game.dealt = True
-                                    self.game.set_turn_order()
-                                    print("Let's start the game!")
-                                    print()
-                                    player_turn['turn_status'] = "start game"
-                                    player_turn['next_player_turn'] = self.game.get_first_player()
-
+                                player_turn = self.add_new_player(player_turn)
                                 server_update = Game_message_handler.build_game_package(player_turn)
 
-                            elif player_turn['turn_status'] != "get":
+                            elif player_turn['turn_status'] != "get" and player_turn['turn_status'] != "start game":
                                 game_status = self.game.player_take_turn(player_turn)
                                 #print(game_status)
                                 server_update = Game_message_handler.build_game_package(game_status)
@@ -151,6 +129,7 @@ class Server:
             if (id_count < PLAYER_MAX):
                 #socket function called, waiting for an incoming connection from a new client
                 conn, addr = self.server.accept()
+                self.clients.append(conn)
                 print("Connected to:", addr)
                 
                 game_status['player_count'] = id_count+1
@@ -164,3 +143,25 @@ class Server:
                 print("Waiting for all players to join...")
                 print()
 
+
+    def add_new_player(self, player_turn):
+        self.game.add_player(player_turn['player_id'], player_turn['player_token'])
+        player = self.game.get_player_object(player_turn['player_id'])
+        print("Added new player to the game: Player "+ player.get_player_id() + " is playing " + player.get_player_name())
+        print()
+
+        player_turn['turn_status'] = "get"
+
+        if (self.id_count == self.max_players and not self.game.dealt):
+            print("All players have joined the game")
+            print("dealing cards to players")
+            print()
+            self.game.deal_to_players()
+            self.game.dealt = True
+            self.game.set_turn_order()
+            print("Let's start the game!")
+            print()
+            player_turn['turn_status'] = "start game"
+            player_turn['next_player'] = self.game.get_first_player()
+
+        return player_turn
