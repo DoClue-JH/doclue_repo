@@ -71,6 +71,9 @@ class Game_controller:
         self.game_state['player_token'] = self.player_token
         self.game_state['turn_status'] = "get"
 
+        input_tile_name = ''
+
+
         game_data = self.network.build_client_package(self.player_id, "join", self.player_token)
         self.network.send(game_data)
 
@@ -97,6 +100,7 @@ class Game_controller:
                     game = self.network.receive()
                 except Exception as err:
                     print("Couldn't receive server update")
+                    print(type(err))
                     print(err)
                     # break
                 # game = self.network.receive()
@@ -122,8 +126,7 @@ class Game_controller:
                             print("You win!")
                             self.board.display_update(self.screen, "You win!")
                     # elif  # print move stuff here
-                    elif prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
-                        input_tile_name = ''
+                    elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
                            input_tile_name = input("Please input a room from the list above: \n    ")
                         
@@ -131,13 +134,24 @@ class Game_controller:
 
                         # update game data
                         game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name)
+                        # print("game data is", game_data)
+
+                        # KT: take out this continue when ui is integrated, may cause 
+                        # errors when you do but needed for command line input rn since
+                        # it stops game_data from being overwritten at the end of the loop
                         continue
                     
                     elif prev_game_state['turn_status'] == 'movement':
-                        print(f"Success! {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
+                        print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
                         
-                        game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
+                        #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
 
+                    elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
+                        print(f"Success! Player {prev_game_state['player_id']} (you) have suggested {prev_game_state['suggested_cards']}!")
+                        if 'suggest_result_player' in prev_game_state and prev_game_state['suggested_match_card'] != "No matched card found!":
+                            print(prev_game_state['suggest_result_player'], "has shown you:", prev_game_state['suggested_match_card'])
+                        else:
+                            print("No match found amongst other hands!")
                 except:
                     print("Couldn't process_server_update")
 
@@ -149,7 +163,7 @@ class Game_controller:
                 break
 
             events = pygame.event.get()
-            print("events is", events)
+            # print("events is", events)
             game_data = self.check_events(events)
             # print(f'game_data is now {game_data}')
             # print()
@@ -430,7 +444,7 @@ class Game_controller:
         token = "None"
         print("Please choose your character token")
         print(CHARACTER_TOKENS)
-        token = input("Please enter you character choice: ")
+        token = input("Please enter your character choice: ")
         while token not in CHARACTER_TOKENS:
             token = input("Please enter a valid character choice: ")
 

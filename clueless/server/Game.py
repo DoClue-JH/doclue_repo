@@ -289,10 +289,28 @@ class Game:
 
             # Game_processor.move(self.game_board, curr_player, self.game_board.get('Billiard Room'))
 
+            if curr_player.get_player_current_location() is None:
+                player_first_move = {
+                    'Miss Scarlet' : 'Hallway 02',
+                    'Professor Plum' : 'Hallway 03',
+                    'Colonal Mustard' : 'Hallway 05',
+                    'Mrs. Peacock' : 'Hallway 08',
+                    'Mr. Green' : 'Hallway 11',
+                    'Mrs. White' : 'Hallway 12'
+                    }
+                
+                first_move_tile_name = player_first_move.get(curr_player.get_player_name())
+
+                curr_player.update(self.game_board.get(first_move_tile_name))
+
+            print("player is on", curr_player.get_player_current_location().get_tile_name())
+
             # update suggested_cards and print
             player_turn['suggested_cards']['room'] = curr_player.get_player_current_location().get_tile_name()
             #print(player_turn['suggested_cards'])
             #print("currplayer and location", curr_player.get_player_current_location())
+
+            # remove later, input to test suggest
 
             suggest_dict = {'character': backend_playername,
                             'weapon': backend_weaponname,
@@ -307,14 +325,19 @@ class Game:
             # suggest will move players and decrement/increment tiles
             Game_processor.suggest(suggest_dict, self.players, self.game_board)
 
+            # print("self.players is", self.players)
+
             # get the player's matched cards
             player_w_match, matched_card = Game_processor.get_suggest_matches_for_player(curr_player, suggest_dict, self.players)
             # TO DO: assumes output of suggest has name of player who suggested cards
-            if player_w_match is not None:
+            if player_w_match != "No player has a matching card!":
                 game_status['suggest_result_player'] = player_w_match.get_player_name()
+                game_status['suggested_match_card'] = matched_card
+            else: 
+                game_status['suggest_result_player'] = player_w_match
+                game_status['suggested_match_card'] = matched_card
             # print("matched_card is:", matched_card)
-            if matched_card is not None:
-                game_status['suggested_match_card']= matched_card
+            # if matched_card != "No matched card found!":
             # else:
             #     game_status['suggested_match_card']= str(matched_card)
         # #     # print('  Player chooses to suggest')

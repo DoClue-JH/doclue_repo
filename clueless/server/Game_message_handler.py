@@ -9,16 +9,16 @@ class Game_message_handler:
         pass
 
     def send_game_update(conn, game_update):
-        print(f"... sending to client {game_update}")
+        # print(f"... sending to client {game_update}")
         conn.send(pickle.dumps(game_update))
 
     def receive_client_update(conn):
-        client_update = pickle.loads(conn.recv(4096))
+        client_update = pickle.loads(conn.recv(4096*10))
         # print(f"...player receiving information from the client {client_update}")
         return client_update
 
     def process_client_update(client_message):
-        print(f"...processing client message {client_message}")
+        # print(f"...processing client message {client_message}")
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
         player_turn = dict({'player_id': client_message['player_id'], 'turn_status': turn_status})
@@ -29,10 +29,11 @@ class Game_message_handler:
             if turn_status == 'MOVEMENT':
                 player_turn.update({'turn_status': 'movement'})
                 player_turn.update({'target_tile': client_message['target_tile']})
-                player_turn.update({'player_token': client_message['player_token']})
-                print(player_turn)
+                # player_turn.update({'player_token': client_message['player_token']})
+                # print("hello i made it!")
             elif turn_status == 'MOVING':
-                player_turn.update({'player_token': client_message['player_token']})
+                pass
+                # player_turn.update({'player_token': client_message['player_token']})
             elif turn_status == 'SUGGESTION':
                 player_turn.update({'turn_status': 'suggestion'})
                 player_turn.update({'suggested_cards': client_message['suggested_cards']})
@@ -47,7 +48,7 @@ class Game_message_handler:
 
 
     def build_game_package(game_status):
-        print("...building message package for client")
+        # print("...building message package for client")
         game_package = dict({
             'player_id': game_status['player_id'],
             # 'player_token': game_status['player_token'],
@@ -80,7 +81,8 @@ class Game_message_handler:
         return game_package
 
     def broadcast(clients, message):
-        print(f'...broadcasting {message} to this many clients: {len(clients)}')
+        # print(f'...broadcasting {message} to this many clients: {len(clients)}')
+        
         # client is same as conn
         for client in clients:
             try: 

@@ -22,7 +22,7 @@ class Client_message_handler:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            return pickle.loads(self.client.recv(4096))
+            return pickle.loads(self.client.recv(4096*10))
         except socket.error as err:
             print(err)
             # pass
@@ -36,7 +36,7 @@ class Client_message_handler:
             self.client.send(pickle.dumps(data))
             
             # print('...receiving server -> client data')
-            return pickle.loads(self.client.recv(4096))
+            return pickle.loads(self.client.recv(4096*10))
         except socket.error as err:
             print(err)
 
@@ -50,7 +50,7 @@ class Client_message_handler:
                 print(err)
 
     def receive(self):
-        server_update = pickle.loads(self.client.recv(4096))
+        server_update = pickle.loads(self.client.recv(4096*10))
         # print(f"...client receiving update from server {server_update}")
         # if server_update['turn_status']!='get':
         #     print(f"...client receiving update from server {server_update}")
@@ -64,8 +64,9 @@ class Client_message_handler:
 
         if (state == 'MOVEMENT'):
             client_package.update({'target_tile': contents})
-        elif (state == 'MOVING'):
-            client_package.update({'player_token': contents})
+            # print("updated client package!")
+        # elif (state == 'MOVING'):
+        #     client_package.update({'player_token': contents})
         elif (state == 'SUGGESTION'):
             client_package.update({'suggested_cards': contents})
         elif (state == 'ACCUSATION'):
@@ -73,10 +74,10 @@ class Client_message_handler:
         elif (state == 'join'):
             client_package.update({'player_token': contents})
 
-        print("client package is", client_package)
         return client_package
     
     def get_server_update(self):
+        print("check get server update")
         game_data = self.build_client_package(self.id, "get", "")
         game = self.send_receive(game_data)
         return game
@@ -95,6 +96,8 @@ class Client_message_handler:
                 if turn_status == 'movement':
                     print(f"player {player_id} chose to move to location {server_message['player_location']}")
                 
+                # from the server message, get the player id of the player moving and print the list of room
+                # options provided from the server as a list
                 elif turn_status == 'MOVING':
                     print(f"    Player {player_id} has these room options available!")
                     print(f"    {server_message['valid_tile_names_for_player']}")
@@ -104,10 +107,16 @@ class Client_message_handler:
                             # server_message['suggested_cards']['weapon'])
                             server_message['suggested_cards']['weapon'] + " in the " + server_message['suggested_cards']['room'])
                     #if the player client is the same as the player who made the suggestion, reveal the suggestion result
-                    if 'suggest_result_player' in server_message:
-                        print(server_message['suggest_result_player'], "has shown you:", server_message['suggested_match_card'])
+                    # if 'suggest_result_player' in server_message:
+                    #     print(server_message['suggest_result_player'], "has shown you:", server_message['suggested_match_card'])
+                    # else:
+                    #     print("No match found amongst other hands!")
+
+                    if 'suggest_result_player' in server_message and server_message['suggested_match_card'] != "No matched card found!":
+                        print(server_message['suggest_result_player'], "is showing Player", player_id, "a card from their hand! How intriguing :)")
                     else:
                         print("No match found amongst other hands!")
+
                 elif turn_status == 'accusation':
                     print(f"Player {player_id} accused {server_message['accused_cards']['character']} with the {server_message['accused_cards']['weapon']} in the {server_message['accused_cards']['room']}")
                     # if('accused_result_player' in server_message):

@@ -67,7 +67,14 @@ class Server:
                                 print("Added new player to the game: Player "+ player.get_player_id() + " is playing " + player.get_player_name())
                                 print()
 
-                                if (self.id_count == self.max_players and not self.game.dealt):
+                                print("self.max_players:", self.max_players)
+                                print("self.id_count:", self.id_count)
+
+                                # KT: changed this to check the length of players in Game, which is only added to
+                                # AFTER all players have selected their player tokens; was seeing errors where deck 
+                                # was dealt when three clients were initialized but only the first player was 
+                                # getting dealt cards
+                                if (len(self.game.players) == self.max_players and not self.game.dealt):
                                     print("All players have joined the game")
                                     print("dealing cards to players")
                                     print()
@@ -81,23 +88,26 @@ class Server:
 
                             elif player_turn['turn_status'] == "MOVING":
                                 # function for getting valid moves goes here
+                                # when player clicks "Go To Room", room selection becomes active in the 
+                                # client; client gets sent a list of names of valid tiles to move to
                                 player = self.game.get_player_object(player_turn['player_id'])
                                 valid_tile_names_for_player = Game_processor.get_valid_moves(self.game.game_board, player)
                                 print("Tiles to send to client", valid_tile_names_for_player)
                                 print("player_turn is", player_turn)
                                 game_status = dict({
                                     'player_id': player.get_player_id(),
-                                    'player_token': player_turn['player_token'],
+                                    # 'player_token': player_turn['player_token'],
                                     'turn_status': player_turn['turn_status'],
                                     'valid_tile_names_for_player': valid_tile_names_for_player
                                 })
-                                print("game_status", game_status)
+                                # print("game_status", game_status)
                                 server_update = Game_message_handler.build_game_package(game_status)
-                                print("server update is", server_update)
+                                # print("server update is", server_update)
 
-                                pass
+                                # pass
 
                             elif player_turn['turn_status'] != "get":
+                                # print("got to server!")
                                 game_status = self.game.player_take_turn(player_turn)
                                 #print(game_status)
                                 server_update = Game_message_handler.build_game_package(game_status)
