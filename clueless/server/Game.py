@@ -246,7 +246,7 @@ class Game:
             target_tile_obj = self.game_board.get(player_turn['target_tile'])
             print("target_tile_obj is", target_tile_obj)
 
-            Game_processor.updated_move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
+            Game_processor.move(board_dict = self.game_board, player = curr_player, destination = target_tile_obj)
             if curr_player.get_player_old_location() is not None:
                 print(f"Player {player_turn['player_id']} was on {curr_player.get_player_old_location().get_tile_name()}")
             print(f"Player {player_turn['player_id']} is now on {curr_player.get_player_current_location().get_tile_name()}")

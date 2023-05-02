@@ -75,7 +75,7 @@ class Game_processor:
         # may need to convert to frontend names
         return valid_tile_names
 
-    def updated_move(board_dict, player, destination):
+    def move(board_dict, player, destination):
         # get backend tile name
 
         old_location_obj = player.get_player_old_location()

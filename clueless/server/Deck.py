@@ -22,9 +22,9 @@ class Deck:
                     self.deck[card_name] = card_type[card_name]
         
         # Shuffle the deck of cards
-        # shuffled_keys = list(self.deck.keys())
-        # random.shuffle(shuffled_keys)
-        # self.deck = {key: self.deck[key] for key in shuffled_keys}
+        shuffled_keys = list(self.deck.keys())
+        random.shuffle(shuffled_keys)
+        self.deck = {key: self.deck[key] for key in shuffled_keys}
 
     def __repr__(self):
         # Return a string representation of the dictionaries
