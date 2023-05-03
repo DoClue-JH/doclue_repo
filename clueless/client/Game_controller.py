@@ -109,7 +109,7 @@ class Game_controller:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                       
                     
-                    # print(f'server update: {prev_game_state} ')   
+                    print(f'server update: {prev_game_state} ')   
                     if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
                            input_tile_name = input("Please input a room from the list above: \n    ")
@@ -438,10 +438,10 @@ class Game_controller:
     # Input : prev_game_state [type: dict]
     ################################################################################
     def update_views(self, prev_game_state):
-        input_tile_name = ''
+        this_player_id = prev_game_state['player_id']
+        
         # ACCUSATION finished
         if prev_game_state['turn_status']=='accusation':
-            this_player_id = prev_game_state['player_id']
             if 'accused_result_player' not in prev_game_state:
                 if this_player_id == self.player_id:
                     print("You Lost!")
@@ -460,9 +460,8 @@ class Game_controller:
         # MOVEMENT finished
         elif prev_game_state['turn_status'] == 'movement':
             print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
-            
             # TO DO convert prev_game_state['player_location'] backend to front end room name
-            self.move_token(self.player_token, (200, 125)) #self.tiles_directory[self.room_choice][1])
+            self.move_token(prev_game_state['moved_player'], (200, 125)) 
             #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
 
         # SUGGEST finished

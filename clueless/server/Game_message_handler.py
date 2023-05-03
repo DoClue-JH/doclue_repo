@@ -68,6 +68,7 @@ class Game_message_handler:
         if turn_status != "get":
             if turn_status == 'movement':
                 game_package.update({'player_location': game_status['target_tile']})
+                game_package.update({'moved_player': game_status['moved_player']})
                 print(game_package)
             elif turn_status == 'MOVING':
                 game_package.update({'valid_tile_names_for_player': game_status['valid_tile_names_for_player']})

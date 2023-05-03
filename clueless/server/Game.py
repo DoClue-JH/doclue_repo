@@ -250,7 +250,8 @@ class Game:
             'suggest_result_player': str,         # Name of player who provided suggested cards, None if no matching cards were found
             'accused_cards': dict,
             'accused_result_player' : str,        # Name of player who accused correctly, None accused incorrectly
-            'target_tile': str
+            'target_tile': str,
+            'moved_player':str                    # string name of player who moved
             } 
         '''
         # Get player object
@@ -261,7 +262,7 @@ class Game:
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":
-            
+            game_status['moved_player'] = curr_player.get_player_name()
             # backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
             # target_tile_obj = self.game_board[backend_tilename]
             # print(f"  Player {curr_player.get_player_name()} chooses to move to location {target_tile_obj.get_tile_name()}")
@@ -360,15 +361,6 @@ class Game:
             else: 
                 game_status['suggest_result_player'] = player_w_match
                 game_status['suggested_match_card'] = matched_card
-            # print("matched_card is:", matched_card)
-            # if matched_card != "No matched card found!":
-            # else:
-            #     game_status['suggested_match_card']= str(matched_card)
-        # #     # print('  Player chooses to suggest')
-        #     player_w_match, matched_card = Game_processor.suggest(curr_player.get_player_name(), player_turn['accused_cards']['weapon'], player_turn['accused_cards']['room'], player_turn['accused_cards']['character'])
-        #     # TO DO: assumes output of suggest has name of player who suggested cards
-        #     game_status['suggest_result_player'] = player_w_match
-        #     game_status['suggested_match_card']= matched_card
         
         #when current player has submitted that they want to end their turn
         elif player_turn['turn_status'] == 'end turn':
