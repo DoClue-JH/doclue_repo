@@ -420,18 +420,6 @@ class Game_controller:
             # print(f"game_controller ... sending message to server for accusation: {accused_card_dict}")
             # game = self.network.send_receive(turn_data)
             # print(f"game_controller ... receiving message from server for accusation: {game}")
-        
-    ################################################################################
-    # add_win_view is the function to show win view
-    # Input : winner [type: Boolean], winner_player_id [type: int],  case_file [type: dict]
-    ################################################################################
-    def add_win_view(self, winner, winner_player_id, case_file):
-        # pygame.display.set_caption("Player : ")
-        self.screen.fill(self.base_color)
-        readable_character = Client_message_handler.get_readable_playername(case_file['character'])
-        readable_weapon = Client_message_handler.get_readable_weaponname(case_file['weapon'])
-        readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
-        self.board.load_win_board(self.screen, self.board, winner, winner_player_id, readable_character, readable_weapon, readable_room)
     
     ################################################################################
     # update_views is the function to read the processed game state and update views correspondingly
@@ -451,10 +439,12 @@ class Game_controller:
                     self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (100, 30))
             else: 
                 if this_player_id == self.player_id:
-                    self.add_win_view(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
+                    self.add_win_screen(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
+                    # self.add_win_view(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print("You Won!")
                 else:
-                    self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
+                    self.add_win_screen(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
+                    # self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print(f"Player {this_player_id} Won!")
             
         # MOVEMENT finished
@@ -481,8 +471,37 @@ class Game_controller:
                 else:
                     self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
                     print("No match found amongst other hands!")
- 
+    
+    ################################################################################
+    # add_win_view is the function to show win view
+    # Input : winner [type: Boolean], winner_player_id [type: int],  case_file [type: dict]
+    ################################################################################    
+    def add_win_screen(self, winner, winner_player_id, case_file):
+        readable_character = Client_message_handler.get_readable_playername(case_file['character'])
+        readable_weapon = Client_message_handler.get_readable_weaponname(case_file['weapon'])
+        readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
+        
+        data_folder = Path("clueless/data/graphics/")
+        mouse_pos = pygame.mouse.get_pos()
+        image = pygame.image.load(data_folder / "splash.png")
+        image = pygame.transform.scale(image, (self.WIDTH, self.HEIGHT))
+        self.screen.blit(image, (0, 0))
 
+        TITLE_TEXT = self.get_font(65).render("CLUE-LESS", True, "#b68f40")
+        TITLE_RECT = TITLE_TEXT.get_rect(center=(530, 100))
+        self.screen.blit(TITLE_TEXT, TITLE_RECT)
+
+        # Update win message for different clients
+        MSG_TEXT = self.get_font(20).render(f'Sorry, Player {winner_player_id} won.', True, "#b68f40")
+        if winner:
+            MSG_TEXT = self.get_font(20).render('Congrats! You Win!!', True, "#b68f40")  
+        MSG_RECT = MSG_TEXT.get_rect(center=(530, 300))
+        self.screen.blit(MSG_TEXT, MSG_RECT)
+        
+        CASEFILE_TEXT =  self.get_font(20).render(f"Secret file was {readable_character} with the {readable_weapon} in the {readable_room} ", True, "#b68f40")
+        CASEFILE_RECT = CASEFILE_TEXT.get_rect(center=(530, 500))
+        self.screen.blit(CASEFILE_TEXT, CASEFILE_RECT)
+         
     def get_font(self,size): # Returns Press-Start-2P in the desired size
         data_folder = Path("clueless/data/font/")
         return pygame.font.Font(data_folder / "font.ttf", size)
