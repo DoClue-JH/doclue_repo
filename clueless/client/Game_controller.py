@@ -461,7 +461,9 @@ class Game_controller:
         elif prev_game_state['turn_status'] == 'movement':
             print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
             # TO DO convert prev_game_state['player_location'] backend to front end room name
-            self.move_token(prev_game_state['moved_player'], (200, 125)) 
+    
+            self.move_token(prev_game_state['moved_player'], self.tiles_directory[prev_game_state['player_location']][1])
+            # self.move_token(prev_game_state['moved_player'], (200, 125)) 
             #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
 
         # SUGGEST finished

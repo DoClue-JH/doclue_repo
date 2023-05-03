@@ -7,7 +7,7 @@ class Game_message_handler:
 
     def __init__(self):
         pass
-
+     
     def send_game_update(conn, game_update):
         #if game_update['turn_status'] != 'pass':
             # print(f"... sending to client {game_update}")
@@ -56,6 +56,28 @@ class Game_message_handler:
 
     def build_game_package(game_status):
         # print("...building message package for client")
+        tilename_dict = {'Study':'study_room',
+                         'Hall':'hall',
+                         'Lounge':'lounge',
+                         'Library':'library',
+                         'Billiard Room':'billiard_room',
+                         'Dining Room':'dining_room',
+                         'Conservatory':'conservatory',
+                         'Ballroom':'ballroom',
+                         'Kitchen':'kitchen',
+                         'Hallway 01':'hallway_1',
+                         'Hallway 02':'hallway_2',
+                         'Hallway 03':'hallway_3',
+                         'Hallway 04':'hallway_4',
+                         'Hallway 05':'hallway_5',
+                         'Hallway 06':'hallway_6',
+                         'Hallway 07':'hallway_7',
+                         'Hallway 08':'hallway_8',
+                         'Hallway 09':'hallway_9',
+                         'Hallway 10':'hallway_10',
+                         'Hallway 11':'hallway_11',
+                         'Hallway 12':'hallway_12'}
+        
         game_package = dict({
             'player_id': game_status['player_id'],
             # 'player_token': game_status['player_token'],
@@ -67,7 +89,9 @@ class Game_message_handler:
         #based on game status, build a package for the game status message
         if turn_status != "get":
             if turn_status == 'movement':
-                game_package.update({'player_location': game_status['target_tile']})
+                frontend_tilename = tilename_dict[(game_status['target_tile'])]
+                game_package.update({'player_location': frontend_tilename})
+                # game_package.update({'player_location': game_status['target_tile']})
                 game_package.update({'moved_player': game_status['moved_player']})
                 print(game_package)
             elif turn_status == 'MOVING':
