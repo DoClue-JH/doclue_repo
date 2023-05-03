@@ -130,12 +130,12 @@ class Server:
                     # index = self.clients.index(conn)
                     # self.clients.remove(conn)
                     # conn.close()
-                    print(err)
+                    # print(err)
                     break
                 # print("... sent server update to client")
                 # print()
             except Exception as err:
-                print(err)
+                # print(err)
                 break
 
         print("Lost connection")
