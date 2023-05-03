@@ -54,7 +54,7 @@ class Server:
                         #print(f"previous client message: {prev_client_message} ... current client message: {client_message}")
                         player_turn = Game_message_handler.process_client_update(client_message)
                         #print("processed client message")
-
+                        
                         #if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "ACCUSING" and player_turn['turn_status'] != "SUGGESTING":
                         if player_turn['turn_status'] != 'pass':
                             if player_turn['turn_status'] == "chose_token":
@@ -88,9 +88,10 @@ class Server:
                                 # pass
 
                             elif player_turn['turn_status'] != "get" and player_turn['turn_status'] != "start game":
-                                # print("got to server!")
+                                print(f"got to server with turn_status {player_turn['turn_status']}")
+                                
                                 game_status = self.game.player_take_turn(player_turn)
-                                #print(game_status)
+                                print(f"finished turn, game_status is now {game_status}")
                                 server_update = Game_message_handler.build_game_package(game_status)
 
                             else:
@@ -111,12 +112,12 @@ class Server:
                     # index = self.clients.index(conn)
                     # self.clients.remove(conn)
                     # conn.close()
-                    # print(err)
+                    print(f" failed broadcast with error: {err}")
                     break
                 # print("... sent server update to client")
                 # print()
             except Exception as err:
-                # print(err)
+                print(f" failed Game_message_handler.receive_client_update() with error: {err}")
                 break
 
         print("Lost connection")

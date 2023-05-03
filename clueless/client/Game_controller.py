@@ -108,8 +108,9 @@ class Game_controller:
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                       
-                    
-                    print(f'server update: {prev_game_state} ')   
+                    # HERE testing how it gets end turn back from game
+                    # print(f'!! server update: {prev_game_state} ')   
+                        
                     if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
                            input_tile_name = input("Please input a room from the list above: \n    ")
@@ -277,6 +278,12 @@ class Game_controller:
                 # print(f"receiving message from server after accusation: {turn_data}")
                 turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict)
 
+            # HERE is this needed?
+            # if (self.state == 'END TURN'):
+            #     turn_dict = {'':''}
+            #     turn_data = self.network.build_client_package(self.player_id, self.state, turn_dict)
+            #     print(f'... turn data is now {turn_data}')
+                
         return turn_data
 
     ################################################################################
@@ -440,11 +447,9 @@ class Game_controller:
             else: 
                 if this_player_id == self.player_id:
                     self.add_win_screen(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
-                    # self.add_win_view(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print("You Won!")
                 else:
                     self.add_win_screen(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
-                    # self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print(f"Player {this_player_id} Won!")
             
         # MOVEMENT finished
@@ -471,18 +476,29 @@ class Game_controller:
                 else:
                     self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
                     print("No match found amongst other hands!")
+        
+        # END TURN finished
+        elif prev_game_state['turn_status'] == 'end turn':
+            if this_player_id == self.player_id:
+                self.board.display_update(self.screen, f"Your turn has ended", (400, 400))
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (400, 500))
+            elif prev_game_state['next_player_turn'] == self.player_id:
+                self.board.display_update(self.screen, f"It's your turn", (400, 400))
+            else:
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (400, 500))
     
     ################################################################################
     # add_win_view is the function to show win view
     # Input : winner [type: Boolean], winner_player_id [type: int],  case_file [type: dict]
     ################################################################################    
     def add_win_screen(self, winner, winner_player_id, case_file):
+        # Extract character, weapon, and room from case file
         readable_character = Client_message_handler.get_readable_playername(case_file['character'])
         readable_weapon = Client_message_handler.get_readable_weaponname(case_file['weapon'])
         readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
         
         data_folder = Path("clueless/data/graphics/")
-        mouse_pos = pygame.mouse.get_pos()
+        # mouse_pos = pygame.mouse.get_pos()
         image = pygame.image.load(data_folder / "splash.png")
         image = pygame.transform.scale(image, (self.WIDTH, self.HEIGHT))
         self.screen.blit(image, (0, 0))
@@ -498,9 +514,14 @@ class Game_controller:
         MSG_RECT = MSG_TEXT.get_rect(center=(530, 300))
         self.screen.blit(MSG_TEXT, MSG_RECT)
         
-        CASEFILE_TEXT =  self.get_font(20).render(f"Secret file was {readable_character} with the {readable_weapon} in the {readable_room} ", True, "#b68f40")
+        # Blit case file answer to all clients
+        CASEFILE_TEXT =  self.get_font(20).render(f"Secret file was {readable_character}", True, "#b68f40")
         CASEFILE_RECT = CASEFILE_TEXT.get_rect(center=(530, 500))
         self.screen.blit(CASEFILE_TEXT, CASEFILE_RECT)
+        
+        CASEFILE_TEXT_REST =  self.get_font(20).render(f"with the {readable_weapon} in the {readable_room} ", True, "#b68f40")
+        CASEFILE_RECT_REST = CASEFILE_TEXT_REST.get_rect(center=(530, 600))
+        self.screen.blit(CASEFILE_TEXT_REST, CASEFILE_RECT_REST)
          
     def get_font(self,size): # Returns Press-Start-2P in the desired size
         data_folder = Path("clueless/data/font/")

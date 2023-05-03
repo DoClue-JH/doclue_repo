@@ -366,10 +366,12 @@ class Game:
         elif player_turn['turn_status'] == 'end turn':
             print("Player " + curr_player.get_player_id() + " is ending their turn.")
             print("Player " + curr_player.get_next_player() + " is starting their turn next.")
-            game_status.update({'next_player_turn': curr_player.get_next_player()})
+            game_status.update({'next_player': curr_player.get_next_player()})
+            next_player_obj = self.get_player_object(curr_player.get_next_player())
+            game_status.update({'next_playername_turn': next_player_obj.get_player_name()})
 
         # print(f'... return game_status {game_status}')
-        game_status['ready']=True
+        # game_status['ready']=True
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 
 # Khue Test Statements for Move
