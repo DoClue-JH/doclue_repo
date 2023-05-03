@@ -107,28 +107,10 @@ class Game_controller:
                 #     print(f"... received from different player { game['player_id']}")   
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
-                    
-                    # try: 
-                    #     self.update_views(prev_game_state)
-                    # except Exception as err:
-                    #     print(err)   
+                      
                     
                     # print(f'server update: {prev_game_state} ')   
-                    # TO DO read prev_game_state and display messages to corresponding players
-                    if prev_game_state['turn_status']=='accusation':
-                        this_player_id = prev_game_state['player_id']
-                        if 'accused_result_player' not in prev_game_state:
-                            if this_player_id == self.player_id:
-                                print("You lost!")
-                                self.board.display_update(self.screen, "You lost!")
-                            else:
-                                print(f"Player {this_player_id} lost!")
-                                self.board.display_update(self.screen, f"Player {this_player_id} lost!")
-                        else: 
-                            print("You win!")
-                            self.board.display_update(self.screen, "You win!")
-                    # elif  # print move stuff here
-                    elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
+                    if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
                            input_tile_name = input("Please input a room from the list above: \n    ")
                         
@@ -136,27 +118,19 @@ class Game_controller:
 
                         # update game data
                         game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name)
-                        # print("game data is", game_data)
 
                         # KT: take out this continue when ui is integrated, may cause 
                         # errors when you do but needed for command line input rn since
                         # it stops game_data from being overwritten at the end of the loop
                         continue
                     
-                    elif prev_game_state['turn_status'] == 'movement':
-                        print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
-                        
-                        # TO DO convert prev_game_state['player_location'] backend to front end room name
-                        self.move_token(self.player_token, (200, 125)) #self.tiles_directory[self.room_choice][1])
-                        
-                        #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
-
-                    elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
-                        print(f"Success! Player {prev_game_state['player_id']} (you) have suggested {prev_game_state['suggested_cards']}!")
-                        if 'suggest_result_player' in prev_game_state and prev_game_state['suggested_match_card'] != "No matched card found!":
-                            print(prev_game_state['suggest_result_player'], "has shown you:", prev_game_state['suggested_match_card'])
-                        else:
-                            print("No match found amongst other hands!")
+                    else:
+                        try: 
+                            # Only update views after a move, suggest, or accuse
+                            self.update_views(prev_game_state)
+                        except Exception as err:
+                            print(err) 
+                         
                 except:
                     print("Couldn't process_server_update")
                     break
@@ -464,11 +438,8 @@ class Game_controller:
     # Input : prev_game_state [type: dict]
     ################################################################################
     def update_views(self, prev_game_state):
-        # Suggestion finished
-        
-        # Move finished
-        
-        # Accusation finished
+        input_tile_name = ''
+        # ACCUSATION finished
         if prev_game_state['turn_status']=='accusation':
             this_player_id = prev_game_state['player_id']
             if 'accused_result_player' not in prev_game_state:
@@ -485,6 +456,22 @@ class Game_controller:
                 else:
                     self.add_win_view(winner=False, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print(f"Player {this_player_id} Won!")
+            
+        # MOVEMENT finished
+        elif prev_game_state['turn_status'] == 'movement':
+            print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
+            
+            # TO DO convert prev_game_state['player_location'] backend to front end room name
+            self.move_token(self.player_token, (200, 125)) #self.tiles_directory[self.room_choice][1])
+            #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
+
+        # SUGGEST finished
+        elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
+            print(f"Success! Player {prev_game_state['player_id']} (you) have suggested {prev_game_state['suggested_cards']}!")
+            if 'suggest_result_player' in prev_game_state and prev_game_state['suggested_match_card'] != "No matched card found!":
+                print(prev_game_state['suggest_result_player'], "has shown you:", prev_game_state['suggested_match_card'])
+            else:
+                print("No match found amongst other hands!")
  
 
     def get_font(self,size): # Returns Press-Start-2P in the desired size
