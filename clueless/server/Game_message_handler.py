@@ -96,6 +96,7 @@ class Game_message_handler:
                 print(game_package)
             elif turn_status == 'MOVING':
                 game_package.update({'valid_tile_names_for_player': game_status['valid_tile_names_for_player']})
+                
             elif turn_status == 'suggestion':
                 game_package.update({'suggested_cards': game_status['suggested_cards']})
                 # game_package.update({'suggest_result': game_status['suggest_result']})
@@ -104,15 +105,23 @@ class Game_message_handler:
                 # game_package.update({'suggested_player_location': game_status['suggested_cards']['room']})
                 if 'suggested_match_card' in game_status:
                     game_package.update({'suggested_match_card': game_status['suggested_match_card']})
+                    
             elif turn_status == 'accusation':
                 game_package.update({'accused_cards': game_status['accused_cards']})
                 if 'accused_result_player' in game_status:
                     game_package.update({'accused_result_player': game_status['accused_result_player']})
+                    
             elif turn_status == 'end turn':
                 game_package.update({'next_player': game_status['next_player']})
                 game_package.update({'next_playername_turn': game_status['next_playername_turn']})
+                
             elif turn_status == 'start game':
                 game_package.update({'next_player': game_status['next_player']})
+                game_package.update({'next_playername_turn': game_status['next_playername_turn']})
+                        
+            elif turn_status == 'chose token':
+                game_package.update({'next_player': game_status['next_player']})
+                
         else:
             game_package.update({'turn_status': 'pass'})
         
@@ -128,6 +137,4 @@ class Game_message_handler:
             try: 
                 Game_message_handler.send_game_update(client, message)
             except Exception as err:
-                # print(err)
-                hold = ''
-            # client.send(message)
+                print(f'failed broadcast with error {err}')

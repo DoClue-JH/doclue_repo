@@ -95,13 +95,13 @@ class Client_message_handler:
 
     # TO DO: move and suggest
     def process_server_update(self, server_message, prev_server_message):
-        print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
+        # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
         player_id = server_message['player_id']
         # player_token = server_message['player_token']
         turn_status = server_message['turn_status']
         
         if server_message != prev_server_message:
-            #print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
+            # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
             if turn_status != "get" and turn_status != 'pass':
                 if not self.player_taking_turn:
                     print("Player taking turn: ", player_id)

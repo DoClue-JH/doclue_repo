@@ -177,9 +177,9 @@ class Game_controller:
 
             if (self.state == 'CHOOSING_TOKEN'):
                 self.choose_player_token()
-
+            
             if (self.state == 'MOVING'): #'MOVEMENT'):
-                print("check_events moving")
+                # print("check_events moving")
                 turn_data = self.add_main_view(events)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
                 for key in self.tiles_directory:
@@ -476,19 +476,32 @@ class Game_controller:
                 else:
                     self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
                     print("No match found amongst other hands!")
+                    
+        # ALL CHOSE TOKEN finished, starting game
+        elif prev_game_state['turn_status'] == 'start game' :
+            first_player_id = prev_game_state['next_player']
+            print(prev_game_state)
+            # Player's first turn
+            if first_player_id == self.player_id:
+                print("It's your first turn")
+                self.board.display_update(self.screen, f"It's your first turn", (300, 30))
+            # Other players, not their turn
+            else:
+                print(f"It's {prev_game_state['next_playername_turn']}'s turn")
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 30))
         
         # END TURN finished
         elif prev_game_state['turn_status'] == 'end turn':
             # Player's turn just ended
             if this_player_id == self.player_id:
-                self.board.display_update(self.screen, f"Your turn has ended", (100, 30))
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (100, 40))
+                self.board.display_update(self.screen, f"Your turn has ended", (300, 30))
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 50))
             # This player's turn
             elif prev_game_state['next_player'] == self.player_id:
-                self.board.display_update(self.screen, f"It's your turn", (100, 30))
+                self.board.display_update(self.screen, f"It's your turn", (300, 30))
             # Other players, not their turn
             else:
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (100, 30))
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 30))
     
     ################################################################################
     # add_win_view is the function to show win view
@@ -605,8 +618,8 @@ class Game_controller:
     def move_token(self,token_name, pos_tuple):
         # print("MOVING ")
         # print(token_name)
-        print(pos_tuple[0])
-        print(pos_tuple[1])
+        # print(pos_tuple[0])
+        # print(pos_tuple[1])
         self.token_coor_dict[token_name][1] = pos_tuple[0]
         self.token_coor_dict[token_name][2] = pos_tuple[1]
 
