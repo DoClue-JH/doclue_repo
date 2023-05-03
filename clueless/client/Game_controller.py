@@ -445,10 +445,10 @@ class Game_controller:
             if 'accused_result_player' not in prev_game_state:
                 if this_player_id == self.player_id:
                     print("You Lost!")
-                    self.board.display_update(self.screen, "Sorry, You Lost!")
+                    self.board.display_update(self.screen, "Sorry, You Lost!", (100, 30))
                 else:
                     print(f"Player {this_player_id} Lost!")
-                    self.board.display_update(self.screen, f"Player {this_player_id} Lost!")
+                    self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (100, 30))
             else: 
                 if this_player_id == self.player_id:
                     self.add_win_view(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
@@ -458,14 +458,19 @@ class Game_controller:
                     print(f"Player {this_player_id} Won!")
             
         # MOVEMENT finished
+        # player_location: holds front end tilename
+        # moved_player: holds front end and back end names (same)
         elif prev_game_state['turn_status'] == 'movement':
-            print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")
-            # TO DO convert prev_game_state['player_location'] backend to front end room name
-    
+            print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")    
             self.move_token(prev_game_state['moved_player'], self.tiles_directory[prev_game_state['player_location']][1])
-            # self.move_token(prev_game_state['moved_player'], (200, 125)) 
             #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
-
+            if this_player_id == self.player_id:
+                # TO DO convert back to front end...
+                # TO DO better way of displaying text instead of blit
+                self.board.display_update(self.screen, f"You've successfully moved to {prev_game_state['player_location']}!", (400, 400))
+            else:
+                self.board.display_update(self.screen, f"{prev_game_state['moved_player']} has moved to {prev_game_state['player_location']}", (400, 400))
+            
         # SUGGEST finished
         elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
             print(f"Success! Player {prev_game_state['player_id']} (you) have suggested {prev_game_state['suggested_cards']}!")
@@ -552,8 +557,8 @@ class Game_controller:
         #return "Professor Plum"
 
     def move_token(self,token_name, pos_tuple):
-        print("MOVING ")
-        print(token_name)
+        # print("MOVING ")
+        # print(token_name)
         print(pos_tuple[0])
         print(pos_tuple[1])
         self.token_coor_dict[token_name][1] = pos_tuple[0]

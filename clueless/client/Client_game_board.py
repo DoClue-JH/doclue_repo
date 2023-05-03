@@ -425,7 +425,7 @@ class Client_game_board:
         if (card_type == 'room'):
             pygame.draw.rect(screen,color,self.room_dict[key_name][0],2)
 
-    def display_update(self, screen, text):
+    def display_update(self, screen, text, coords):
         my_font = pygame.font.SysFont(None, 30)
         text_surface = my_font.render(text, False, (0, 0, 0))
-        screen.blit(text_surface, (100, 30))
+        screen.blit(text_surface, coords)
