@@ -497,7 +497,7 @@ class Game_controller:
                     self.game_state['player_id'] = self.player_id
                     self.game_state['player_token'] = self.player_token
                     self.game_state['turn_status'] = "get"
-                    game_data = self.network.build_client_package(self.player_id, "join", self.player_token)
+                    game_data = self.network.build_client_package(self.player_id, "chose_token", self.player_token)
                     self.network.send(game_data)
 
                     self.state = 'START'
