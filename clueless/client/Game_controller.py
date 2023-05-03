@@ -474,10 +474,13 @@ class Game_controller:
         # SUGGEST finished
         elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
             print(f"Success! Player {prev_game_state['player_id']} (you) have suggested {prev_game_state['suggested_cards']}!")
-            if 'suggest_result_player' in prev_game_state and prev_game_state['suggested_match_card'] != "No matched card found!":
-                print(prev_game_state['suggest_result_player'], "has shown you:", prev_game_state['suggested_match_card'])
-            else:
-                print("No match found amongst other hands!")
+            if this_player_id == self.player_id:
+                if 'suggest_result_player' in prev_game_state and prev_game_state['suggested_match_card'] != "No matched card found!":
+                    print(prev_game_state['suggest_result_player'], "has shown you:", prev_game_state['suggested_match_card'])
+                    self.board.display_update(self.screen, f"{prev_game_state['suggest_result_player']} has shown you: {prev_game_state['suggested_match_card']}", (400, 400))
+                else:
+                    self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
+                    print("No match found amongst other hands!")
  
 
     def get_font(self,size): # Returns Press-Start-2P in the desired size
