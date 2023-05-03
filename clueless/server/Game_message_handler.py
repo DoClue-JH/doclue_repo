@@ -30,13 +30,18 @@ class Game_message_handler:
             if turn_status == 'MOVEMENT':
                 player_turn.update({'turn_status': 'movement'})
                 player_turn.update({'target_tile': client_message['target_tile']})
+                # player_turn.update({'player_token': client_message['player_token']})
+                # print("hello i made it!")
+            elif turn_status == 'MOVING':
+                pass
+                # player_turn.update({'player_token': client_message['player_token']})
             elif turn_status == 'SUGGESTION':
                 player_turn.update({'turn_status': 'suggestion'})
                 player_turn.update({'suggested_cards': client_message['suggested_cards']})
             elif turn_status == 'ACCUSATION':
                 player_turn.update({'turn_status': 'accusation'})
                 player_turn.update({'accused_cards': client_message['accused_cards']})
-            elif turn_status == "join":
+            elif turn_status == "chose_token": #join
                 player_turn.update({'player_token': client_message['player_token']})
             elif turn_status == 'start game':
                 player_turn['turn_status'] = 'get'
@@ -63,6 +68,9 @@ class Game_message_handler:
         if turn_status != "get":
             if turn_status == 'movement':
                 game_package.update({'player_location': game_status['target_tile']})
+                print(game_package)
+            elif turn_status == 'MOVING':
+                game_package.update({'valid_tile_names_for_player': game_status['valid_tile_names_for_player']})
             elif turn_status == 'suggestion':
                 game_package.update({'suggested_cards': game_status['suggested_cards']})
                 # game_package.update({'suggest_result': game_status['suggest_result']})
@@ -88,10 +96,12 @@ class Game_message_handler:
 
     def broadcast(clients, message):
         #print(f'...broadcasting {message} to this many clients: {len(clients)}')
+
         # client is same as conn
         for client in clients:
             try: 
                 Game_message_handler.send_game_update(client, message)
             except Exception as err:
-                print(err)
+                # print(err)
+                hold = ''
             # client.send(message)
