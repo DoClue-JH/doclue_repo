@@ -42,8 +42,6 @@ class Game_message_handler:
                 player_turn['turn_status'] = 'get'
             elif turn_status == 'END TURN':
                 player_turn.update({'turn_status': 'end turn'})
-            else:
-                print("Client message not recognized: "+ turn_status)
         else:
             player_turn['turn_status'] = 'pass'
 

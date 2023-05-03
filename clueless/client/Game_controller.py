@@ -84,13 +84,6 @@ class Game_controller:
                 current_time = datetime.now() 
                 # print("....current Time =", current_time)
                 
-                # game = self.network.send_receive(game_data)
-                # print("...sent and received client message")
-                
-                #self.network.send(game_data)
-                # print("...sent client message")
-                #game_data = self.network.build_client_package(self.player_id, "get", '')
-                #game = self.network.send_receive(game_data)
                 #if game_data != prev_game_data:
                 self.network.send(game_data)
                 # print("...sent client message")
