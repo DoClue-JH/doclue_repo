@@ -9,8 +9,10 @@ from clueless.server.Game_processor import *
 
 HOST_ADDR = socket.gethostbyname(socket.gethostname())
 HOST_PORT = 8080
-DEFAULT_TURN = dict({'header': 'None', 'player_id': 'None', 'data': ''})
-DEFAULT_GAME = dict({'player_count': 0, 'player_token': '0', 'turn_status': ''})
+# DEFAULT_TURN = dict({'header': 'None', 'player_id': 'None', 'data': ''})
+DEFAULT_TURN = dict({'header': 'None', 'player_id': 'None', 'data': '', 'next_player': '', 'next_playername_turn':''})
+# DEFAULT_GAME = dict({'player_count': 0, 'player_token': '0', 'turn_status': ''})
+DEFAULT_GAME = dict({'player_count': 0, 'player_token': '0', 'turn_status': '', 'next_player': '', 'next_playername_turn':''})
 PLAYER_MAX = 6
 PLAYER_MIN = 3
 SKIP = 'skip'
@@ -51,9 +53,8 @@ class Server:
                     break
                 else:
                     if client_message != prev_client_message:
-                        #print(f"previous client message: {prev_client_message} ... current client message: {client_message}")
+                        print(f"previous client message: {prev_client_message} ... current client message: {client_message}")
                         player_turn = Game_message_handler.process_client_update(client_message)
-                        #print("processed client message")
                         
                         #if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "ACCUSING" and player_turn['turn_status'] != "SUGGESTING":
                         if player_turn['turn_status'] != 'pass':
@@ -83,7 +84,8 @@ class Server:
                                     'player_id': player.get_player_id(),
                                     # 'player_token': player_turn['player_token'],
                                     'turn_status': player_turn['turn_status'],
-                                    'valid_tile_names_for_player': valid_tile_names_for_player
+                                    'valid_tile_names_for_player': valid_tile_names_for_player,
+                                     'next_player': '', 'next_playername_turn':''
                                 })
                                 # print("game_status", game_status)
                                 server_update = Game_message_handler.build_game_package(game_status)

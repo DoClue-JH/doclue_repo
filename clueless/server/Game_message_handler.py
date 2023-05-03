@@ -22,7 +22,11 @@ class Game_message_handler:
         # print(f"...processing client message {client_message}")
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
-        player_turn = dict({'player_id': client_message['player_id'], 'turn_status': turn_status})
+        player_turn = dict({'player_id': client_message['player_id'], 
+                            'turn_status': turn_status,
+                            'next_player': client_message['next_player'],
+                            'next_playername_turn': client_message['next_playername_turn']
+                            })
 
         if turn_status == "reset":
             pass        
@@ -81,7 +85,9 @@ class Game_message_handler:
         game_package = dict({
             'player_id': game_status['player_id'],
             # 'player_token': game_status['player_token'],
-            'turn_status': game_status['turn_status']
+            'turn_status': game_status['turn_status'],
+            'next_player': game_status['next_player'],
+            'next_playername_turn': game_status['next_playername_turn']
         })
 
         turn_status = game_package['turn_status']

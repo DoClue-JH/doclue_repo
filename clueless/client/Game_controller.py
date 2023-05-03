@@ -14,7 +14,7 @@ from datetime import datetime
 import time
 import traceback
 
-DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get'})
+DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get','next_player':'0','next_playername_turn':''})
 server_update = dict({})
 CHARACTER_TOKENS = ["Mrs. Peacock", "Mrs. White", "Miss Scarlet", "Mr. Green", "Colonel Mustard", "Professor Plum"]
 
@@ -66,7 +66,6 @@ class Game_controller:
     def game_loop(self):
 
         prev_game_state = DEFAULT_GAME
-        prev_game_data = DEFAULT_GAME
         print("You are Player ", self.id)
         self.game_state['player_id'] = self.player_id
         self.game_state['player_token'] = self.player_token
@@ -74,8 +73,8 @@ class Game_controller:
 
         input_tile_name = ''
 
-
-        game_data = self.network.build_client_package(self.player_id, "join", self.player_token)
+        game_data = self.network.build_client_package(self.player_id, "join", self.player_token, '','') # 'next_player': '', 'next_playername_turn':''
+        # game_data = self.network.build_client_package(self.player_id, "join", self.player_token)
         self.network.send(game_data)
 
         while self.playing:
@@ -118,7 +117,7 @@ class Game_controller:
                         print("    Success! Sending room selection to server...")
 
                         # update game data
-                        game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name)
+                        game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name, '','') # 'next_player': '', 'next_playername_turn':'')
 
                         # KT: take out this continue when ui is integrated, may cause 
                         # errors when you do but needed for command line input rn since
@@ -143,7 +142,7 @@ class Game_controller:
 
             events = pygame.event.get()
             # print("events is", events)
-            game_data = self.check_events(events)
+            game_data = self.check_events(events, prev_game_state)
             # print(f'game_data is now {game_data}')
             # print()
             
@@ -155,7 +154,7 @@ class Game_controller:
     # check_events is the function to check user's mouse movement
     # Input : events [type: Pygame Event]
     ################################################################################
-    def check_events(self, events) :
+    def check_events(self, events, prev_game_state) :
         # print('...checking events')
         mousePos = pygame.mouse.get_pos()
         turn_data = DEFAULT_GAME
@@ -169,10 +168,9 @@ class Game_controller:
             if (self.state == 'START'):
                 # print("check_events start")
                 # self.message_for_server = {}
-
                 self.room_choice = None
                 self.screen.fill(self.base_color)
-                turn_data = self.add_main_view(events)
+                turn_data = self.add_main_view(events, prev_game_state)
             # This is to highlight rectangle when choosing the room and print the choosen one on the options box
 
             if (self.state == 'CHOOSING_TOKEN'):
@@ -180,7 +178,7 @@ class Game_controller:
             
             if (self.state == 'MOVING'): #'MOVEMENT'):
                 # print("check_events moving")
-                turn_data = self.add_main_view(events)
+                turn_data = self.add_main_view(events, prev_game_state)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
                 for key in self.tiles_directory:
                     if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
@@ -197,7 +195,7 @@ class Game_controller:
                     if self.room_choice is not None:
                         self.state = "MOVING"
                         # SEND MESSAGE TO SERVER AND MOVE TOKEN
-                        turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice)
+                        turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice, '','') # 'next_player': '', 'next_playername_turn':''
                         self.move_token(self.player_token, self.tiles_directory[self.room_choice][1])
                         # self.network.send(turn_data)
                         print(turn_data)
@@ -236,7 +234,7 @@ class Game_controller:
                             self.suggest_suspect_dict[key][3] = True
                             self.character_choice = key
 
-                turn_data = self.network.build_client_package(self.player_id, self.state, suggested_card_dict)
+                turn_data = self.network.build_client_package(self.player_id, self.state, suggested_card_dict, '','') # 'next_player': '', 'next_playername_turn':''
 
             if (self.state == 'ACCUSING'): #'ACCUSATION'):
                 accused_card_dict = self.add_accuse_view(events)
@@ -276,7 +274,7 @@ class Game_controller:
                 # # Testing receive here
                 # turn_data = self.network.receive()
                 # print(f"receiving message from server after accusation: {turn_data}")
-                turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict)
+                turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict, '','') # 'next_player': '', 'next_playername_turn':''
 
             # HERE is this needed?
             # if (self.state == 'END TURN'):
@@ -290,8 +288,7 @@ class Game_controller:
     # add_main_view is the function to show main view
     # Input : events [type: Pygame Event]
     ################################################################################
-    def add_main_view(self, events):
-
+    def add_main_view(self, events, prev_game_state):        
         player_caption = "Clue-Less Player " + str(self.id)
         pygame.display.set_caption(player_caption)
         # Add board
@@ -311,7 +308,7 @@ class Game_controller:
         # Initialize valid players 
         # TO DO: players should be added to screen later depending on which tokens are chosen (here for now to test)
         self.token_coor_dict = self.board.load_player_tokens(self.screen, self.board, self.token_coor_dict)
-
+                
         mousePos = pygame.mouse.get_pos()
         if is_Room_Selection_Active:
             # self.state = "MOVEMENT"
@@ -320,21 +317,21 @@ class Game_controller:
             print('Player chose to move')
             # This data stores the mouse position of the button
             #turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
-            turn_data = self.network.build_client_package(self.player_id, self.state, self.player_token)
+            turn_data = self.network.build_client_package(self.player_id, self.state, self.player_token, '','') # 'next_player': '', 'next_playername_turn':''
             self.network.send(turn_data)
 
         if is_Accuse_Selection_Active:
             # self.state = "ACCUSATION"
             self.state = "ACCUSING"
             self.board.load_options(self.screen, self.state, events)
-            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos), '','') # 'next_player': '', 'next_playername_turn':''
             #print(turn_data)
             self.network.send(turn_data)
 
         if is_Suggest_Selection_Active:
             self.state = "SUGGESTING"
             self.board.load_options(self.screen, self.state, events)
-            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos), '','') # 'next_player': '', 'next_playername_turn':''
             #print(turn_data)
             self.network.send(turn_data)
 
@@ -342,7 +339,7 @@ class Game_controller:
         if isEndTurnSelectionActive:
             self.state = "END TURN"
             self.board.load_options(self.screen, self.state, events)
-            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos))
+            turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos), '','') # 'next_player': '', 'next_playername_turn':''
             #print(turn_data)
             self.network.send(turn_data)
 
@@ -440,10 +437,10 @@ class Game_controller:
             if 'accused_result_player' not in prev_game_state:
                 if this_player_id == self.player_id:
                     print("You Lost!")
-                    self.board.display_update(self.screen, "Sorry, You Lost!", (100, 30))
+                    self.board.display_update(self.screen, "Sorry, You Lost!", (300, 30))
                 else:
                     print(f"Player {this_player_id} Lost!")
-                    self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (100, 30))
+                    self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (300, 30))
             else: 
                 if this_player_id == self.player_id:
                     self.add_win_screen(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
@@ -599,7 +596,7 @@ class Game_controller:
                     self.game_state['player_id'] = self.player_id
                     self.game_state['player_token'] = self.player_token
                     self.game_state['turn_status'] = "get"
-                    game_data = self.network.build_client_package(self.player_id, "chose_token", self.player_token)
+                    game_data = self.network.build_client_package(self.player_id, "chose_token", self.player_token, '','') # 'next_player': '', 'next_playername_turn':''
                     self.network.send(game_data)
 
                     self.state = 'START'

@@ -63,11 +63,15 @@ class Client_message_handler:
         #     print(f"...client receiving update from server {server_update}")
         return server_update     
 
-    def build_client_package(self, player_id, state, contents):
+    def build_client_package(self, player_id, state, contents, next_player, next_playername_turn):
         #start builing message package to send to server
         # print("...building client package")
         # print(f'   for player {player_id}, {state}, {contents}')
-        client_package = dict({'player_id': player_id, 'turn_status': state})
+        client_package = dict({'player_id': player_id, 
+                               'turn_status': state,
+                               'next_player': '', 
+                               'next_playername_turn':''
+                               })
 
         if (state == 'MOVEMENT'):
             client_package.update({'target_tile': contents})
@@ -165,6 +169,9 @@ class Client_message_handler:
                         print("Player " + server_message['next_player'] + " starts")
                         print()
                         self.game_has_started = True
+                        
+                elif turn_status == 'START':
+                    print(server_message)
                 else:
                     server_message['turn_status'] = 'pass'
 

@@ -12,27 +12,11 @@ class Game:
         self.num_players = num_players
         self.players = []
         self.dealt = False
-        # self.player_info_dict = {1:'Colonal Mustard',
-        #                         2:'Miss Scarlet',
-        #                         3:'Professor Plum'}
-
-
-        # for player_id, player_name in player_info_dict.items():
-        #     this_player = Player(player_name, player_id)
-        #     self.players.append(this_player)
         self.game_deck = Deck()                                 # dict for initial overall game deck
         self.case_file = self.game_deck.get_secret_deck()       # dict of three secret cards
-        
-        # Below needs ALL player objects initialized
-
-        #self.deal_to_players()
-        # self.turn_state = None                                # turn state for current player
         self.game_status = None                                 # game state of entire game
         print(f'  case_file: {self.case_file}')
-        # print('   with players')
-        # for p in self.players:
-        #     print(f'       {p.get_player_name()}, {p.get_player_id()}, {p.get_hand()}')
-        
+
         ############################
         ##### INITIALIZE TILES #####
         # to initialize an object of class tile
@@ -237,6 +221,8 @@ class Game:
         INPUT: player_turn : dictionary from Game_message_handler.process_client_update(client_message)
             {'player_id': str,
             'turn_status': str,                                 # movement, accusation, or suggestion
+            'next_player': str,
+            'next_playername_turn': str,
             'suggested_cards': dict,                            # client_message['suggested_cards']
             'accused_cards': dict,
             'target_tile': str
