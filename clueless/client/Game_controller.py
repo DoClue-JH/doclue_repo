@@ -479,13 +479,16 @@ class Game_controller:
         
         # END TURN finished
         elif prev_game_state['turn_status'] == 'end turn':
+            # Player's turn just ended
             if this_player_id == self.player_id:
-                self.board.display_update(self.screen, f"Your turn has ended", (400, 400))
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (400, 500))
-            elif prev_game_state['next_player_turn'] == self.player_id:
-                self.board.display_update(self.screen, f"It's your turn", (400, 400))
+                self.board.display_update(self.screen, f"Your turn has ended", (100, 30))
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (100, 40))
+            # This player's turn
+            elif prev_game_state['next_player'] == self.player_id:
+                self.board.display_update(self.screen, f"It's your turn", (100, 30))
+            # Other players, not their turn
             else:
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (400, 500))
+                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (100, 30))
     
     ################################################################################
     # add_win_view is the function to show win view
@@ -615,7 +618,7 @@ class Game_controller:
         self.clock.tick(self.FPS)
 
     def randomise_color(self):
-        list_of_color = [(224,238,255), (203,204,255), (255,216,171), (255,234,253), (162,131,91), (110,137,215), (183,142,55), (234,231,240), (204,153,255), (126,135,145), (86,180,233), (0,0,0),(213,94,0), (255,255,255), (75,0,146), (64,176,166)]
+        list_of_color = [(224,238,255), (203,204,255), (255,216,171), (255,234,253), (162,131,91), (110,137,215), (183,142,55), (234,231,240), (204,153,255), (126,135,145), (86,180,233),(213,94,0), (255,255,255), (75,0,146), (64,176,166)]
         return list_of_color[random.randint(0,len(list_of_color)-1)]
     
     def reset_weapon_and_suspect_dict(self, state):
