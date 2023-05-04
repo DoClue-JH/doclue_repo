@@ -61,6 +61,7 @@ class Game_controller:
         self.lost = False
         self.on_playerid_turn = 0
         self.on_playername_turn = ''
+        self.first_move_complete = False
         self.game_loop()
 
     ################################################################################
@@ -110,7 +111,8 @@ class Game_controller:
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                         
-                    if prev_game_state['turn_status'] == 'start game':
+                    if prev_game_state['turn_status'] == 'start game' and self.first_move_complete == False:
+                        self.first_move_complete = True # Ensure this only updates once, doesn't interfere with end turn later
                         # print('Game_controller: updating player turn')
                         self.on_playerid_turn = prev_game_state['next_player']
                         self.on_playername_turn = prev_game_state['next_playername_turn']
