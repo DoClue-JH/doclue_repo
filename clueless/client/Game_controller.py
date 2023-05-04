@@ -107,8 +107,6 @@ class Game_controller:
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                       
-                    # HERE testing how it gets end turn back from game
-                    # print(f'!! server update: {prev_game_state} ')   
                         
                     if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
@@ -142,6 +140,7 @@ class Game_controller:
 
             events = pygame.event.get()
             # print("events is", events)
+            # print(f'... checkin events {prev_game_state}')
             game_data = self.check_events(events, prev_game_state)
             # print(f'game_data is now {game_data}')
             # print()
@@ -275,7 +274,7 @@ class Game_controller:
                 # turn_data = self.network.receive()
                 # print(f"receiving message from server after accusation: {turn_data}")
                 turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict, '','') # 'next_player': '', 'next_playername_turn':''
-
+                    
             # HERE is this needed?
             # if (self.state == 'END TURN'):
             #     turn_dict = {'':''}
@@ -441,7 +440,10 @@ class Game_controller:
                 else:
                     print(f"Player {this_player_id} Lost!")
                     self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (300, 30))
+                    
             else: 
+                self.state = 'WIN'
+                this_player_id = prev_game_state['player_id']
                 if this_player_id == self.player_id:
                     self.add_win_screen(winner=True, winner_player_id=this_player_id, case_file=prev_game_state['accused_cards'])
                     print("You Won!")

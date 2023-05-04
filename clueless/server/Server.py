@@ -53,7 +53,7 @@ class Server:
                     break
                 else:
                     if client_message != prev_client_message:
-                        print(f"previous client message: {prev_client_message} ... current client message: {client_message}")
+                        # print(f"previous client message: {prev_client_message} ... current client message: {client_message}")
                         player_turn = Game_message_handler.process_client_update(client_message)
                         
                         #if player_turn['turn_status'] != "get" and player_turn['turn_status'] != "ACCUSING" and player_turn['turn_status'] != "SUGGESTING":
@@ -85,7 +85,7 @@ class Server:
                                     # 'player_token': player_turn['player_token'],
                                     'turn_status': player_turn['turn_status'],
                                     'valid_tile_names_for_player': valid_tile_names_for_player,
-                                     'next_player': '', 'next_playername_turn':''
+                                    'next_player': '', 'next_playername_turn':''
                                 })
                                 # print("game_status", game_status)
                                 server_update = Game_message_handler.build_game_package(game_status)
