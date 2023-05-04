@@ -108,26 +108,27 @@ class Game_controller:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                     # print(f'prev_game_state is now {prev_game_state}')
                         
-                    if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
-                        while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
-                           input_tile_name = input("Please input a room from the list above: \n    ")
+                    # if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
+                    #     # while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
+                    #     #    input_tile_name = input("Please input a room from the list above: \n    ")
                         
-                        print("    Success! Sending room selection to server...")
+                    #     # print("    Success! Sending room selection to server...")
 
-                        # update game data
-                        game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name, '','') # 'next_player': '', 'next_playername_turn':'')
+                    #     # update game data
+                    #     # game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name, '','') # 'next_player': '', 'next_playername_turn':'')
 
-                        # KT: take out this continue when ui is integrated, may cause 
-                        # errors when you do but needed for command line input rn since
-                        # it stops game_data from being overwritten at the end of the loop
-                        continue
+                    #     # KT: take out this continue when ui is integrated, may cause 
+                    #     # errors when you do but needed for command line input rn since
+                    #     # it stops game_data from being overwritten at the end of the loop
+                    #     # continue
+                        
                     
-                    else:
-                        try: 
-                            # Only update views after a move, suggest, or accuse
-                            self.update_views(prev_game_state)
-                        except Exception as err:
-                            print(err) 
+                    # else:
+                    try: 
+                        # Only update views after a move, suggest, or accuse
+                        self.update_views(prev_game_state)
+                    except Exception as err:
+                        print(err) 
                          
                 except:
                     print("Couldn't process_server_update")
@@ -175,10 +176,18 @@ class Game_controller:
             if (self.state == 'CHOOSING_TOKEN'):
                 self.choose_player_token()
             
-            if (self.state == 'MOVING'): #'MOVEMENT'):
+            if (self.state == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state): #'MOVEMENT'):
                 # print("check_events moving")
                 turn_data = self.add_main_view(events, prev_game_state)
                 self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
+
+                # print the valid rooms in the bottom lefthand corner of the window
+                message_font_02 = pygame.font.SysFont('Comic Sans MS', 20)
+                message_surface_02 = message_font_02.render("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')), False, (120,39,64), (202, 228, 241))
+                print("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')))
+                # message_surface_rect_02 = message_surface_02.get_rect(topleft = (100,750))
+                self.screen.blit(message_surface_02, (100,650))
+
                 for key in self.tiles_directory:
                     if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                         pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
@@ -189,15 +198,23 @@ class Game_controller:
                         self.screen.blit(message_surface, message_surface_rect)
                         self.room_choice = key
 
+                        # pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
+                        # self.board.highlight_tile_rect(self.screen,(0,200,0),key)
+                        # message_font_02 = pygame.font.SysFont('Comic Sans MS', 20)
+                        # message_surface_02 = message_font_02.render("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')), False, (120,39,64), (202, 228, 241))
+                        # print("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')))
+                        # # message_surface_rect_02 = message_surface_02.get_rect(topleft = (100,750))
+                        # self.screen.blit(message_surface_02, (100,650))
+
                 enterRect = pygame.Rect(810, 560, 60, 35)
                 if (enterRect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                     if self.room_choice is not None:
                         self.state = "MOVING"
                         # SEND MESSAGE TO SERVER AND MOVE TOKEN
-                        turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice, '','') # 'next_player': '', 'next_playername_turn':''
+                        turn_data = self.network.build_client_package(self.player_id, "MOVEMENT", self.room_choice, '','') # 'next_player': '', 'next_playername_turn':''
                         self.move_token(self.player_token, self.tiles_directory[self.room_choice][1])
                         # self.network.send(turn_data)
-                        print(turn_data)
+                        print("turn_data is", turn_data)
                         # print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
                         self.state = 'START'
 

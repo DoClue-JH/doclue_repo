@@ -74,7 +74,8 @@ class Client_message_handler:
                                })
 
         if (state == 'MOVEMENT'):
-            client_package.update({'target_tile': contents})
+            backend_tile_name = Client_message_handler.get_readable_tilename(contents)
+            client_package.update({'target_tile': backend_tile_name})
             # print("updated client package!")
         # elif (state == 'MOVING'):
         #     client_package.update({'player_token': contents})
@@ -119,8 +120,9 @@ class Client_message_handler:
                 # from the server message, get the player id of the player moving and print the list of room
                 # options provided from the server as a list
                 elif turn_status == 'MOVING':
-                    print(f"    Player {player_id} has these room options available!")
-                    print(f"    {server_message['valid_tile_names_for_player']}")
+                    #print(f"    Player {player_id} has these room options available!")
+                    #print(f"    {server_message['valid_tile_names_for_player']}")
+                    pass
 
                 elif turn_status == 'suggestion':
                     print("Player " + player_id + " suggested " + server_message['suggested_cards']['character'] + " with the " + 

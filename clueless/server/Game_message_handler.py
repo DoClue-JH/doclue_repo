@@ -19,7 +19,7 @@ class Game_message_handler:
         return client_update
 
     def process_client_update(client_message):
-        # print(f"...processing client message {client_message}")
+        print(f"...processing client message {client_message}")
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
         player_turn = dict({'player_id': client_message['player_id'], 
