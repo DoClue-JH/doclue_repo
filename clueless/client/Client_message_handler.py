@@ -33,7 +33,7 @@ class Client_message_handler:
             pass
 
     def send_receive(self, data):
-        print("Player sending information to the Server")
+        # print("Player sending information to the Server")
         #print(data)
         try:
             # print('...sending client -> server data
@@ -53,7 +53,7 @@ class Client_message_handler:
             try:
                 self.client.send(dic1)
             except socket.error as err:
-                print(err)
+                print(f'failed to send with error {err}')
                 pass
 
     def receive(self):

@@ -248,6 +248,7 @@ class Game:
         
         # Execute specific turn and update corresponding game_status with result
         if player_turn['turn_status'] == "movement":
+            print('in player_take_turn movement')
             game_status['moved_player'] = curr_player.get_player_name()
             # backend_tilename = self.get_backend_tilename(player_turn['target_tile'])
             # target_tile_obj = self.game_board[backend_tilename]

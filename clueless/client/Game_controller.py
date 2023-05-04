@@ -106,7 +106,7 @@ class Game_controller:
                 #     print(f"... received from different player { game['player_id']}")   
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
-                      
+                    # print(f'prev_game_state is now {prev_game_state}')
                         
                     if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
@@ -337,9 +337,9 @@ class Game_controller:
         # if player chooose end turn, then it passes the turn to others.
         if isEndTurnSelectionActive:
             self.state = "END TURN"
-            self.board.load_options(self.screen, self.state, events)
+            # self.board.load_options(self.screen, self.state, events)
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos), '','') # 'next_player': '', 'next_playername_turn':''
-            #print(turn_data)
+            # #print(turn_data)
             self.network.send(turn_data)
 
         return turn_data
@@ -434,6 +434,7 @@ class Game_controller:
         # ACCUSATION finished
         if prev_game_state['turn_status']=='accusation':
             if 'accused_result_player' not in prev_game_state:
+                # TO FINALIZE
                 if this_player_id == self.player_id:
                     print("You Lost!")
                     self.board.display_update(self.screen, "Sorry, You Lost!", (300, 30))
@@ -459,12 +460,15 @@ class Game_controller:
             self.move_token(prev_game_state['moved_player'], self.tiles_directory[prev_game_state['player_location']][1])
             #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
             if this_player_id == self.player_id:
-                # TO DO convert back to front end...
                 # TO DO better way of displaying text instead of blit
-                self.board.display_update(self.screen, f"You've successfully moved to {prev_game_state['player_location']}!", (400, 400))
+                self.board.display_update(self.screen, f"You've successfully moved to {prev_game_state['player_location']}!", (300, 30))
             else:
-                self.board.display_update(self.screen, f"{prev_game_state['moved_player']} has moved to {prev_game_state['player_location']}", (400, 400))
+                self.board.display_update(self.screen, f"{prev_game_state['moved_player']} has moved to {prev_game_state['player_location']}", (300, 30))
             
+            self.state = 'START'
+            turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
+            self.network.send(turn_data)
+
         # SUGGEST finished
         elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
             print(f"Success! Player {prev_game_state['player_id']} (you) have suggested {prev_game_state['suggested_cards']}!")

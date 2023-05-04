@@ -413,6 +413,9 @@ class Client_game_board:
             pygame.draw.rect(screen,color,self.room_dict[key_name][0],2)
 
     def display_update(self, screen, text, coords):
+        board_surface = pygame.Surface((700,50))
+        board_surface.fill('bisque3')
+        screen.blit(board_surface,(0,0))
         TEXT = self.get_font(15).render(text, True, "#000000")
         RECT = TEXT.get_rect(center=coords)
         screen.blit(TEXT, RECT)  

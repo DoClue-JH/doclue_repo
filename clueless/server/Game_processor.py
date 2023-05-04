@@ -56,9 +56,11 @@ class Game_processor:
         else:
             
             # get adjacent tiles for that tile
-            temp_adjacent_tiles = board_dict.get(player.get_player_current_location()).get_adjacent_tiles()
+            # board_dict {'Hallway XX': tile obj}
+            current_tilename_str = player.get_player_current_location().get_tile_name()
+            temp_adjacent_tiles = board_dict.get(current_tilename_str).get_adjacent_tiles()
 
-            valid_tile_names.append(player.get_player_current_location().get_tile_name())
+            valid_tile_names.append(current_tilename_str)
 
             # check if the player is allowed to move there
             for tile in temp_adjacent_tiles:
@@ -75,6 +77,7 @@ class Game_processor:
         # may need to convert to frontend names
         return valid_tile_names
 
+    # destination: tile object
     def move(board_dict, player, destination):
         # get backend tile name
 

@@ -77,6 +77,8 @@ class Server:
                                 # when player clicks "Go To Room", room selection becomes active in the 
                                 # client; client gets sent a list of names of valid tiles to move to
                                 player = self.game.get_player_object(player_turn['player_id'])
+                                print(f'player_turn {player_turn}')
+                                print(player)
                                 valid_tile_names_for_player = Game_processor.get_valid_moves(self.game.game_board, player)
                                 print("Tiles to send to client", valid_tile_names_for_player)
                                 print("player_turn is", player_turn)
