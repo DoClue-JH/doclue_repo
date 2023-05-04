@@ -58,6 +58,7 @@ class Game_controller:
         self.character_choice = None
         self.weapon_choice = None
         self.room_choice = None
+        self.lost = False
         self.game_loop()
 
     ################################################################################
@@ -121,6 +122,9 @@ class Game_controller:
                         # errors when you do but needed for command line input rn since
                         # it stops game_data from being overwritten at the end of the loop
                         continue
+                    
+                    elif self.state == 'START':
+                        pass
                     
                     else:
                         try: 
@@ -287,7 +291,7 @@ class Game_controller:
     # add_main_view is the function to show main view
     # Input : events [type: Pygame Event]
     ################################################################################
-    def add_main_view(self, events, prev_game_state):        
+    def add_main_view(self, events, prev_game_state):         
         player_caption = "Clue-Less Player " + str(self.id)
         pygame.display.set_caption(player_caption)
         # Add board
@@ -303,7 +307,7 @@ class Game_controller:
         is_Suggest_Selection_Active = self.board.load_button(self.screen, "Suggest", button_X_Pos, button_Y_Pos + button_distance)
         is_Accuse_Selection_Active = self.board.load_button(self.screen, "Accuse", button_X_Pos, button_Y_Pos + button_distance*2)
         isEndTurnSelectionActive = self.board.load_button(self.screen, "End Turn", button_X_Pos, button_Y_Pos + button_distance*3)
-        
+            
         # Initialize valid players 
         # TO DO: players should be added to screen later depending on which tokens are chosen (here for now to test)
         self.token_coor_dict = self.board.load_player_tokens(self.screen, self.board, self.token_coor_dict)
@@ -341,7 +345,13 @@ class Game_controller:
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos), '','') # 'next_player': '', 'next_playername_turn':''
             # #print(turn_data)
             self.network.send(turn_data)
-
+        if self.lost == True:
+            self.board.display_update(self.screen, "Sorry, You Lost!", (300, 30))
+            board_surface = pygame.Surface((2000,2000))
+            board_surface.fill('gray')
+            board_surface.set_alpha(200)
+            self.screen.blit(board_surface,(0,0))
+            
         return turn_data
 
     ################################################################################
@@ -437,11 +447,15 @@ class Game_controller:
                 # TO FINALIZE
                 if this_player_id == self.player_id:
                     print("You Lost!")
+                    self.lost = True
                     self.board.display_update(self.screen, "Sorry, You Lost!", (300, 30))
                 else:
                     print(f"Player {this_player_id} Lost!")
                     self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (300, 30))
-                    
+                self.state = 'START'
+                # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
+                # self.network.send(turn_data)
+            
             else: 
                 self.state = 'WIN'
                 this_player_id = prev_game_state['player_id']
@@ -466,8 +480,8 @@ class Game_controller:
                 self.board.display_update(self.screen, f"{prev_game_state['moved_player']} has moved to {prev_game_state['player_location']}", (300, 30))
             
             self.state = 'START'
-            turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
-            self.network.send(turn_data)
+            # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
+            # self.network.send(turn_data)
 
         # SUGGEST finished
         elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
