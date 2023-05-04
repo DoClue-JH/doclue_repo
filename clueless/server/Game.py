@@ -213,6 +213,20 @@ class Game:
             print("Player ID: " + player.get_player_id())
             print("Next Player: " + player.get_next_player())
 
+    ################################################################################
+    # update_turn_order updates the turn order to remove the lost player
+    # Input : lost_player [type: Player]
+    ################################################################################
+    def update_turn_order(self, lost_player):
+        # Get string ID
+        lost_playerid = lost_player.get_player_id()
+        print(f'Player {lost_playerid} lost')
+        for i, player in enumerate(self.players):
+            # Update player who's next player just lost to be the loser's next player
+            if str(player.next_player) == lost_playerid:
+                print(f'Player {player.get_player_id()}s next player updates from {lost_playerid} to {lost_player.next_player}')
+                player.set_next_player(lost_player.next_player)
+            
     # This method determines what turn the player is taking and then routes to 
     # appropriate game logic functions to carry out turn accordingly
     def player_take_turn(self, player_turn):
@@ -282,6 +296,7 @@ class Game:
                 game_status['accused_result_player'] = curr_player.get_player_name()
             else: 
                 curr_player.set_player_status('LOST')
+                self.update_turn_order(curr_player)
                 print('    Player accused incorrectly')
             
         elif player_turn['turn_status'] == "suggestion":        

@@ -295,9 +295,10 @@ class Game_controller:
                     
             # HERE is this needed?
             # if (self.state == 'END TURN'):
+            #     self.state == "START"
             #     turn_dict = {'':''}
-            #     turn_data = self.network.build_client_package(self.player_id, self.state, turn_dict)
-            #     print(f'... turn data is now {turn_data}')
+            #     turn_data = self.network.build_client_package(self.player_id, self.state, turn_dict, '','') # 'next_player': '', 'next_playername_turn':''
+                # print(f'... turn data is now {turn_data}')
                 
         return turn_data
 
