@@ -143,5 +143,5 @@ class Game_message_handler:
             try: 
                 Game_message_handler.send_game_update(client, message)
             except Exception as err:
-                # print(f'failed broadcast with error {err}')
+                print(f'failed broadcast with error {err} for message {message}')
                 pass

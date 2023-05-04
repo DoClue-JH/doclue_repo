@@ -61,16 +61,20 @@ class Server:
                             if player_turn['turn_status'] == "chose_token":
                                 # add new player to the game
                                 player_turn = self.add_new_player(player_turn) 
+                                # print(f'line 64 {player_turn}')
                                 server_update = Game_message_handler.build_game_package(player_turn)
-                                
+                                # print(f'line 66 {server_update}')
                                 if server_update['turn_status'] == 'start game':
                                     print(f'NOW STARTING GAME {server_update}') # ex:{'player_id': '3', 'turn_status': 'start game', 'next_player': '1'}
+                                    print(f'for this many clients {len(self.clients)}')
                                     Game_message_handler.broadcast(self.clients, server_update)
                                 #print("self.max_players:", self.max_players)
                                 #print("self.id_count:", self.id_count)
                                 
-                                player_turn['turn_status'] = "get"
-                                server_update = Game_message_handler.build_game_package(player_turn)
+                                # HERE What to set turn_status to after starting game?
+                                player_turn['turn_status'] = "pass"
+                                # player_turn['turn_status'] = "get"
+                                # server_update = Game_message_handler.build_game_package(player_turn)
 
                             elif player_turn['turn_status'] == "MOVING":
                                 # function for getting valid moves goes here
@@ -210,5 +214,7 @@ class Server:
             first_player_obj = self.game.get_player_object(first_player_id_str)
             first_player_name = first_player_obj.get_player_name()
             player_turn['next_playername_turn'] = first_player_name
+            # print(f'line 215 {player_turn}')
+            # print()
 
         return player_turn

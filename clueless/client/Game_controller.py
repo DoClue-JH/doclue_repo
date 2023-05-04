@@ -111,6 +111,7 @@ class Game_controller:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
                         
                     if prev_game_state['turn_status'] == 'start game':
+                        # print('Game_controller: updating player turn')
                         self.on_playerid_turn = prev_game_state['next_player']
                         self.on_playername_turn = prev_game_state['next_playername_turn']
                     # END TURN finished
