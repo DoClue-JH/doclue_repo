@@ -146,7 +146,7 @@ class Client_message_handler:
                         #     print("...accusation incorrect. Player " + player_id + " loses.")
                         self.player_accused = True
                 elif turn_status == 'end turn':
-                    print('... in Client_msg_handler')
+                    # print('... in Client_msg_handler')
                     if not self.player_ended_turn:
                         next_player_id = server_message['next_player']
                         print("Player " + player_id + "'s turn ended.")

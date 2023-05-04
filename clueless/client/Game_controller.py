@@ -59,6 +59,8 @@ class Game_controller:
         self.weapon_choice = None
         self.room_choice = None
         self.lost = False
+        self.on_playerid_turn = 0
+        self.on_playername_turn = ''
         self.game_loop()
 
     ################################################################################
@@ -107,9 +109,16 @@ class Game_controller:
                 #     print(f"... received from different player { game['player_id']}")   
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
-                    # print(f'prev_game_state is now {prev_game_state}')
                         
-                    if (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
+                    if prev_game_state['turn_status'] == 'start game':
+                        self.on_playerid_turn = prev_game_state['next_player']
+                        self.on_playername_turn = prev_game_state['next_playername_turn']
+                    # END TURN finished
+                    elif prev_game_state['turn_status'] == 'end turn':
+                        # Update player turn to next player
+                        self.on_playerid_turn = prev_game_state['next_player']
+                        self.on_playername_turn = prev_game_state['next_playername_turn']
+                    elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
                         while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
                            input_tile_name = input("Please input a room from the list above: \n    ")
                         
@@ -127,6 +136,8 @@ class Game_controller:
                         pass
                     
                     else:
+                        # if prev_game_state['turn_status'] != 'pass':
+                        #     print(f"prev_game_state is now {prev_game_state['turn_status']}")
                         try: 
                             # Only update views after a move, suggest, or accuse
                             self.update_views(prev_game_state)
@@ -291,7 +302,14 @@ class Game_controller:
     # add_main_view is the function to show main view
     # Input : events [type: Pygame Event]
     ################################################################################
-    def add_main_view(self, events, prev_game_state):         
+    def add_main_view(self, events, prev_game_state):     
+        if self.on_playerid_turn == 0:
+            self.board.display_update(self.screen, '', (300, 30))
+        elif self.on_playerid_turn == self.player_id:
+            self.board.display_update(self.screen, f"It's your turn", (300, 30))
+        else:
+            self.board.display_update(self.screen, f"It's {self.on_playername_turn}'s turn", (300, 30))
+                
         player_caption = "Clue-Less Player " + str(self.id)
         pygame.display.set_caption(player_caption)
         # Add board
@@ -441,6 +459,22 @@ class Game_controller:
     def update_views(self, prev_game_state):
         this_player_id = prev_game_state['player_id']
         
+        # BELOW MOVED TO game_loop
+        # ALL CHOSE TOKEN finished, starting game
+        # if prev_game_state['turn_status'] == 'start game':
+        #     print("set first player turn")
+        #     first_player_id = prev_game_state['next_player']
+        #     self.on_playerid_turn = first_player_id
+        #     self.on_playername_turn = prev_game_state['next_playername_turn']
+        #     # Player's first turn
+        #     if first_player_id == self.player_id:
+        #         print("It's your first turn")
+        #         self.board.display_update(self.screen, f"It's your first turn", (300, 30))
+        #     # Other players, not their turn
+        #     else:
+        #         print(f"It's {prev_game_state['next_playername_turn']}'s turn")
+        #         self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 30))
+        
         # ACCUSATION finished
         if prev_game_state['turn_status']=='accusation':
             if 'accused_result_player' not in prev_game_state:
@@ -478,7 +512,6 @@ class Game_controller:
                 self.board.display_update(self.screen, f"You've successfully moved to {prev_game_state['player_location']}!", (300, 30))
             else:
                 self.board.display_update(self.screen, f"{prev_game_state['moved_player']} has moved to {prev_game_state['player_location']}", (300, 30))
-            
             self.state = 'START'
             # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
             # self.network.send(turn_data)
@@ -494,31 +527,23 @@ class Game_controller:
                     self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
                     print("No match found amongst other hands!")
                     
-        # ALL CHOSE TOKEN finished, starting game
-        elif prev_game_state['turn_status'] == 'start game' :
-            first_player_id = prev_game_state['next_player']
-            print(prev_game_state)
-            # Player's first turn
-            if first_player_id == self.player_id:
-                print("It's your first turn")
-                self.board.display_update(self.screen, f"It's your first turn", (300, 30))
-            # Other players, not their turn
-            else:
-                print(f"It's {prev_game_state['next_playername_turn']}'s turn")
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 30))
-        
-        # END TURN finished
-        elif prev_game_state['turn_status'] == 'end turn':
-            # Player's turn just ended
-            if this_player_id == self.player_id:
-                self.board.display_update(self.screen, f"Your turn has ended", (300, 30))
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 50))
-            # This player's turn
-            elif prev_game_state['next_player'] == self.player_id:
-                self.board.display_update(self.screen, f"It's your turn", (300, 30))
-            # Other players, not their turn
-            else:
-                self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 30))
+        # # END TURN finished
+        # elif prev_game_state['turn_status'] == 'end turn':
+        #     next_player_id = prev_game_state['next_player']
+        #     next_player_name = prev_game_state['next_playername_turn']
+        #     # Update player turn to next player
+        #     self.on_playerid_turn = next_player_id
+        #     self.on_playername_turn = next_player_name
+            # # Player's turn just ended
+            # if this_player_id == self.player_id:
+            #     self.board.display_update(self.screen, f"Your turn has ended", (300, 30))
+            #     self.board.display_update(self.screen, f"It's {next_player_name}'s turn", (300, 50))
+            # # This player's turn
+            # elif next_player_id == self.player_id:
+            #     self.board.display_update(self.screen, f"It's your turn", (300, 30))
+            # # Other players, not their turn
+            # else:
+            #     self.board.display_update(self.screen, f"It's {next_player_name}'s turn", (300, 30))
     
     ################################################################################
     # add_win_view is the function to show win view

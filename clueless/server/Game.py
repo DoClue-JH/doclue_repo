@@ -357,7 +357,7 @@ class Game:
             next_player_obj = self.get_player_object(curr_player.get_next_player())
             game_status.update({'next_playername_turn': next_player_obj.get_player_name()})
 
-        # print(f'... return game_status {game_status}')
+        print(f'... return game_status {game_status}')
         # game_status['ready']=True
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 
