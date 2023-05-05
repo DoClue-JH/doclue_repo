@@ -110,6 +110,8 @@ class Game_controller:
                 #     print(f"... received from different player { game['player_id']}")   
                 try:
                     prev_game_state = self.network.process_server_update(game, prev_game_state)
+                    if prev_game_state['turn_status'] == 'accusation' or prev_game_state['turn_status'] == 'movement' or prev_game_state['turn_status'] == 'suggestion':
+                        self.update_views(prev_game_state)
                         
                     if prev_game_state['turn_status'] == 'start game' and self.first_move_complete == False:
                         self.first_move_complete = True # Ensure this only updates once, doesn't interfere with end turn later
@@ -138,14 +140,14 @@ class Game_controller:
                     elif self.state == 'START':
                         pass
                     
-                    else:
-                        # if prev_game_state['turn_status'] != 'pass':
-                        #     print(f"prev_game_state is now {prev_game_state['turn_status']}")
-                        try: 
-                            # Only update views after a move, suggest, or accuse
-                            self.update_views(prev_game_state)
-                        except Exception as err:
-                            print(err) 
+                    # else:
+                    #     # if prev_game_state['turn_status'] != 'pass':
+                    #     #     print(f"prev_game_state is now {prev_game_state['turn_status']}")
+                    #     try: 
+                    #         # Only update views after a move, suggest, or accuse
+                    #         self.update_views(prev_game_state)
+                    #     except Exception as err:
+                    #         print(err) 
                          
                 except:
                     print("Couldn't process_server_update")
@@ -481,8 +483,8 @@ class Game_controller:
         
         # ACCUSATION finished
         if prev_game_state['turn_status']=='accusation':
+            print('484 HIIII')
             if 'accused_result_player' not in prev_game_state:
-                # TO FINALIZE
                 if this_player_id == self.player_id:
                     print("You Lost!")
                     self.lost = True
@@ -490,6 +492,9 @@ class Game_controller:
                 else:
                     print(f"Player {this_player_id} Lost!")
                     self.board.display_update(self.screen, f"Player {this_player_id} Lost!", (300, 30))
+                # Player lost, update turn
+                self.on_playerid_turn = prev_game_state['next_player']
+                self.on_playername_turn = prev_game_state['next_playername_turn']
                 self.state = 'START'
                 # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
                 # self.network.send(turn_data)
@@ -530,7 +535,7 @@ class Game_controller:
                 else:
                     self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
                     print("No match found amongst other hands!")
-                    
+        # BELOW MOVED TO game_loop           
         # # END TURN finished
         # elif prev_game_state['turn_status'] == 'end turn':
         #     next_player_id = prev_game_state['next_player']

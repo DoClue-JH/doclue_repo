@@ -105,6 +105,7 @@ class Server:
                                 game_status = self.game.player_take_turn(player_turn)
                                 print(f"finished turn, game_status is now {game_status}")
                                 server_update = Game_message_handler.build_game_package(game_status)
+                                print(f"finished building game package, server_update is now {server_update}")
 
                             else:
                                 server_update = player_turn

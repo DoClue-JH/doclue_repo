@@ -149,23 +149,22 @@ class Client_message_handler:
                         #     print("...accusation incorrect. Player " + player_id + " loses.")
                         self.player_accused = True
                 elif turn_status == 'end turn':
-                    print(server_message)
-                    # # print('... in Client_msg_handler')
-                    # if not self.player_ended_turn:
-                    #     next_player_id = server_message['next_player']
-                    #     print("Player " + player_id + "'s turn ended.")
-                    #     self.player_ended_turn = True
+                    # print('... in Client_msg_handler')
+                    if not self.player_ended_turn:
+                        next_player_id = server_message['next_player']
+                        print("Player " + player_id + "'s turn ended.")
+                        self.player_ended_turn = True
 
-                    #     if next_player_id == self.id:
-                    #         print("It is now your turn!")
-                    #     else:
-                    #         print(f"It is now Player {next_player_id}'s turn.")
-                    #         self.player_moved = False
-                    #         self.player_suggested = False
-                    #         self.player_accused = False
-                    #         self.player_ended_turn = False
-                    #         self.player_taking_turn = False
-                    #     print()
+                        if next_player_id == self.id:
+                            print("It is now your turn!")
+                        else:
+                            print(f"It is now Player {next_player_id}'s turn.")
+                            self.player_moved = False
+                            self.player_suggested = False
+                            self.player_accused = False
+                            self.player_ended_turn = False
+                            self.player_taking_turn = False
+                        print()
                 # HERE
                 # elif turn_status == 'pass' and server_message['next_playername_turn']!='':
                 #     server_message['turn_status'] = 'start game'
