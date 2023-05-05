@@ -100,6 +100,8 @@ class Client_message_handler:
 
     # TO DO: move and suggest
     def process_server_update(self, server_message, prev_server_message):
+        #if server_message.get("turn_status") and server_message["turn_status"] == "movement":
+        #    print(f"\n\n\n\n\n {server_message}")
         # print(f"...processing server message --> {server_message} and prev server message {prev_server_message}")
         player_id = server_message['player_id']
         # player_token = server_message['player_token']
@@ -113,6 +115,9 @@ class Client_message_handler:
                     self.player_taking_turn = True
                 #based on player's turn and game status, update players with the status of the game
                 if turn_status == 'movement':
+                #    print("    in process_server_update, turn_status == movement")
+                #    print(self.player_moved)
+                #    print("turn_status is", turn_status)
                     if not self.player_moved:
                       print(f"player {player_id} chose to move to location {server_message['player_location']}")
                       self.player_moved = True
@@ -174,10 +179,10 @@ class Client_message_handler:
                         
                 elif turn_status == 'START':
                     print(server_message)
-                else:
-                    server_message['turn_status'] = 'pass'
+                # else:
+                    # server_message['turn_status'] = 'pass'
 
-        prev_server_message = server_message
+        # prev_server_message = server_message
         # print("...processed server message")
         return server_message
     

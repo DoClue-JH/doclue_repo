@@ -211,7 +211,7 @@ class Game_controller:
 
                 # print the valid rooms in the bottom lefthand corner of the window
                 message_font_02 = pygame.font.SysFont('Comic Sans MS', 20)
-                message_surface_02 = message_font_02.render("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')), False, (120,39,64), (202, 228, 241))
+                message_surface_02 = message_font_02.render("Valid rooms: " + str(allowed_tiles), False, (120,39,64), (202, 228, 241))
                 print("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')))
                 # message_surface_rect_02 = message_surface_02.get_rect(topleft = (100,750))
                 self.screen.blit(message_surface_02, (100,650))
@@ -243,10 +243,11 @@ class Game_controller:
                         self.state = "MOVING"
                         # SEND MESSAGE TO SERVER AND MOVE TOKEN
                         turn_data = self.network.build_client_package(self.player_id, "MOVEMENT", self.room_choice, '','') # 'next_player': '', 'next_playername_turn':''
+                        self.state = "MOVEMENT"
                         self.move_token(self.player_token, self.tiles_directory[self.room_choice][1])
                         # self.network.send(turn_data)
                         print("turn_data is", turn_data)
-                        # print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
+                        print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
                         self.state = 'START'
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
@@ -336,7 +337,7 @@ class Game_controller:
     # Input : events [type: Pygame Event]
     ################################################################################
     def add_main_view(self, events, prev_game_state):        
-        player_caption = "Clue-Less Player " + str(self.id)
+        player_caption = "Clue-Less Player " + str(self.id) + ": " + str(self.player_token)
         pygame.display.set_caption(player_caption)
         # Add board
         self.board.load_tiles(self.screen, self.board)
@@ -506,6 +507,9 @@ class Game_controller:
         elif prev_game_state['turn_status'] == 'movement':
             print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")    
             self.move_token(prev_game_state['moved_player'], self.tiles_directory[prev_game_state['player_location']][1])
+            print("moved_player is", prev_game_state['moved_player'])
+            print(self.tiles_directory[prev_game_state['player_location']][1])
+            print(self.player_token)
             #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
             if this_player_id == self.player_id:
                 # TO DO better way of displaying text instead of blit
