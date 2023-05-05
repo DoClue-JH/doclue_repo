@@ -179,7 +179,35 @@ class Game_controller:
             if (self.state == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state): #'MOVEMENT'):
                 # print("check_events moving")
                 turn_data = self.add_main_view(events, prev_game_state)
-                self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
+                allowed_tiles = []
+
+                # TRANSLATE tile name
+                tilename_dict = {'Study':'study_room',
+                    'Hall':'hall',
+                    'Lounge':'lounge',
+                    'Library':'library',
+                    'Billiard Room':'billiard_room',
+                    'Dining Room':'dining_room',
+                    'Conservatory':'conservatory',
+                    'Ballroom':'ballroom',
+                    'Kitchen':'kitchen',
+                    'Hallway 01':'hallway_1',
+                    'Hallway 02':'hallway_2',
+                    'Hallway 03':'hallway_3',
+                    'Hallway 04':'hallway_4',
+                    'Hallway 05':'hallway_5',
+                    'Hallway 06':'hallway_6',
+                    'Hallway 07':'hallway_7',
+                    'Hallway 08':'hallway_8',
+                    'Hallway 09':'hallway_9',
+                    'Hallway 10':'hallway_10',
+                    'Hallway 11':'hallway_11',
+                    'Hallway 12':'hallway_12'}
+                
+                for each in prev_game_state['valid_tile_names_for_player']:
+                    allowed_tiles.append(tilename_dict[each])
+
+                self.board.highlight_tile_rect(self.screen,(0,100,0), allowed_tiles)
 
                 # print the valid rooms in the bottom lefthand corner of the window
                 message_font_02 = pygame.font.SysFont('Comic Sans MS', 20)
@@ -188,10 +216,13 @@ class Game_controller:
                 # message_surface_rect_02 = message_surface_02.get_rect(topleft = (100,750))
                 self.screen.blit(message_surface_02, (100,650))
 
-                for key in self.tiles_directory:
+                # Only allow event clicked for tiles listed on prev_game_state array
+
+
+                for key in allowed_tiles:
                     if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                         pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
-                        self.board.highlight_tile_rect(self.screen,(0,200,0),key)
+                        self.board.highlight_tile_rect(self.screen,(0,200,0),[key])
                         message_font = pygame.font.SysFont('Comic Sans MS', 14)
                         message_surface = message_font.render( key + '.  Proceed?', False, (120,39,64))
                         message_surface_rect = message_surface.get_rect(topleft = (810, 450))
