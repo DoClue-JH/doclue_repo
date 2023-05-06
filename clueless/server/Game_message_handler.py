@@ -2,10 +2,12 @@ import socket
 import threading
 import pickle
 import sys
+clients_lock = threading.Lock()
 
 class Game_message_handler:
 
     def __init__(self):
+        # self.clients_lock = threading.Lock()
         pass
      
     def send_game_update(conn, game_update):
@@ -140,13 +142,12 @@ class Game_message_handler:
 
     def broadcast(clients, message):
         # print(f'...broadcasting {message} to this many clients: {len(clients)}')
-
-        # client is same as conn
-        for client in clients:
-            # if message["turn_status"] == "MOVING":
-            #     print(f"i am client {client}")
-            try: 
-                Game_message_handler.send_game_update(client, message)
-            except Exception as err:
-                print(f'failed broadcast with error {err} for message {message}')
-                pass
+        with clients_lock:
+            # client is same as conn
+            for client in clients:
+                print(f'...broadcasting {message} to client: {client}')
+                try: 
+                    Game_message_handler.send_game_update(client, message)
+                except Exception as err:
+                    print(f'failed broadcast with error {err} for message {message}')
+                    pass

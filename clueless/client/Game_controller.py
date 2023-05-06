@@ -504,8 +504,9 @@ class Game_controller:
                 self.on_playerid_turn = prev_game_state['next_player']
                 self.on_playername_turn = prev_game_state['next_playername_turn']
                 self.state = 'START'
-                # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
-                # self.network.send(turn_data)
+                # Below is essential to reset the state to START so old messages don't glitch
+                turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
+                self.network.send(turn_data)
 
             else: 
                 self.state = 'WIN'
