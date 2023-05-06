@@ -26,7 +26,7 @@ class Game:
         # INITIALIZE ROOM TILES
         # with their str name, "room", and adj tiles
         tile_study = Tile("Study", "room", ["Hallway 01", "Hallway 03", "Kitchen"])
-        tile_hall = Tile("Hall", "room", ["Hallway 01", "Hallway 02"])
+        tile_hall = Tile("Hall", "room", ["Hallway 01", "Hallway 02", "Hallway 04"])
         tile_lounge = Tile("Lounge", "room", ["Hallway 02", "Hallway 05", "Conservatory"])
         tile_library = Tile("Library", "room", ["Hallway 03", "Hallway 06", "Hallway 08"])
         tile_billiard_room = Tile("Billiard Room", "room", ["Hallway 06", "Hallway 04", "Hallway 09", "Hallway 07"])
@@ -45,7 +45,7 @@ class Game:
         tile_hallway_06 = Tile("Hallway 06", "hallway", ["Library", "Billiard Room"])
         tile_hallway_07 = Tile("Hallway 07", "hallway", ["Billiard Room", "Dining Room"])
         tile_hallway_08 = Tile("Hallway 08", "hallway", ["Library", "Conservatory"])
-        tile_hallway_09 = Tile("Hallway 09", "hallway", ["Billiard Room", "Dining Room"])
+        tile_hallway_09 = Tile("Hallway 09", "hallway", ["Billiard Room", "Ballroom"])
         tile_hallway_10 = Tile("Hallway 10", "hallway", ["Dining Room", "Kitchen"])
         tile_hallway_11 = Tile("Hallway 11", "hallway", ["Conservatory", "Ballroom"])
         tile_hallway_12 = Tile("Hallway 12", "hallway", ["Ballroom", "Kitchen"])
@@ -337,6 +337,8 @@ class Game:
 
                 curr_player.update(self.game_board.get(first_move_tile_name))
 
+                ## ADD DECREMENT IN HERE FOR TILE, OR USE MOVE DIRECTLY
+
             print("player is on", curr_player.get_player_current_location().get_tile_name())
 
             # update suggested_cards and print
@@ -379,39 +381,6 @@ class Game:
             next_player_obj = self.get_player_object(curr_player.get_next_player())
             game_status.update({'next_playername_turn': next_player_obj.get_player_name()})
 
-        print(f'... return game_status {game_status}')
-        # game_status['ready']=True
+        # print(f'... return game_status {game_status}')
         return game_status # --goes to--> server_update = Game_message_handler.build_game_package(game_status)
 
-# Khue Test Statements for Move
-# show valid moves, prompt, take input is the loop
-# test statement
-
-# miss_scarlet = Player("Miss Scarlet", 1)
-# players = []
-# players.append(miss_scarlet)
-
-# game = Game(players, len(players))
-
-# # movement phase for one player
-# while True:
-#     show_valid_moves(miss_scarlet, game.get_game_board())
-#     move_input = prompt_move(miss_scarlet)
-#     move_output = move(game.game_board, miss_scarlet, move_input)
-
-#     if move_output == True:
-#         break       # continue to next phase
-
-#     else:
-#         print("Invalid move, try again!")
-
-# while True:
-#     show_valid_moves(miss_scarlet, game.get_game_board())
-#     move_input = prompt_move(miss_scarlet)
-#     move_output = move(game.game_board, miss_scarlet, move_input)
-
-#     if move_output == True:
-#         break       # continue to next phase
-
-#     else:
-#         print("Invalid move, try again!")

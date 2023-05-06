@@ -124,32 +124,8 @@ class Game_controller:
                         # Update player turn to next player
                         self.on_playerid_turn = prev_game_state['next_player']
                         self.on_playername_turn = prev_game_state['next_playername_turn']
-                    elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state:
-                        while input_tile_name not in prev_game_state.get('valid_tile_names_for_player'):
-                           input_tile_name = input("Please input a room from the list above: \n    ")
-                        
-                        print("    Success! Sending room selection to server...")
-
-                        # update game data
-                        game_data = self.network.build_client_package(self.player_id, 'MOVEMENT', input_tile_name, '','') # 'next_player': '', 'next_playername_turn':'')
-
-                        # KT: take out this continue when ui is integrated, may cause 
-                        # errors when you do but needed for command line input rn since
-                        # it stops game_data from being overwritten at the end of the loop
-                        continue
-                    
-                    elif self.state == 'START':
-                        pass
-                    
-                    # else:
-                    #     # if prev_game_state['turn_status'] != 'pass':
-                    #     #     print(f"prev_game_state is now {prev_game_state['turn_status']}")
-                    #     try: 
-                    #         # Only update views after a move, suggest, or accuse
-                    #         self.update_views(prev_game_state)
-                    #     except Exception as err:
-                    #         print(err) 
-                         
+                    # print(f'prev_game_state is now {prev_game_state}')
+                          
                 except:
                     print("Couldn't process_server_update")
                     break
@@ -196,30 +172,78 @@ class Game_controller:
             if (self.state == 'CHOOSING_TOKEN'):
                 self.choose_player_token()
             
-            if (self.state == 'MOVING'): #'MOVEMENT'):
+            if (self.state == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state): #'MOVEMENT'):
                 # print("check_events moving")
                 turn_data = self.add_main_view(events, prev_game_state)
-                self.board.highlight_tile_rect(self.screen,(0,100,0),'All')
-                for key in self.tiles_directory:
+                allowed_tiles = []
+
+                # TRANSLATE tile name
+                tilename_dict = {'Study':'study_room',
+                    'Hall':'hall',
+                    'Lounge':'lounge',
+                    'Library':'library',
+                    'Billiard Room':'billiard_room',
+                    'Dining Room':'dining_room',
+                    'Conservatory':'conservatory',
+                    'Ballroom':'ballroom',
+                    'Kitchen':'kitchen',
+                    'Hallway 01':'hallway_1',
+                    'Hallway 02':'hallway_2',
+                    'Hallway 03':'hallway_3',
+                    'Hallway 04':'hallway_4',
+                    'Hallway 05':'hallway_5',
+                    'Hallway 06':'hallway_6',
+                    'Hallway 07':'hallway_7',
+                    'Hallway 08':'hallway_8',
+                    'Hallway 09':'hallway_9',
+                    'Hallway 10':'hallway_10',
+                    'Hallway 11':'hallway_11',
+                    'Hallway 12':'hallway_12'}
+                
+                for each in prev_game_state['valid_tile_names_for_player']:
+                    allowed_tiles.append(tilename_dict[each])
+
+                self.board.highlight_tile_rect(self.screen,(0,100,0), allowed_tiles)
+
+                # print the valid rooms in the bottom lefthand corner of the window
+                message_font_02 = pygame.font.SysFont('Comic Sans MS', 20)
+                message_surface_02 = message_font_02.render("Valid rooms: " + str(allowed_tiles), False, (120,39,64), (202, 228, 241))
+                print("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')))
+                # message_surface_rect_02 = message_surface_02.get_rect(topleft = (100,750))
+                self.screen.blit(message_surface_02, (100,650))
+
+                # Only allow event clicked for tiles listed on prev_game_state array
+
+
+                for key in allowed_tiles:
                     if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                         pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
-                        self.board.highlight_tile_rect(self.screen,(0,200,0),key)
+                        self.board.highlight_tile_rect(self.screen,(0,200,0),[key])
                         message_font = pygame.font.SysFont('Comic Sans MS', 14)
                         message_surface = message_font.render( key + '.  Proceed?', False, (120,39,64))
                         message_surface_rect = message_surface.get_rect(topleft = (810, 450))
                         self.screen.blit(message_surface, message_surface_rect)
                         self.room_choice = key
 
+                        # pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
+                        # self.board.highlight_tile_rect(self.screen,(0,200,0),key)
+                        # message_font_02 = pygame.font.SysFont('Comic Sans MS', 20)
+                        # message_surface_02 = message_font_02.render("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')), False, (120,39,64), (202, 228, 241))
+                        # print("Valid rooms: " + str(prev_game_state.get('valid_tile_names_for_player')))
+                        # # message_surface_rect_02 = message_surface_02.get_rect(topleft = (100,750))
+                        # self.screen.blit(message_surface_02, (100,650))
+
                 enterRect = pygame.Rect(810, 560, 60, 35)
                 if (enterRect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                     if self.room_choice is not None:
                         self.state = "MOVING"
                         # SEND MESSAGE TO SERVER AND MOVE TOKEN
-                        turn_data = self.network.build_client_package(self.player_id, self.state, self.room_choice, '','') # 'next_player': '', 'next_playername_turn':''
+                        turn_data = self.network.build_client_package(self.player_id, "MOVEMENT", self.room_choice, '','') # 'next_player': '', 'next_playername_turn':''
+                        self.state = "MOVEMENT"
                         self.move_token(self.player_token, self.tiles_directory[self.room_choice][1])
                         # self.network.send(turn_data)
-                        print(turn_data)
-                        # print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
+                        print("turn_data is", turn_data)
+                        print(f"sending message to server for movement: {self.player_id}, {self.state}, {self.room_choice}")
                         self.state = 'START'
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
@@ -317,7 +341,7 @@ class Game_controller:
         else:
             self.board.display_update(self.screen, f"It's {self.on_playername_turn}'s turn", (300, 30))
                 
-        player_caption = "Clue-Less Player " + str(self.id)
+        player_caption = "Clue-Less Player " + str(self.id) + ": " + str(self.player_token)
         pygame.display.set_caption(player_caption)
         # Add board
         self.board.load_tiles(self.screen, self.board)
@@ -466,22 +490,6 @@ class Game_controller:
     def update_views(self, prev_game_state):
         this_player_id = prev_game_state['player_id']
         
-        # BELOW MOVED TO game_loop
-        # ALL CHOSE TOKEN finished, starting game
-        # if prev_game_state['turn_status'] == 'start game':
-        #     print("set first player turn")
-        #     first_player_id = prev_game_state['next_player']
-        #     self.on_playerid_turn = first_player_id
-        #     self.on_playername_turn = prev_game_state['next_playername_turn']
-        #     # Player's first turn
-        #     if first_player_id == self.player_id:
-        #         print("It's your first turn")
-        #         self.board.display_update(self.screen, f"It's your first turn", (300, 30))
-        #     # Other players, not their turn
-        #     else:
-        #         print(f"It's {prev_game_state['next_playername_turn']}'s turn")
-        #         self.board.display_update(self.screen, f"It's {prev_game_state['next_playername_turn']}'s turn", (300, 30))
-        
         # ACCUSATION finished
         if prev_game_state['turn_status']=='accusation':
             if 'accused_result_player' not in prev_game_state:
@@ -498,7 +506,7 @@ class Game_controller:
                 self.state = 'START'
                 # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
                 # self.network.send(turn_data)
-            
+
             else: 
                 self.state = 'WIN'
                 this_player_id = prev_game_state['player_id']
@@ -515,6 +523,9 @@ class Game_controller:
         elif prev_game_state['turn_status'] == 'movement':
             print(f"Success! Player {prev_game_state['player_id']} has moved to {prev_game_state['player_location']}!")    
             self.move_token(prev_game_state['moved_player'], self.tiles_directory[prev_game_state['player_location']][1])
+            print("moved_player is", prev_game_state['moved_player'])
+            print(self.tiles_directory[prev_game_state['player_location']][1])
+            print(self.player_token)
             #game_data = self.network.build_client_package(self.player_id, 'get', self.player_token)
             if this_player_id == self.player_id:
                 # TO DO better way of displaying text instead of blit
@@ -522,8 +533,8 @@ class Game_controller:
             else:
                 self.board.display_update(self.screen, f"{prev_game_state['moved_player']} has moved to {prev_game_state['player_location']}", (300, 30))
             self.state = 'START'
-            # turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
-            # self.network.send(turn_data)
+            turn_data = self.network.build_client_package(self.player_id, self.state, '', '','') # 'next_player': '', 'next_playername_turn':''
+            self.network.send(turn_data)
 
         # SUGGEST finished
         elif (prev_game_state['player_id'] == self.player_id) and prev_game_state['turn_status'] == 'suggestion' and 'suggested_cards' in prev_game_state:
@@ -535,25 +546,28 @@ class Game_controller:
                 else:
                     self.board.display_update(self.screen, f"No match found amongst other hands!", (400, 400))
                     print("No match found amongst other hands!")
-        # BELOW MOVED TO game_loop           
-        # # END TURN finished
-        # elif prev_game_state['turn_status'] == 'end turn':
-        #     next_player_id = prev_game_state['next_player']
-        #     next_player_name = prev_game_state['next_playername_turn']
-        #     # Update player turn to next player
-        #     self.on_playerid_turn = next_player_id
-        #     self.on_playername_turn = next_player_name
-            # # Player's turn just ended
-            # if this_player_id == self.player_id:
-            #     self.board.display_update(self.screen, f"Your turn has ended", (300, 30))
-            #     self.board.display_update(self.screen, f"It's {next_player_name}'s turn", (300, 50))
-            # # This player's turn
-            # elif next_player_id == self.player_id:
-            #     self.board.display_update(self.screen, f"It's your turn", (300, 30))
-            # # Other players, not their turn
-            # else:
-            #     self.board.display_update(self.screen, f"It's {next_player_name}'s turn", (300, 30))
     
+    ################################################################################
+    # add_win_view is the function to show win view
+    # Input : winner [type: Boolean], winner_player_id [type: int],  case_file [type: dict]
+    ################################################################################    
+    def add_win_screen(self, winner, winner_player_id, case_file):
+        # Extract character, weapon, and room from case file
+        readable_character = Client_message_handler.get_readable_playername(case_file['character'])
+        readable_weapon = Client_message_handler.get_readable_weaponname(case_file['weapon'])
+        readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
+        
+        data_folder = Path("clueless/data/graphics/")
+        # mouse_pos = pygame.mouse.get_pos()
+        image = pygame.image.load(data_folder / "splash.png")
+        image = pygame.transform.scale(image, (self.WIDTH, self.HEIGHT))
+        self.screen.blit(image, (0, 0))
+
+        TITLE_TEXT = self.get_font(65).render("CLUE-LESS", True, "#b68f40")
+        TITLE_RECT = TITLE_TEXT.get_rect(center=(530, 100))
+        self.screen.blit(TITLE_TEXT, TITLE_RECT)
+                    
+      
     ################################################################################
     # add_win_view is the function to show win view
     # Input : winner [type: Boolean], winner_player_id [type: int],  case_file [type: dict]
