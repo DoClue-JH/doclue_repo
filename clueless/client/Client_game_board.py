@@ -304,10 +304,9 @@ class Client_game_board:
         # Initialize token positions for chosen tokens
         for token in chosen_tokens:
             token_surface = pygame.Surface((100, 100))
-            token_image = pygame.image.load(f'{data_folder / token_info_dict[token][0]}.PNG').convert_alpha()
+            token_image = pygame.image.load(f'{data_folder / token_info_dict[token][0]}.png').convert_alpha()
             token_image = pygame.transform.scale(token_image, (80, 80))
             
-            pygame.draw.rect(token_image, 'BLACK', pygame.Rect(0, 0, 100, 100), 1)
             token_rect = (token_info_dict[token][1], token_info_dict[token][2], 100, 100)
             screen.blit(token_image, token_rect) 
             
