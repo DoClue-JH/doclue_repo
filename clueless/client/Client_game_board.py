@@ -359,8 +359,7 @@ class Client_game_board:
 
         return rectangle_dict
     
-    def load_button(self, screen, text, buttonXPos, buttonYPos):
-        button_color = (150, 150, 150)
+    def load_button(self, screen, text, buttonXPos, buttonYPos, button_color):
         button_width = 160
         button_height = 40
         button_highlight_color = (100, 200, 255)
@@ -420,3 +419,44 @@ class Client_game_board:
         # my_font = pygame.font.SysFont(None, 30)
         # text_surface = my_font.render(text, False, (0, 0, 0))
         # screen.blit(text_surface, coords)
+
+    def load_hands(self, screen, hands_array):
+
+        TEXT = self.get_font(25).render("YOUR CARDS",True,(238,232,205))
+        TEXT_RECT = TEXT.get_rect(center=(530, 80))
+        screen.blit(TEXT, TEXT_RECT)
+
+        array = []
+        init_x = 250
+        init_y = 180
+
+        for each in hands_array:
+            file_name = each + '.png'
+            image = pygame.image.load(data_folder / file_name).convert_alpha()
+            image = pygame.transform.scale(image, (140, 120))
+            array.append(image)
+
+        # this is stupid way to do it, because we need to customize the location of x and y and different number of cards will card differently..
+        # we need to cover 3 - 6 cards placement cases.
+        if len(array) == 3:
+            screen.blit(array[0], (init_x, init_y+100))
+            screen.blit(array[1], (init_x+200, init_y+100))
+            screen.blit(array[2], (init_x+400, init_y+100))
+        if len(array) == 4:
+            screen.blit(array[0], (init_x, init_y))
+            screen.blit(array[1], (init_x+200, init_y))
+            screen.blit(array[2], (init_x+400, init_y))
+            screen.blit(array[3], (init_x+300, init_y+230))
+        if len(array) == 5:
+            screen.blit(array[0], (init_x, init_y))
+            screen.blit(array[1], (init_x+200, init_y))
+            screen.blit(array[2], (init_x+400, init_y))
+            screen.blit(array[3], (init_x+100, init_y+230))
+            screen.blit(array[4], (init_x+300, init_y+230))
+        if len(array) == 6:
+            screen.blit(array[0], (init_x, init_y))
+            screen.blit(array[1], (init_x+200, init_y))
+            screen.blit(array[2], (init_x+400, init_y))
+            screen.blit(array[3], (init_x, init_y+230))
+            screen.blit(array[4], (init_x+200, init_y+230))
+            screen.blit(array[5], (init_x+400, init_y+230))

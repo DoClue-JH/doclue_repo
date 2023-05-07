@@ -103,7 +103,9 @@ class Game_message_handler:
                 print(game_package)
             elif turn_status == 'MOVING':
                 game_package.update({'valid_tile_names_for_player': game_status['valid_tile_names_for_player']})
-                
+            elif turn_status == 'ask hand':
+                game_package.update({'player_hand': game_status['player_hand']})
+                print(game_package)
             elif turn_status == 'suggestion':
                 game_package.update({'suggested_cards': game_status['suggested_cards']})
                 # game_package.update({'suggest_result': game_status['suggest_result']})

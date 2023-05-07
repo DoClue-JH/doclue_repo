@@ -214,7 +214,6 @@ class Game_controller:
 
                 # Only allow event clicked for tiles listed on prev_game_state array
 
-
                 for key in allowed_tiles:
                     if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
                         pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
@@ -319,7 +318,9 @@ class Game_controller:
                 # turn_data = self.network.receive()
                 # print(f"receiving message from server after accusation: {turn_data}")
                 turn_data = self.network.build_client_package(self.player_id, self.state, accused_card_dict, '','') # 'next_player': '', 'next_playername_turn':''
-                    
+            if (self.state == 'ask hand' and 'player_hand' in prev_game_state):
+                self.add_hands_view(prev_game_state['player_hand'])
+
             # HERE is this needed?
             # if (self.state == 'END TURN'):
             #     self.state == "START"
@@ -352,10 +353,12 @@ class Game_controller:
         button_Y_Pos = 75
         button_X_Pos = 800
         button_distance = 60
-        is_Room_Selection_Active = self.board.load_button(self.screen, "Go To Room", button_X_Pos, button_Y_Pos)
-        is_Suggest_Selection_Active = self.board.load_button(self.screen, "Suggest", button_X_Pos, button_Y_Pos + button_distance)
-        is_Accuse_Selection_Active = self.board.load_button(self.screen, "Accuse", button_X_Pos, button_Y_Pos + button_distance*2)
-        isEndTurnSelectionActive = self.board.load_button(self.screen, "End Turn", button_X_Pos, button_Y_Pos + button_distance*3)
+        is_Room_Selection_Active = self.board.load_button(self.screen, "Go To Room", button_X_Pos, button_Y_Pos, (150, 150, 150))
+        is_Suggest_Selection_Active = self.board.load_button(self.screen, "Suggest", button_X_Pos, button_Y_Pos + button_distance,(150, 150, 150))
+        is_Accuse_Selection_Active = self.board.load_button(self.screen, "Accuse", button_X_Pos, button_Y_Pos + button_distance*2,(150, 150, 150))
+        isEndTurnSelectionActive = self.board.load_button(self.screen, "End Turn", button_X_Pos, button_Y_Pos + button_distance*3,(150, 150, 150))
+
+        is_Show_Hands_Active = self.board.load_button(self.screen, "My Cards", button_X_Pos, button_Y_Pos + button_distance*4.5, (205,200,177))
             
         # Initialize valid players 
         # TO DO: players should be added to screen later depending on which tokens are chosen (here for now to test)
@@ -385,6 +388,11 @@ class Game_controller:
             self.board.load_options(self.screen, self.state, events)
             turn_data = self.network.build_client_package(self.player_id, self.state, str(mousePos), '','') # 'next_player': '', 'next_playername_turn':''
             #print(turn_data)
+            self.network.send(turn_data)
+        
+        if is_Show_Hands_Active:
+            self.state = "ask hand"
+            turn_data = self.network.build_client_package(self.player_id, self.state, self.player_token, '','') # 'next_player': '', 'next_playername_turn':''
             self.network.send(turn_data)
 
         # if player chooose end turn, then it passes the turn to others.
@@ -417,8 +425,9 @@ class Game_controller:
         # Initialize Back Button
         button_X_Pos = 250
         button_Y_Pos = 620
-        is_back_button_active = self.board.load_button(self.screen, "Back to Main", button_X_Pos, button_Y_Pos)
-        is_submit_button_active = self.board.load_button(self.screen, "Submit", button_X_Pos+350, button_Y_Pos)
+        button_color = (150, 150, 150)
+        is_back_button_active = self.board.load_button(self.screen, "Back to Main", button_X_Pos, button_Y_Pos, button_color)
+        is_submit_button_active = self.board.load_button(self.screen, "Submit", button_X_Pos+350, button_Y_Pos, button_color)
 
         self.board.load_suggest_board(self.screen, self.board)
         self.board.load_options(self.screen, self.state, events)
@@ -459,8 +468,9 @@ class Game_controller:
         # Initialize Back Button
         button_X_Pos = 250
         button_Y_Pos = 620
-        is_back_button_active = self.board.load_button(self.screen, "Back to Main", button_X_Pos, button_Y_Pos)
-        is_submit_button_active = self.board.load_button(self.screen, "Submit", button_X_Pos+350, button_Y_Pos)
+        button_color = (150, 150, 150)
+        is_back_button_active = self.board.load_button(self.screen, "Back to Main", button_X_Pos, button_Y_Pos, button_color)
+        is_submit_button_active = self.board.load_button(self.screen, "Submit", button_X_Pos+350, button_Y_Pos, button_color)
 
         self.board.load_accuse_board(self.screen, self.board)
         if is_back_button_active: 
@@ -679,6 +689,50 @@ class Game_controller:
         # print("You have chosen: " + token)
         
         #return "Professor Plum"
+    def add_hands_view(self, hands_array):
+        data_folder = Path("clueless/data/graphics/")
+        background = pygame.image.load(data_folder / "splash.png")
+        background = pygame.transform.scale(background, (self.WIDTH, self.HEIGHT))
+        self.screen.blit(background, (0, 0))
+
+        translated_hands = []
+
+        # TRANSLATE the hand array
+        hand_dict = {'Study':'study',
+                    'Hall':'hall',
+                    'Lounge':'lounge',
+                    'Library':'library',
+                    'Billiard Room':'billiard',
+                    'Dining Room':'dining',
+                    'Conservatory':'conservatory',
+                    'Ballroom':'ballroom',
+                    'Kitchen':'kitchen',
+                    'Rope':'rope',
+                    'Lead Pipe':'leadpipe',
+                    'Dagger':'dagger',
+                    'Wrench':'wrench',
+                    'Candlestick':'candlestick',
+                    'Revolver':'revolver',
+                    'Miss Scarlet':'miss_scarlet',
+                    'Colonel Mustard':'colonel_mustard',
+                    'Mrs. White':'mrs_white',
+                    'Mr. Green':'mr_green',
+                    'Mrs. Peacock':'mrs_peacock',
+                    'Professor Plum':'prof_plum'}
+        
+        for each in hands_array:
+            translated_hands.append(hand_dict[each])
+
+        self.board.load_hands(self.screen, translated_hands)
+
+        button_X_Pos = 440
+        button_Y_Pos = 620
+        button_color = (238,232,205)
+        is_back_button_active = self.board.load_button(self.screen, "Back to Main", button_X_Pos, button_Y_Pos, button_color)
+
+        if is_back_button_active:
+            self.state = "START"
+            self.screen.fill(self.base_color)
 
     def move_token(self,token_name, pos_tuple):
         # print("MOVING ")
