@@ -436,7 +436,7 @@ class Client_game_board:
             image = pygame.transform.scale(image, (140, 120))
             array.append(image)
 
-        # this is stupid way to do it, because we need to customize the location of x and y and different number of cards will card differently..
+        # this is stupid way to do it, because we need to customize the location of x and y and different number of cards will be placed differently..
         # we need to cover 3 - 6 cards placement cases.
         if len(array) == 3:
             screen.blit(array[0], (init_x, init_y+100))

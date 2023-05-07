@@ -17,15 +17,16 @@ import traceback
 DEFAULT_GAME = dict({'player_id': '0', 'turn_status': 'get','next_player':'0','next_playername_turn':''})
 server_update = dict({})
 CHARACTER_TOKENS = ["Mrs. Peacock", "Mrs. White", "Miss Scarlet", "Mr. Green", "Colonel Mustard", "Professor Plum"]
+data_folder = Path("clueless/data/graphics/")
 
 class Game_controller:
 
     # WIDTH AND HEIGHT OF THE WINDOW
     WIDTH = 1050
     HEIGHT = 700
-    FPS = 60
+    FPS = 20
 
-    # There are FOUR Game State : "START", "MOVING", "ACCUSING", "SUGGESTING", "CHOOSING_TOKEN", "SPLASH_SCREEN", "chose_token"
+    # There are NINE Game State : "START", "MOVING", "ACCUSING", "SUGGESTING", "CHOOSING_TOKEN", "SPLASH_SCREEN", "chose_token", "ask hand", "MOVEMENT"
     # Each State will have different views
     # SEND MESSAGE TO SERVER comments are placeholder where the code sends message to server
     ############################################################################################
@@ -567,7 +568,6 @@ class Game_controller:
         readable_weapon = Client_message_handler.get_readable_weaponname(case_file['weapon'])
         readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
         
-        data_folder = Path("clueless/data/graphics/")
         # mouse_pos = pygame.mouse.get_pos()
         image = pygame.image.load(data_folder / "splash.png")
         image = pygame.transform.scale(image, (self.WIDTH, self.HEIGHT))
@@ -588,7 +588,6 @@ class Game_controller:
         readable_weapon = Client_message_handler.get_readable_weaponname(case_file['weapon'])
         readable_room = Client_message_handler.get_readable_tilename(case_file['room'])
         
-        data_folder = Path("clueless/data/graphics/")
         # mouse_pos = pygame.mouse.get_pos()
         image = pygame.image.load(data_folder / "splash.png")
         image = pygame.transform.scale(image, (self.WIDTH, self.HEIGHT))
@@ -615,11 +614,10 @@ class Game_controller:
         self.screen.blit(CASEFILE_TEXT_REST, CASEFILE_RECT_REST)
          
     def get_font(self,size): # Returns Press-Start-2P in the desired size
-        data_folder = Path("clueless/data/font/")
-        return pygame.font.Font(data_folder / "font.ttf", size)
+        font_folder = Path("clueless/data/font/")
+        return pygame.font.Font(font_folder / "font.ttf", size)
     
     def add_splash_screen(self, events):
-        data_folder = Path("clueless/data/graphics/")
         mouse_pos = pygame.mouse.get_pos()
         image = pygame.image.load(data_folder / "splash.png")
         image = pygame.transform.scale(image, (self.WIDTH, self.HEIGHT))
@@ -648,14 +646,6 @@ class Game_controller:
                     sys.exit()
 
     def choose_player_token(self):
-        # token = "None"
-        # print("Please choose your character token")
-        # print(CHARACTER_TOKENS)
-        # token = input("Please enter your character choice: ")
-        #while token not in CHARACTER_TOKENS:
-        #    token = input("Please enter a valid character choice: ")
-
-        # print("You have chosen: " + token)
         self.screen.fill(self.base_color)
         mouse_pos = pygame.mouse.get_pos()
 
@@ -690,7 +680,6 @@ class Game_controller:
         
         #return "Professor Plum"
     def add_hands_view(self, hands_array):
-        data_folder = Path("clueless/data/graphics/")
         background = pygame.image.load(data_folder / "splash.png")
         background = pygame.transform.scale(background, (self.WIDTH, self.HEIGHT))
         self.screen.blit(background, (0, 0))
@@ -767,30 +756,3 @@ class Game_controller:
                     self.suggest_weapon_dict[i][3] = False
             for i in self.suggest_suspect_dict:
                     self.suggest_suspect_dict[i][3] = False
-################################################################################
-# Instantiate Deck class
-# Remove docstring to execute 
-
-# players= []
-
-# num_players= int(input("Enter the number of players: "))
-
-# assert 6 >= num_players >=3, f"A total number of 3-6 players are allowed to\
-#  participate in this game."
-################################################################################
-
-#Instatiate Weapon_Image Class 
-# Remove docstring to execute 
-'''
-weapon_dict= {
-    'Dagger':'dagger.png', 'Candlestick':'candlestick.png', 'Wrench': 'wrench.png',
-    'Leadpipe':'leadpipe.png', 'Revolver': 'revolver.png', 'Rope': 'rope.png'
-}
-
-wep_img= Weapon_Image()
-
-# Enter the name of your Weapon
-weapon_name= input("State the name of your Weapon (first letter capitalized) to display image: ")
-wep_img.display_weapon_image(weapon_dict[weapon_name])
-'''
-################################################################################
