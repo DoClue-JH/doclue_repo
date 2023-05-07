@@ -102,12 +102,15 @@ class Game_message_handler:
                 game_package.update({'player_location': frontend_tilename})
                 # game_package.update({'player_location': game_status['target_tile']})
                 game_package.update({'moved_player': game_status['moved_player']})
-                print(game_package)
+                # print(game_package)
             elif turn_status == 'MOVING':
                 game_package.update({'valid_tile_names_for_player': game_status['valid_tile_names_for_player']})
                 
             elif turn_status == 'suggestion':
+                # frontend_tilename = tilename_dict[(game_status['suggested_cards']['room'])]
+                # print("frontend_tile is", frontend_tilename)
                 game_package.update({'suggested_cards': game_status['suggested_cards']})
+                # game_package.update({'frontend_tile': frontend_tilename})
                 # game_package.update({'suggest_result': game_status['suggest_result']})
                 if 'suggested_match_card' in game_status:
                     game_package.update({'suggest_result_player': game_status['suggest_result_player']})
@@ -145,9 +148,20 @@ class Game_message_handler:
         with clients_lock:
             # client is same as conn
             for client in clients:
-                print(f'...broadcasting {message} to client: {client}')
-                try: 
-                    Game_message_handler.send_game_update(client, message)
-                except Exception as err:
-                    print(f'failed broadcast with error {err} for message {message}')
-                    pass
+                if message['turn_status'] == 'movement' or message['turn_status'] == 'suggestion' or message['turn_status'] == 'accusation':
+                    for x in range(0,30):
+                        # print(x)
+                        # print(message)
+                        print(f'...broadcasting {message} to client: {client}')
+                        try: 
+                            Game_message_handler.send_game_update(client, message)
+                        except Exception as err:
+                            # print(f'failed broadcast with error {err} for message {message}')
+                            pass
+                else:
+                    try: 
+                        # print(message)
+                        Game_message_handler.send_game_update(client, message)
+                    except Exception as err:
+                        # print(f'failed broadcast with error {err} for message {message}')
+                        pass
