@@ -119,11 +119,18 @@ class Game_controller:
                         # print('Game_controller: updating player turn')
                         self.on_playerid_turn = prev_game_state['next_player']
                         self.on_playername_turn = prev_game_state['next_playername_turn']
+                        print("Player taking turn: ", self.on_playerid_turn)
                     # END TURN finished
                     elif prev_game_state['turn_status'] == 'end turn':
+                        print(f"Player {self.on_playerid_turn} ended their turn.")
                         # Update player turn to next player
                         self.on_playerid_turn = prev_game_state['next_player']
                         self.on_playername_turn = prev_game_state['next_playername_turn']
+                        
+                        if self.on_playerid_turn == self.player_id:
+                            print(f"It's your turn!")
+                        else:
+                            print(f"It's {self.on_playername_turn}'s turn")
                     # print(f'prev_game_state is now {prev_game_state}')
                           
                 except:
