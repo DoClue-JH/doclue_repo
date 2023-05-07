@@ -171,7 +171,7 @@ class Game_controller:
             # This is to highlight rectangle when choosing the room and print the choosen one on the options box
 
             if (self.state == 'CHOOSING_TOKEN'):
-                self.choose_player_token()
+                self.choose_player_token(events)
             
             if (self.state == 'MOVING' and 'valid_tile_names_for_player' in prev_game_state): #'MOVEMENT'):
                 # print("check_events moving")
@@ -216,7 +216,7 @@ class Game_controller:
                 # Only allow event clicked for tiles listed on prev_game_state array
 
                 for key in allowed_tiles:
-                    if (self.tiles_directory[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                    if (self.tiles_directory[key][0].collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                         pygame.draw.rect(self.screen, (202, 228, 241), (800,450,180,50), width=0, border_radius=5)
                         self.board.highlight_tile_rect(self.screen,(0,200,0),[key])
                         message_font = pygame.font.SysFont('Comic Sans MS', 14)
@@ -234,7 +234,7 @@ class Game_controller:
                         # self.screen.blit(message_surface_02, (100,650))
 
                 enterRect = pygame.Rect(810, 560, 60, 35)
-                if (enterRect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                if (enterRect.collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                     if self.room_choice is not None:
                         self.state = "MOVING"
                         # SEND MESSAGE TO SERVER AND MOVE TOKEN
@@ -248,7 +248,7 @@ class Game_controller:
 
                 #Manually record the rectangle position of close button. Everytime this button is pressed, close the options box
                 closeRect = pygame.Rect(970, 570, 25, 25)
-                if (closeRect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                if (closeRect.collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                     self.board.close_room_options(self.screen, self.base_color)
                     self.state = "START"
                     #is_Room_Selection_Active = False
@@ -259,7 +259,7 @@ class Game_controller:
                 for key in self.suggest_weapon_dict:
                     if self.suggest_weapon_dict[key][3] == True:
                         self.board.highlight_rect(self.screen,(0,200,0),self.suggest_weapon_dict[key][2],key)
-                    if (self.suggest_weapon_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                    if (self.suggest_weapon_dict[key][0].collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                         for i in self.suggest_weapon_dict:
                             self.suggest_weapon_dict[i][3] = False
                         if (self.suggest_weapon_dict[key][2] == 'weapon') :
@@ -270,7 +270,7 @@ class Game_controller:
                 for key in self.suggest_suspect_dict:
                     if self.suggest_suspect_dict[key][3] == True:
                         self.board.highlight_rect(self.screen,(0,200,0),self.suggest_suspect_dict[key][2],key)
-                    if (self.suggest_suspect_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                    if (self.suggest_suspect_dict[key][0].collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                         for i in self.suggest_suspect_dict:
                             self.suggest_suspect_dict[i][3] = False
                         if (self.suggest_suspect_dict[key][2] == 'suspect') :
@@ -286,7 +286,7 @@ class Game_controller:
                 for key in self.accuse_weapon_dict:
                     if self.accuse_weapon_dict[key][3] == True:
                         self.board.highlight_rect(self.screen,(0,200,0),self.accuse_weapon_dict[key][2],key)
-                    if (self.accuse_weapon_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                    if (self.accuse_weapon_dict[key][0].collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                         for i in self.accuse_weapon_dict:
                             self.accuse_weapon_dict[i][3] = False
                         if (self.accuse_weapon_dict[key][2] == 'weapon') :
@@ -297,7 +297,7 @@ class Game_controller:
                 for key in self.accuse_suspect_dict:
                     if self.accuse_suspect_dict[key][3] == True:
                         self.board.highlight_rect(self.screen,(0,200,0),self.accuse_suspect_dict[key][2],key)
-                    if (self.accuse_suspect_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                    if (self.accuse_suspect_dict[key][0].collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                         for i in self.accuse_suspect_dict:
                             self.accuse_suspect_dict[i][3] = False
                         if (self.accuse_suspect_dict[key][2] == 'suspect') :
@@ -308,7 +308,7 @@ class Game_controller:
                 for key in self.accuse_room_dict:
                     if self.accuse_room_dict[key][3] == True:
                         self.board.highlight_rect(self.screen,(0,200,0),self.accuse_room_dict[key][2],key)
-                    if (self.accuse_room_dict[key][0].collidepoint(mousePos) and pygame.mouse.get_pressed()[0] == 1):
+                    if (self.accuse_room_dict[key][0].collidepoint(mousePos) and event.type == pygame.MOUSEBUTTONDOWN):
                         for i in self.accuse_room_dict:
                             self.accuse_room_dict[i][3] = False
                         if (self.accuse_room_dict[key][2] == 'room') :
@@ -645,29 +645,30 @@ class Game_controller:
                     pygame.quit()
                     sys.exit()
 
-    def choose_player_token(self):
+    def choose_player_token(self, events):
         self.screen.fill(self.base_color)
         mouse_pos = pygame.mouse.get_pos()
 
         # Load view from board class
         rectangle_dict = self.board.load_character_selection_board(self.screen)
-        
-        if self.player_token == "None":
-            for rect in rectangle_dict:
-                if (rectangle_dict[rect].collidepoint(mouse_pos) and pygame.mouse.get_pressed()[0] == 1):
-                    self.highlighted_character_rect = rectangle_dict[rect]
-                    pygame.draw.rect(self.screen,"Red",rectangle_dict[rect],4)
-                    print("Player " + self.player_id + ' choose ' + rect)
 
-                    # send to server for player's token selection
-                    self.player_token = rect
-                    self.game_state['player_id'] = self.player_id
-                    self.game_state['player_token'] = self.player_token
-                    self.game_state['turn_status'] = "get"
-                    game_data = self.network.build_client_package(self.player_id, "chose_token", self.player_token, '','') # 'next_player': '', 'next_playername_turn':''
-                    self.network.send(game_data)
+        for event in events:
+            if self.player_token == "None":
+                for rect in rectangle_dict:
+                    if (rectangle_dict[rect].collidepoint(mouse_pos) and event.type == pygame.MOUSEBUTTONDOWN):
+                        self.highlighted_character_rect = rectangle_dict[rect]
+                        pygame.draw.rect(self.screen,"Red",rectangle_dict[rect],4)
+                        print("Player " + self.player_id + ' choose ' + rect)
 
-                    self.state = 'START'
+                        # send to server for player's token selection
+                        self.player_token = rect
+                        self.game_state['player_id'] = self.player_id
+                        self.game_state['player_token'] = self.player_token
+                        self.game_state['turn_status'] = "get"
+                        game_data = self.network.build_client_package(self.player_id, "chose_token", self.player_token, '','') # 'next_player': '', 'next_playername_turn':''
+                        self.network.send(game_data)
+
+                        self.state = 'START'
 
         #token = "None"
         # print("Please choose your character token")
