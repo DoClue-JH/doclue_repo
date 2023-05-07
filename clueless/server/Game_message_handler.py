@@ -22,7 +22,7 @@ class Game_message_handler:
         return client_update
 
     def process_client_update(client_message):
-        print(f"...processing client message {client_message}")
+        #print(f"...processing client message {client_message}")
         turn_status = client_message['turn_status']
         #starting with client turn status form bc og the get condition
         player_turn = dict({'player_id': client_message['player_id'], 
@@ -145,7 +145,7 @@ class Game_message_handler:
         with clients_lock:
             # client is same as conn
             for client in clients:
-                print(f'...broadcasting {message} to client: {client}')
+                #print(f'...broadcasting {message} to client: {client}')
                 try: 
                     Game_message_handler.send_game_update(client, message)
                 except Exception as err:
